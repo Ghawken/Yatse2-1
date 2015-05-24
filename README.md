@@ -3,14 +3,32 @@
     YATSE 2 - A touch screen remote controller for XBMC (.NET 3.5)
     Copyright (C) 2010-2013  Tolriq (http://yatse.leetzone.org)
 
-Home Page : http://yatse.leetzone.org	
-	
-#####You can follow Yatse news on facebook and twitter :
+An update on Tolriq Yatse2 - 2nd screen TFT HTPC remote control and media info
+for Xbmc and Kodi.
+Functioning well with Kodi Helix 14.2 and currently Isengard 15.2Beta
+Some minor changes - as in the commits including a MinimiseAlways setting
 
-- http://www.facebook.com/pages/Yatse/158907237599252
-- https://twitter.com/YatseRemote
+In Xml settings file
+<MinimiseAlways> Always Minimise Yatsee unless playback or paused.  
+On stop etc Yatse disappears, 
+when playback started Yatse returns fullscreen, pause it remains.
+To setup - make sure MinimiseAlways is false and setup/connect to remote Kodi 
+as needed.
+Then once all working - change the MinimiseAlways setting.
 
-#####The main repository for auto update is still runned by me. Please PR your changes so it can be spread to all users.
+Why?  To enable second application or fullscreen webbrowser to show something else
+in between playback episodes - ie. completely custom web-page/screen showing whatever
+like.  When playback starts - up pops control/timer and fanart. 
+
+Few other settings
+1. Remove old plugins - most not loading anyway
+2. Comestic changes - icon/name shows compatible with Kodi
+3. UnDim with Paused movie - If movie paused (and screen dim) Screen will undim until movie
+restarted.
+
+Glenn
+
+
 	
 ```
     This program is free software: you can redistribute it and/or modify
