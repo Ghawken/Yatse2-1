@@ -322,7 +322,10 @@ namespace Yatse2
             {
                 //Glenn Added
                 Window glennwindow = Window.GetWindow(this);
-                glennwindow.WindowState = WindowState.Normal;
+                if (glennwindow.WindowState != WindowState.Normal)
+                {
+                    glennwindow.WindowState = WindowState.Normal;
+                }
                 UpdateCurrently(nowPlaying);
             }
             if ((nowPlaying.IsPlaying || nowPlaying.IsPaused))
