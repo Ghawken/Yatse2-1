@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yatse2", "Yatse2.csproj", "{EC10C6B5-D1E9-4EE1-88DC-C780AF8001FE}"
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yatse2.01", "Yatse2.01.csproj", "{EC10C6B5-D1E9-4EE1-88DC-C780AF8001FE}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D3FE9900-7F0D-44D6-85B1-D001AEA434B7} = {D3FE9900-7F0D-44D6-85B1-D001AEA434B7}
 	EndProjectSection

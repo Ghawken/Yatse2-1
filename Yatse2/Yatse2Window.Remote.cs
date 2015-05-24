@@ -320,6 +320,9 @@ namespace Yatse2
             var nowPlaying = _remote.Player.NowPlaying(true);
             if (nowPlaying.IsNewMedia && (nowPlaying.IsPlaying || nowPlaying.IsPaused) && !String.IsNullOrEmpty(nowPlaying.FileName))
             {
+                //Glenn Added
+                Window glennwindow = Window.GetWindow(this);
+                glennwindow.WindowState = WindowState.Normal;
                 UpdateCurrently(nowPlaying);
             }
             if ((nowPlaying.IsPlaying || nowPlaying.IsPaused))

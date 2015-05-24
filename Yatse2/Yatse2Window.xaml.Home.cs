@@ -373,7 +373,9 @@ namespace Yatse2
         private void btn_Home_Close_Click(object sender, RoutedEventArgs e)
         {
             Logger.Instance().Log("Yatse2", "Closing", true);
-            Close();
+          //  Window glennwindow = Window.GetWindow(this);
+          // glennwindow.WindowState = WindowState.Minimized;
+             Close();
         }
 
         private void btn_Home_Reboot_Click(object sender, RoutedEventArgs e)

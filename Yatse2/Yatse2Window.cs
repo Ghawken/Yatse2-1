@@ -602,6 +602,8 @@ namespace Yatse2
                 _timerHeader = 0;
             }
             var nowPlaying = _remote != null ? _remote.Player.NowPlaying(false) : new ApiCurrently();
+            var GlennMinimise =  (_config.MinimiseAlways);
+          
 
             if ((_timer > _config.DimmingTimer) && _config.Dimming && (nowPlaying.IsPlaying || nowPlaying.IsPaused))
             {
@@ -616,6 +618,29 @@ namespace Yatse2
                     }
                 }
                 ResetTimer();
+            }
+
+            if  ( ! nowPlaying.IsPaused && ! nowPlaying.IsPlaying)
+            {
+                if  (GlennMinimise == true)
+                {    
+                     Window glennwindow = Window.GetWindow(this);
+                     glennwindow.WindowState = WindowState.Minimized;
+                }
+            }
+
+            if (nowPlaying.IsPaused)
+            {
+                var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
+                if (stbDimmingShow != null)
+                     stbDimmingShow.Begin(this);
+            }
+
+            if (nowPlaying.IsMuted)
+            {
+                var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
+                if (stbDimmingShow != null)
+                    stbDimmingShow.Begin(this);
             }
 
             if (_timer > _timerScreenSaver)

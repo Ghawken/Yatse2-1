@@ -29,6 +29,7 @@ namespace Yatse2.Classes
         public bool IsConfigured { get; set; }
         public bool Debug { get; set; }
         public bool SecondScreen { get; set; }
+        public bool MinimiseAlways { get; set; }
         public bool Topmost { get; set; }
         public bool KeepFocus { get; set; }
         public bool ForceResolution { get; set; }
@@ -85,6 +86,7 @@ namespace Yatse2.Classes
             IsConfigured = false;
             Debug = true;
             SecondScreen = true;
+            //MinimiseAlways = false;
             Topmost = true;
             Hack480 = false;
             KeepFocus = true;
@@ -161,6 +163,7 @@ namespace Yatse2.Classes
             IsConfigured = config.IsConfigured;
             Debug = config.Debug;
             SecondScreen = config.SecondScreen;
+            MinimiseAlways = config.MinimiseAlways;
             Topmost = config.Topmost;
             KeepFocus = config.KeepFocus;
             ForceResolution = config.ForceResolution;
@@ -237,6 +240,7 @@ namespace Yatse2.Classes
             }
             return;
         }
+
     }
 }
 
