@@ -949,7 +949,7 @@
         				</TabControl>
         				<Button Width="201" Height="25.724" VerticalAlignment="Top" Style="{DynamicResource Button}" FontSize="16" Panel.ZIndex="5"
         					Content="{DynamicResource Localized_83}" Canvas.Left="8" Canvas.Top="318.538" Click="btn_Settings_SaveSettings_Click"/>
-        				<TextBlock Height="23" Text="Tolriq @ http://yatse.leetzone.org" TextWrapping="Wrap" FontSize="16" TextAlignment="Center" Foreground="{DynamicResource Default_Font_Color}" FontStyle="Italic" MouseDown="TextBlock_MouseDown" Canvas.Left="234" Canvas.Top="321" Width="436"/>
+                            <TextBlock Height="23" Text="Tolriq FORK https://github.com/Ghawken/Yatse2-1" TextWrapping="Wrap" FontSize="16" TextAlignment="Center" Foreground="{DynamicResource Default_Font_Color}" FontStyle="Italic" MouseDown="TextBlock_MouseDown" Canvas.Left="234" Canvas.Top="321" Width="436"/>
         				<Image HorizontalAlignment="Right" Width="100" Source="Skin/Internal/Images/Paypal.gif" VerticalAlignment="Bottom" Stretch="UniformToFill" StretchDirection="DownOnly" Height="30" MouseDown="Image_MouseDown" Canvas.Left="674" Canvas.Top="314"/>
         				<Rectangle Fill="White" Height="277" StrokeThickness="3" Opacity="0.5" Canvas.Left="156" Canvas.Top="21" Width="1"/>
         			</Canvas>

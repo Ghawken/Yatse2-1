@@ -34,13 +34,13 @@ namespace Yatse2
     {
         private static void Donate()
         {
-            const string url = @"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BBUWT92HT3XUG";
+            const string url = @"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=";
             Process.Start(new ProcessStartInfo(url));
         }
 
         private static void WebSite()
         {
-            const string url = @"http://yatse.leetzone.org";
+            const string url = @"https://github.com/Ghawken/Yatse2-1";
             Process.Start(new ProcessStartInfo(url));
         }
 
