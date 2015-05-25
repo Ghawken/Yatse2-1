@@ -197,6 +197,7 @@ namespace FluidKit.Controls
 		private void OnMinimizeButtonClick(object sender, RoutedEventArgs e)
 		{
 			WindowState = WindowState.Minimized;
+            Hide();
 		}
 
 		#region Sizing Event Handlers

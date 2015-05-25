@@ -779,6 +779,7 @@ namespace Yatse2
             if (this.WindowState == WindowState.Minimized)
             {
                 this.WindowState = WindowState.Normal;
+                this.ShowInTaskbar = true;
                 _config.MinimiseAlways = false;
                 this.Activate();
                 return;
@@ -786,6 +787,7 @@ namespace Yatse2
             if (this.WindowState == WindowState.Normal)
             {
                 this.WindowState = WindowState.Minimized;
+                this.ShowInTaskbar = false;
                 _config.MinimiseAlways = true;
             }          
             // Activate the form. 
