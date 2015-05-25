@@ -777,10 +777,22 @@ namespace Yatse2
 
             // Set the WindowState to normal if the form is minimized. 
             if (this.WindowState == WindowState.Minimized)
+            {
                 this.WindowState = WindowState.Normal;
-
+                _config.MinimiseAlways = false;
+                this.Activate();
+                return;
+            }
+            if (this.WindowState == WindowState.Normal)
+            {
+                this.WindowState = WindowState.Minimized;
+                _config.MinimiseAlways = true;
+            }          
             // Activate the form. 
             this.Activate();
+
+
+
         }
         private void ShowHome()
         {
