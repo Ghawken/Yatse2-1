@@ -712,12 +712,7 @@ namespace Yatse2
             System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
             ni.Icon = new System.Drawing.Icon("Yatse2.ico");
             ni.Visible = true;
-        //    ni.DoubleClick +=
-        //        delegate(object sender, EventArgs args)
-         //       {
-        //            this.Show();
-        //            this.WindowState = WindowState.Normal;
-        // //       };
+            ni.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
 
             if (screens.Length == 1 || !_config.SecondScreen)
             {
@@ -776,7 +771,17 @@ namespace Yatse2
 
             _setPov = false;
         }
+        private void notifyIcon1_DoubleClick(object Sender, EventArgs e)
+        {
+            // Show the form when the user double clicks on the notify icon. 
 
+            // Set the WindowState to normal if the form is minimized. 
+            if (this.WindowState == WindowState.Minimized)
+                this.WindowState = WindowState.Normal;
+
+            // Activate the form. 
+            this.Activate();
+        }
         private void ShowHome()
         {
             
