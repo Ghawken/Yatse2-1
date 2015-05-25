@@ -708,6 +708,17 @@ namespace Yatse2
                 }
             }
             var screens = System.Windows.Forms.Screen.AllScreens;
+            
+            System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
+            ni.Icon = new System.Drawing.Icon("Yatse2.ico");
+            ni.Visible = true;
+        //    ni.DoubleClick +=
+        //        delegate(object sender, EventArgs args)
+         //       {
+        //            this.Show();
+        //            this.WindowState = WindowState.Normal;
+        // //       };
+
             if (screens.Length == 1 || !_config.SecondScreen)
             {
                 if (_config.ForceResolution)
