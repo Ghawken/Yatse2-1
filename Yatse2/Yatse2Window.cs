@@ -54,7 +54,6 @@ namespace Yatse2
         private bool _startLetterDrag;
         private Point _mouseDownPoint;
         private DateTime _mouseDownTime;
-
         private readonly Hashtable _yatse2Pages = new Hashtable
                             {
                                 {"Home", "grd_Home"},
@@ -420,6 +419,14 @@ namespace Yatse2
 
                 RefreshHeader();
 
+
+                System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
+                ni.Icon = new System.Drawing.Icon("Yatse2.ico");
+                ni.Visible = true;
+                ni.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
+                //ni.BalloonTipText = "Minimise Always Now False";
+               // ni.ShowBalloonTip(4000);
+
                 if (!_config.DisableAnimations)
                 {
                     trp_Transition.Transition = TryFindResource("GridTransition") as FluidKit.Controls.Transition;
@@ -708,11 +715,7 @@ namespace Yatse2
                 }
             }
             var screens = System.Windows.Forms.Screen.AllScreens;
-            
-            System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
-            ni.Icon = new System.Drawing.Icon("Yatse2.ico");
-            ni.Visible = true;
-            ni.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
+
 
             if (screens.Length == 1 || !_config.SecondScreen)
             {
@@ -771,6 +774,9 @@ namespace Yatse2
 
             _setPov = false;
         }
+
+   
+        
         private void notifyIcon1_DoubleClick(object Sender, EventArgs e)
         {
             // Show the form when the user double clicks on the notify icon. 
@@ -779,7 +785,7 @@ namespace Yatse2
             if (this.WindowState == WindowState.Minimized)
             {
                 this.WindowState = WindowState.Normal;
-                this.ShowInTaskbar = true;
+                this.ShowInTaskbar = true;              
                 _config.MinimiseAlways = false;
                 this.Activate();
                 return;
