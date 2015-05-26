@@ -197,13 +197,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Yatse2\System\Setup\Setup.csproj">
-      <Project>{548143A8-C4EB-4382-B41A-1B6B78513723}</Project>
-      <Name>Setup</Name>
-      <Private>True</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Logo.png" />
   </ItemGroup>
   <ItemGroup>

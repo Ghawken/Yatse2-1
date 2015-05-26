@@ -157,12 +157,6 @@
     <AppDesigner Include="Properties\" />
     <None Include="Yatse2-NP.snk" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Yatse2\System\Setup\Setup.csproj">
-      <Project>{548143A8-C4EB-4382-B41A-1B6B78513723}</Project>
-      <Name>Setup</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

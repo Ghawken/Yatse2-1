@@ -87,10 +87,6 @@
       <Name>Plugin</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\System\Setup\Setup.csproj">
-      <Project>{548143A8-C4EB-4382-B41A-1B6B78513723}</Project>
-      <Name>Setup</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Jayrock.Json\Jayrock.Json.csproj">
       <Project>{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}</Project>
       <Name>Jayrock.Json</Name>
