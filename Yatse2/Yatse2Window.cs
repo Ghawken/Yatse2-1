@@ -626,14 +626,18 @@ namespace Yatse2
                 }
                 ResetTimer();
             }
-
+            //glenn added
             if  ( ! nowPlaying.IsPaused && ! nowPlaying.IsPlaying)
             {
                 if  (GlennMinimise == true)
                 {    
                      Window glennwindow = Window.GetWindow(this);
                      glennwindow.WindowState = WindowState.Minimized;
+
                 }
+                var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
+                if (stbDimmingShow != null)
+                    stbDimmingShow.Begin(this);
             }
 
             if (nowPlaying.IsPaused)
