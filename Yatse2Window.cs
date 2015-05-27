@@ -424,7 +424,7 @@ namespace Yatse2
                 ni.Icon = new System.Drawing.Icon("Yatse2.ico");
                 ni.Visible = true;
                 ni.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
-
+                Logger.Instance().LogDump("NEW Yastse Debug    : Create new Taskbar Icon, make Visible, create Double Click event ", _config.MinimiseAlways);
 
                 if (!_config.DisableAnimations)
                 {
@@ -589,6 +589,7 @@ namespace Yatse2
             _timerHeader++;
             _timer++;
             UpdateRemote();
+            Window glennwindow = Window.GetWindow(this);
 
             if (_config.CheckForUpdate && !_updatecheck)
             {
@@ -626,17 +627,21 @@ namespace Yatse2
                 ResetTimer();
             }
 
-            if  ( ! nowPlaying.IsPaused && ! nowPlaying.IsPlaying)
+            if (!nowPlaying.IsPaused && !nowPlaying.IsPlaying)
             {
-                
+
                 var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
+
                 if (stbDimmingShow != null)
                     stbDimmingShow.Begin(this);
-                               
-                if  (GlennMinimise == true)
-                {    
-                     Window glennwindow = Window.GetWindow(this);
-                     glennwindow.WindowState = WindowState.Minimized;
+
+                if (glennwindow.WindowState == WindowState.Normal)
+                {
+                    if (GlennMinimise == true)
+                    {
+                        glennwindow.WindowState = WindowState.Minimized;
+                        Logger.Instance().LogDump("GH: WindowState.Normal & Not Playing and Not paused and MinimiseAlways true ", _config.MinimiseAlways);
+                    }
                 }
             }
 
@@ -645,6 +650,7 @@ namespace Yatse2
                 var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
                 if (stbDimmingShow != null)
                      stbDimmingShow.Begin(this);
+                     Logger.Instance().LogDump("Yatse2 NEW Debug:   Playback Paused undim ", _config.MinimiseAlways);
             }
 
             if (nowPlaying.IsMuted)
@@ -652,6 +658,7 @@ namespace Yatse2
                 var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
                 if (stbDimmingShow != null)
                     stbDimmingShow.Begin(this);
+                    Logger.Instance().LogDump("Yatse2 NEW Debug:   Playback Muted undim ", _config.MinimiseAlways); 
             }
 
             if (_timer > _timerScreenSaver)
@@ -800,7 +807,7 @@ namespace Yatse2
                 this.ShowInTaskbar = true;
                 _config.MinimiseAlways = false;
                 this.Activate();
-
+                Logger.Instance().LogDump("NEW Yastse Debug    : DBL click tasbar event/Min Window, Open Window and set MinimiseAlways to false ", _config.MinimiseAlways);
                 return;
             }
             if (this.WindowState == WindowState.Normal)
@@ -808,6 +815,7 @@ namespace Yatse2
                 this.WindowState = WindowState.Minimized;
                 this.ShowInTaskbar = false;
                 _config.MinimiseAlways = true;
+                Logger.Instance().LogDump("NEW Yastse Debug    : DBL click tasbar event/Normal Window, Minimise Window and set MinimiseAlways to true ", _config.MinimiseAlways);
             }
             // Activate the form. 
             this.Activate();
