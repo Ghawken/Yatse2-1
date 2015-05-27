@@ -91,7 +91,7 @@ namespace Yatse2
         private AudioGenresCollection _audioGenresDataSource;
         private CollectionView _audioGenresCollectionView;
         private AudioSongsCollection _audioSongsDataSource;
-
+        private System.Windows.Forms.NotifyIcon ni = null;
 
         private readonly Collection<string> _gridHistory = new Collection<string>();
         private long _currentRemoteId;
@@ -420,6 +420,12 @@ namespace Yatse2
 
                 RefreshHeader();
 
+                System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
+                ni.Icon = new System.Drawing.Icon("Yatse2.ico");
+                ni.Visible = true;
+                ni.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
+
+
                 if (!_config.DisableAnimations)
                 {
                     trp_Transition.Transition = TryFindResource("GridTransition") as FluidKit.Controls.Transition;
@@ -713,10 +719,9 @@ namespace Yatse2
                 }
             }
             var screens = System.Windows.Forms.Screen.AllScreens;
-	        System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
-            ni.Icon = new System.Drawing.Icon("Yatse2.ico");
-            ni.Visible = true;
-            ni.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
+
+    //        ni.BalloonTipTitle = "Minimise Setting";
+    //        ni.BalloonTipText = " Minimise Always On";
 
         //    ni.DoubleClick +=
 
@@ -795,6 +800,7 @@ namespace Yatse2
                 this.ShowInTaskbar = true;
                 _config.MinimiseAlways = false;
                 this.Activate();
+
                 return;
             }
             if (this.WindowState == WindowState.Normal)
