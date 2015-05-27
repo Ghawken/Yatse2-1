@@ -424,7 +424,7 @@ namespace Yatse2
                 ni.Icon = new System.Drawing.Icon("Yatse2.ico");
                 ni.Visible = true;
                 ni.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
-                Logger.Instance().LogDump("NEW Yastse Debug    : Create new Taskbar Icon, make Visible, create Double Click event ", _config.MinimiseAlways);
+                Logger.Instance().Log("NEW Yastse Debug:","Create new Taskbar Icon, make Visible, create Double Click event ");
 
                 if (!_config.DisableAnimations)
                 {
@@ -612,13 +612,13 @@ namespace Yatse2
             var GlennMinimise =  (_config.MinimiseAlways);
           
 
-            if ((_timer > _config.DimmingTimer) && _config.Dimming && (nowPlaying.IsPlaying || nowPlaying.IsPaused))
+            if ((_timer > _config.DimmingTimer) && _config.Dimming && (nowPlaying.IsPlaying ))
             {
                 if (!(!_yatse2Properties.Currently.IsTv && !_yatse2Properties.Currently.IsMovie && _config.DimmingOnlyVideo))
                 {
                     if (grd_Dimming.Visibility != Visibility.Visible)
                     {
-                        Logger.Instance().Log("Yatse2", "Start screen saver : Dimming");
+                        Logger.Instance().Log("Yatse2", "Start screen saver : Dimming here 2");
                         var stbDimmingShow = (Storyboard) TryFindResource("stb_ShowDimming");
                         if (stbDimmingShow != null)
                             stbDimmingShow.Begin(this);
@@ -629,39 +629,47 @@ namespace Yatse2
 
             if (!nowPlaying.IsPaused && !nowPlaying.IsPlaying)
             {
-
-                var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
-
-                if (stbDimmingShow != null)
-                    stbDimmingShow.Begin(this);
-
+                if (grd_Dimming.Visibility == Visibility.Visible)
+                {
+                    var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
+                    if (stbDimmingShow != null)
+                        stbDimmingShow.Begin(this);
+                    Logger.Instance().LogDump("Yatse2 NEW DEBUG:","Playback Paused or Playing & Dim on Undim");
+                }
+                
                 if (glennwindow.WindowState == WindowState.Normal)
                 {
                     if (GlennMinimise == true)
                     {
                         glennwindow.WindowState = WindowState.Minimized;
-                        Logger.Instance().LogDump("GH: WindowState.Normal & Not Playing and Not paused and MinimiseAlways true ", _config.MinimiseAlways);
+                        Logger.Instance().LogDump("Yatse2 NEW DEBUG:","WindowState.Normal & Not Playing and Not paused and MinimiseAlways true");
                     }
                 }
             }
 
             if (nowPlaying.IsPaused)
             {
-                var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
-                if (stbDimmingShow != null)
-                     stbDimmingShow.Begin(this);
-                     Logger.Instance().LogDump("Yatse2 NEW Debug:   Playback Paused undim ", _config.MinimiseAlways);
+                if (grd_Dimming.Visibility == Visibility.Visible)
+                {
+                    var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
+                    if (stbDimmingShow != null)
+                        stbDimmingShow.Begin(this);
+                    Logger.Instance().LogDump("Yatse2 NEW Debug:","Playback Paused undim ");
+                }
             }
 
             if (nowPlaying.IsMuted)
             {
-                var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
-                if (stbDimmingShow != null)
-                    stbDimmingShow.Begin(this);
-                    Logger.Instance().LogDump("Yatse2 NEW Debug:   Playback Muted undim ", _config.MinimiseAlways); 
+                if (grd_Dimming.Visibility == Visibility.Visible)
+                {
+                    var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
+                    if (stbDimmingShow != null)
+                        stbDimmingShow.Begin(this);
+                    Logger.Instance().LogDump("Yatse2 NEW Debug:", "Playback Muted undim ");
+                }
             }
 
-            if (_timer > _timerScreenSaver)
+            if (_timer > _timerScreenSaver && !nowPlaying.IsPaused)
             {
                 StartScreensaver();
             }
@@ -684,7 +692,7 @@ namespace Yatse2
                 _isScreenSaver = true;
                 if (_config.Dimming && !_config.DimmingOnlyVideo)
                 {
-                    Logger.Instance().Log("Yatse2", "Start screen saver : Dimming");
+                    Logger.Instance().Log("Yatse2", "Start screen saver : Dimming Here as well");
                     var stbDimmingShow = (Storyboard)TryFindResource("stb_ShowDimming");
                     if (stbDimmingShow != null)
                         stbDimmingShow.Begin(this);
