@@ -375,6 +375,8 @@ namespace Yatse2
             Logger.Instance().Log("Yatse2", "Closing", true);
           //  Window glennwindow = Window.GetWindow(this);
           // glennwindow.WindowState = WindowState.Minimized;
+            ni.Dispose();
+            ni = null;
              Close();
         }
 

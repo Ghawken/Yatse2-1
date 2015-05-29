@@ -629,20 +629,28 @@ namespace Yatse2
 
             if (!nowPlaying.IsPaused && !nowPlaying.IsPlaying)
             {
-                if (grd_Dimming.Visibility == Visibility.Visible)
+                if (grd_Dimming.Visibility == Visibility.Visible && glennwindow.WindowState == WindowState.Normal)
                 {
                     var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
                     if (stbDimmingShow != null)
                         stbDimmingShow.Begin(this);
-                    Logger.Instance().LogDump("Yatse2 NEW DEBUG:","Playback Paused or Playing & Dim on Undim");
+                    Logger.Instance().LogDump("Yatse2 NEW DEBUG:","Playback Paused or Playing - Dim on Undim");
                 }
                 
-                if (glennwindow.WindowState == WindowState.Normal)
+                  if (glennwindow.WindowState == WindowState.Normal)
+           //     if (this.Visibility == Visibility.Visible)
                 {
                     if (GlennMinimise == true)
                     {
-                        glennwindow.WindowState = WindowState.Minimized;
-                        Logger.Instance().LogDump("Yatse2 NEW DEBUG:","WindowState.Normal & Not Playing and Not paused and MinimiseAlways true");
+                        notifyIcon1_DoubleClick(null, null );
+                        // this.ShowInTaskbar = false;
+                       // this.WindowState = WindowState.Minimized;
+                       // Hide();
+                       // this.ShowInTaskbar = false;
+                       // _config.MinimiseAlways = true;
+                        Logger.Instance().LogDump("NEW Yastse  Debug    : DBL click tasbar event/Normal Window, Minimise Window and set MinimiseAlways to true ", _config.MinimiseAlways);
+                       // this.Activate();
+                                 
                     }
                 }
             }
@@ -944,7 +952,6 @@ namespace Yatse2
             }
             _timer = 0;
         }
-
 
         private void RefreshHeader()
         {
