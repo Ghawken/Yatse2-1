@@ -204,7 +204,7 @@ namespace Yatse2
             }
             var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             _config.FanartDirectory = appdatadirectory + @"\Kodi\userdata\addon_data\script.artworkorganizer\TVShowFanart\";
-            Logger.Instance().Log("FanART DEBUG", "Fanart Directory equals " + _config.FanartDirectory, true);
+         //   Logger.Instance().Log("FanART DEBUG", "Fanart Directory equals " + _config.FanartDirectory, true);
             
             _yatse2Properties.DiaporamaImage1 = GetRandomImagePath(_config.FanartDirectory);
             _fanartCurrentImage = 1;
@@ -705,7 +705,7 @@ namespace Yatse2
             }
             var nowPlaying = _remote != null ? _remote.Player.NowPlaying(false) : new ApiCurrently();
             var GlennMinimise =  (_config.MinimiseAlways);
-          
+            Logger.Instance().Log("MENU ", "Menu equals " + nowPlaying.CurrentMenuID, true);
 
             if ((_timer > _config.DimmingTimer) && _config.Dimming && (nowPlaying.IsPlaying ))
             {

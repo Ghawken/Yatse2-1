@@ -319,6 +319,8 @@ namespace Plugin
         public bool IsPlaying { get; set; }
         public bool IsPaused { get; set; }
         public string MediaType { get; set; }
+        public string CurrentMenuLabel { get; set; }
+        public string CurrentMenuID { get; set; }
         public bool IsNewMedia{ get; set; }
         public bool IsMuted { get; set; }
     }

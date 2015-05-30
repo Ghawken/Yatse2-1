@@ -29,6 +29,7 @@ namespace Remote.XBMC.Frodo.Api
         private readonly Xbmc _parent;
         private string _currentMediaFile;
         private string _currentMediaTitle;
+        //public string _currentMenu;
         private readonly ApiCurrently _nowPlaying = new ApiCurrently();
 
         static readonly object Locker = new object();
@@ -72,9 +73,27 @@ namespace Remote.XBMC.Frodo.Api
                         _nowPlaying.IsPaused = false;
                         return;
                     }
+                   
+                    var GUIproperties = new JsonObject();
+                    GUIproperties["properties"] = new[]
+                                                      {
+                                                          "currentwindow"
+                                                             
+                                                      
+                                                        };
 
+                    var menuresult = (JsonObject)_parent.JsonCommand("GUI.GetProperties", GUIproperties);
+                    var GUIdeeper = (JsonObject)menuresult["currentwindow"];
+                    //var GUIdeeper2 = (JsonObject)GUIdeeper["id"];
+                    //_currentMenu = menuresult["id"];
+                    _nowPlaying.CurrentMenuLabel = GUIdeeper["id"].ToString();
+                    _nowPlaying.CurrentMenuID = GUIdeeper["label"].ToString();
+                    
+                                     
                     var current = -1;
                     var players = (JsonArray)_parent.JsonCommand("Player.GetActivePlayers", null);
+
+
                     if (players.Count > 0)
                     {
                         foreach (JsonObject player in players)
