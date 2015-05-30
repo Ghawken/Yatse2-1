@@ -105,7 +105,9 @@ namespace Yatse2
         private long _timer;
         private long _timerHeader;
         private bool _isScreenSaver;
+        private bool _isfanart;
         private int _diaporamaCurrentImage;
+        private int _fanartCurrentImage;
         private bool _showRemoteSelect;
         private bool _showHomePage;
         private bool _isPlaying;
@@ -205,20 +207,20 @@ namespace Yatse2
             Logger.Instance().Log("FanART DEBUG", "Fanart Directory equals " + _config.FanartDirectory, true);
             
             _yatse2Properties.DiaporamaImage1 = GetRandomImagePath(_config.FanartDirectory);
-            _diaporamaCurrentImage = 1;
+            _fanartCurrentImage = 1;
             var stbDiaporamaShow = (Storyboard)TryFindResource("stb_ShowDiaporama");
             if (stbDiaporamaShow != null)
             {
                 stbDiaporamaShow.Begin(this);
-                _isScreenSaver = true;
+                _isfanart = true;
             }
         }
 
         private void SwitchFanart()
         {
-            if (_diaporamaCurrentImage == 1)
+            if (_fanartCurrentImage == 1)
             {
-                _diaporamaCurrentImage = 2;
+                _fanartCurrentImage = 2;
                 _yatse2Properties.DiaporamaImage2 = GetRandomImagePath(_config.FanartDirectory);
                 var stbDiaporamaSwap = (Storyboard)TryFindResource("stb_Diaporama_12_1");
                 if (stbDiaporamaSwap != null)
@@ -226,7 +228,7 @@ namespace Yatse2
             }
             else
             {
-                _diaporamaCurrentImage = 1;
+                _fanartCurrentImage = 1;
                 _yatse2Properties.DiaporamaImage1 = GetRandomImagePath(_config.FanartDirectory);
                 var stbDiaporamaSwap = (Storyboard)TryFindResource("stb_Diaporama_21_1");
                 if (stbDiaporamaSwap != null)
@@ -745,9 +747,11 @@ namespace Yatse2
                        // this.Activate();
                                  
                     }
-                    if (GlennMinimise ==false)
+                    if (GlennMinimise ==false && _isfanart==false)
                     {
                         StartFanart();
+                        //Fanart Routine shoudl go here
+                        return;
                     }
                 }
             }
@@ -783,6 +787,11 @@ namespace Yatse2
             if (_isScreenSaver && _diaporamaCurrentImage != 0 && (_timer % _config.DiaporamaTimer) == 0)
             {
                 SwitchDiaporama();
+            }
+
+            if (_isfanart && _fanartCurrentImage != 0 && (_timer % _config.DiaporamaTimer) == 0)
+            {
+                SwitchFanart();
             }
 
             PositionScreen();

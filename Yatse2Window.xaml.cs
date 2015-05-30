@@ -49,6 +49,7 @@ namespace Yatse2
             _isScreenSaver = false;
             ResetTimer();
             _diaporamaCurrentImage = 0;
+            _fanartCurrentImage = 0;
             var stbDiaporamaHide = (Storyboard)TryFindResource("stb_HideDiaporama");
             if (stbDiaporamaHide != null)
                 stbDiaporamaHide.Begin(this);
