@@ -86,8 +86,8 @@ namespace Remote.XBMC.Frodo.Api
                     var GUIdeeper = (JsonObject)menuresult["currentwindow"];
                     //var GUIdeeper2 = (JsonObject)GUIdeeper["id"];
                     //_currentMenu = menuresult["id"];
-                    _nowPlaying.CurrentMenuLabel = GUIdeeper["id"].ToString();
-                    _nowPlaying.CurrentMenuID = GUIdeeper["label"].ToString();
+                    _nowPlaying.CurrentMenuLabel = GUIdeeper["label"].ToString();
+                    _nowPlaying.CurrentMenuID = GUIdeeper["id"].ToString();
                     
                                      
                     var current = -1;

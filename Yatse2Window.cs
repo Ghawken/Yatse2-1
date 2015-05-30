@@ -706,6 +706,7 @@ namespace Yatse2
             var nowPlaying = _remote != null ? _remote.Player.NowPlaying(false) : new ApiCurrently();
             var GlennMinimise =  (_config.MinimiseAlways);
             Logger.Instance().Log("MENU ", "Menu equals " + nowPlaying.CurrentMenuID, true);
+            Logger.Instance().Log("MENU ", "Menu equals " + nowPlaying.CurrentMenuLabel, true);
 
             if ((_timer > _config.DimmingTimer) && _config.Dimming && (nowPlaying.IsPlaying ))
             {
