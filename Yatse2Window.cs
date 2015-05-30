@@ -751,7 +751,6 @@ namespace Yatse2
                     {
                         StartFanart();
                         //Fanart Routine shoudl go here
-                        return;
                     }
                 }
             }

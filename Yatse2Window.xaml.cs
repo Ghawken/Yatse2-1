@@ -47,6 +47,7 @@ namespace Yatse2
         private void grd_Diaporama_MouseDown(object sender, MouseButtonEventArgs e)
         {
             _isScreenSaver = false;
+            _isfanart = false;
             ResetTimer();
             _diaporamaCurrentImage = 0;
             _fanartCurrentImage = 0;
@@ -58,6 +59,7 @@ namespace Yatse2
         private void grd_Dimming_MouseDown(object sender, MouseButtonEventArgs e)
         {
             _isScreenSaver = false;
+            _isfanart = false;
             ResetTimer();
             var stbDimmingHide = (Storyboard)TryFindResource("stb_HideDimming");
             if (stbDimmingHide != null)
