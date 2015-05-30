@@ -73,7 +73,7 @@ namespace Remote.XBMC.Frodo.Api
                         _nowPlaying.IsPaused = false;
                         return;
                     }
-                   
+
                     var GUIproperties = new JsonObject();
                     GUIproperties["properties"] = new[]
                                                       {
@@ -84,8 +84,6 @@ namespace Remote.XBMC.Frodo.Api
 
                     var menuresult = (JsonObject)_parent.JsonCommand("GUI.GetProperties", GUIproperties);
                     var GUIdeeper = (JsonObject)menuresult["currentwindow"];
-                    //var GUIdeeper2 = (JsonObject)GUIdeeper["id"];
-                    //_currentMenu = menuresult["id"];
                     _nowPlaying.CurrentMenuLabel = GUIdeeper["label"].ToString();
                     _nowPlaying.CurrentMenuID = GUIdeeper["id"].ToString();
                     

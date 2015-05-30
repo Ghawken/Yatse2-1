@@ -202,9 +202,10 @@ namespace Yatse2
                     img_Diaporama2.Stretch = Stretch.Fill;
                     break;
             }
-            var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            _config.FanartDirectory = appdatadirectory + @"\Kodi\userdata\addon_data\script.artworkorganizer\TVShowFanart\";
-         //   Logger.Instance().Log("FanART DEBUG", "Fanart Directory equals " + _config.FanartDirectory, true);
+          //  var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+          //  _config.FanartDirectory = appdatadirectory + @"\Kodi\userdata\addon_data\script.artworkorganizer\";
+         
+       //     Logger.Instance().Log("FanART DEBUG", "Fanart Directory equals " + _config.FanartDirectory, true);
             
             _yatse2Properties.DiaporamaImage1 = GetRandomImagePath(_config.FanartDirectory);
             _fanartCurrentImage = 1;
@@ -218,6 +219,9 @@ namespace Yatse2
 
         private void SwitchFanart()
         {
+            
+            
+            
             if (_fanartCurrentImage == 1)
             {
                 _fanartCurrentImage = 2;
@@ -679,12 +683,71 @@ namespace Yatse2
             repo.CleanTemporary();
         }
 
+        private void CheckFanArt()
+        {
+            var nowPlaying = _remote != null ? _remote.Player.NowPlaying(false) : new ApiCurrently();
+            var FanartAlways = _config.FanartAlways;
+            _config.FanartDirectory = null;
+          //  Logger.Instance().Debug("MENU ", "Menu equals " + nowPlaying.CurrentMenuID, true);
+          //  Logger.Instance().Debug("MENU ", "Menu equals " + nowPlaying.CurrentMenuLabel, true);
+
+            if (FanartAlways == true)
+            {
+                var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                var FanartDirectory = appdatadirectory + @"\Kodi\userdata\addon_data\script.artworkorganizer\";
+
+                if (nowPlaying.CurrentMenuID == "10025")
+                {
+                    _config.FanartDirectory = FanartDirectory + @"MovieFanart\";
+                    return;
+                }
+                if (nowPlaying.CurrentMenuID == "10502")
+                {
+                    _config.FanartDirectory = FanartDirectory + @"ArtistFanart\";
+                    return;
+                }
+                if (nowPlaying.CurrentMenuID == "10501")
+                {
+                    _config.FanartDirectory = FanartDirectory + @"ArtistFanart\";
+                    return;
+                }
+
+                if (nowPlaying.CurrentMenuID == "10002")
+                {
+                    _config.FanartDirectory = FanartDirectory + @"OwnFanart\";
+                    return;
+                }
+                if (nowPlaying.CurrentMenuID == "12600")
+                {
+                    _config.FanartDirectory = appdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
+                    return;
+                }
+                if (nowPlaying.CurrentMenuID == "10004")
+                {
+                    _config.FanartDirectory = null;
+                    FanartAlways = false;
+                    var stbDiaporamaHide = (Storyboard)TryFindResource("stb_HideDiaporama");
+                    if (stbDiaporamaHide != null)
+                    {
+                        stbDiaporamaHide.Begin(this);
+                    }
+                    return;
+                }
+
+                _config.FanartDirectory = FanartDirectory + @"TVShowFanart\";
+
+
+
+            }
+        }
+
         private void Timer_Tick(object sender, EventArgs e)
         {
             _timerHeader++;
             _timer++;
             UpdateRemote();
             Window glennwindow = Window.GetWindow(this);
+
 
             if (_config.CheckForUpdate && !_updatecheck)
             {
@@ -704,18 +767,19 @@ namespace Yatse2
                 _timerHeader = 0;
             }
             var nowPlaying = _remote != null ? _remote.Player.NowPlaying(false) : new ApiCurrently();
-            var GlennMinimise =  (_config.MinimiseAlways);
-            Logger.Instance().Log("MENU ", "Menu equals " + nowPlaying.CurrentMenuID, true);
-            Logger.Instance().Log("MENU ", "Menu equals " + nowPlaying.CurrentMenuLabel, true);
+            var GlennMinimise = (_config.MinimiseAlways);
 
-            if ((_timer > _config.DimmingTimer) && _config.Dimming && (nowPlaying.IsPlaying ))
+            CheckFanArt();
+
+
+            if ((_timer > _config.DimmingTimer) && _config.Dimming && (nowPlaying.IsPlaying))
             {
                 if (!(!_yatse2Properties.Currently.IsTv && !_yatse2Properties.Currently.IsMovie && _config.DimmingOnlyVideo))
                 {
                     if (grd_Dimming.Visibility != Visibility.Visible)
                     {
                         Logger.Instance().Log("Yatse2", "Start screen saver : Dimming here 2");
-                        var stbDimmingShow = (Storyboard) TryFindResource("stb_ShowDimming");
+                        var stbDimmingShow = (Storyboard)TryFindResource("stb_ShowDimming");
                         if (stbDimmingShow != null)
                             stbDimmingShow.Begin(this);
                     }
@@ -730,73 +794,76 @@ namespace Yatse2
                     var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
                     if (stbDimmingShow != null)
                         stbDimmingShow.Begin(this);
-                    Logger.Instance().LogDump("Yatse2 NEW DEBUG:","Playback Paused or Playing - Dim on Undim");
+                    Logger.Instance().LogDump("Yatse2 NEW DEBUG:", "Playback Paused or Playing - Dim on Undim");
                 }
-                
-                  if (glennwindow.WindowState == WindowState.Normal)
-           //     if (this.Visibility == Visibility.Visible)
+
+                if (glennwindow.WindowState == WindowState.Normal)
+                //     if (this.Visibility == Visibility.Visible)
                 {
                     if (GlennMinimise == true)
                     {
-                        notifyIcon1_DoubleClick(null, null );
+                        notifyIcon1_DoubleClick(null, null);
                         // this.ShowInTaskbar = false;
-                       // this.WindowState = WindowState.Minimized;
-                       // Hide();
-                       // this.ShowInTaskbar = false;
-                       // _config.MinimiseAlways = true;
+                        // this.WindowState = WindowState.Minimized;
+                        // Hide();
+                        // this.ShowInTaskbar = false;
+                        // _config.MinimiseAlways = true;
                         Logger.Instance().LogDump("NEW Yastse  Debug    : DBL click tasbar event/Normal Window, Minimise Window and set MinimiseAlways to true ", _config.MinimiseAlways);
-                       // this.Activate();
-                                 
+                        // this.Activate();
+
                     }
-                    if (GlennMinimise ==false && _isfanart==false)
+                    if (GlennMinimise == false && _isfanart == false && _config.FanartAlways == true)
                     {
-                        StartFanart();
-                        //Fanart Routine shoudl go here
+                        if (nowPlaying.CurrentMenuID != "10004")
+                        {
+                            StartFanart();
+                            //Fanart Routine shoudl go here
+                        }
                     }
                 }
-            }
 
-            if (nowPlaying.IsPaused)
-            {
-                if (grd_Dimming.Visibility == Visibility.Visible)
+                if (nowPlaying.IsPaused)
                 {
-                    var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
-                    if (stbDimmingShow != null)
-                        stbDimmingShow.Begin(this);
-                    Logger.Instance().LogDump("Yatse2 NEW Debug:","Playback Paused undim ");
+                    if (grd_Dimming.Visibility == Visibility.Visible)
+                    {
+                        var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
+                        if (stbDimmingShow != null)
+                            stbDimmingShow.Begin(this);
+                        Logger.Instance().LogDump("Yatse2 NEW Debug:", "Playback Paused undim ");
+                    }
                 }
-            }
 
-            if (nowPlaying.IsMuted)
-            {
-                if (grd_Dimming.Visibility == Visibility.Visible)
+                if (nowPlaying.IsMuted)
                 {
-                    var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
-                    if (stbDimmingShow != null)
-                        stbDimmingShow.Begin(this);
-                    Logger.Instance().LogDump("Yatse2 NEW Debug:", "Playback Muted undim ");
+                    if (grd_Dimming.Visibility == Visibility.Visible)
+                    {
+                        var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
+                        if (stbDimmingShow != null)
+                            stbDimmingShow.Begin(this);
+                        Logger.Instance().LogDump("Yatse2 NEW Debug:", "Playback Muted undim ");
+                    }
                 }
+
+                if (_timer > _timerScreenSaver && !nowPlaying.IsPaused)
+                {
+                    StartScreensaver();
+                }
+
+
+                if (_isScreenSaver && _diaporamaCurrentImage != 0 && (_timer % _config.DiaporamaTimer) == 0)
+                {
+                    SwitchDiaporama();
+                }
+
+                if (_isfanart && _fanartCurrentImage != 0 && (_timer % _config.DiaporamaTimer) == 0)
+                {
+                    SwitchFanart();
+                }
+
+                PositionScreen();
+
+                CheckFirstLaunch();
             }
-
-            if (_timer > _timerScreenSaver && !nowPlaying.IsPaused)
-            {
-                StartScreensaver();
-            }
-
-
-            if (_isScreenSaver && _diaporamaCurrentImage != 0 && (_timer % _config.DiaporamaTimer) == 0)
-            {
-                SwitchDiaporama();
-            }
-
-            if (_isfanart && _fanartCurrentImage != 0 && (_timer % _config.DiaporamaTimer) == 0)
-            {
-                SwitchFanart();
-            }
-
-            PositionScreen();
-
-            CheckFirstLaunch();
         }
 
         private void StartScreensaver()
@@ -928,6 +995,7 @@ namespace Yatse2
                 this.WindowState = WindowState.Normal;
                 this.ShowInTaskbar = true;
                 _config.MinimiseAlways = false;
+                _config.FanartAlways = true;
                 this.Activate();
                 Logger.Instance().LogDump("NEW Yastse Debug    : DBL click tasbar event/Min Window, Open Window and set MinimiseAlways to false ", _config.MinimiseAlways);
                 return;
@@ -937,6 +1005,7 @@ namespace Yatse2
                 this.WindowState = WindowState.Minimized;
                 this.ShowInTaskbar = false;
                 _config.MinimiseAlways = true;
+                _config.FanartAlways = false;
                 Logger.Instance().LogDump("NEW Yastse Debug    : DBL click tasbar event/Normal Window, Minimise Window and set MinimiseAlways to true ", _config.MinimiseAlways);
             }
             // Activate the form. 
