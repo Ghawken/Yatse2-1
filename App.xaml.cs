@@ -58,12 +58,7 @@ namespace Yatse2
         }
         protected override void OnStartup(StartupEventArgs e)
         {
-            /*var processes = Process.GetProcessesByName("Yatse2.exe");
-            if (processes.Length != 1)
-            {
-                MessageBox.Show("Yatse2 is already running. Closing.");
-                Shutdown();
-            }*/ // TODO : Reactivate
+
 
             Current.DispatcherUnhandledException += AppDispatcherUnhandledException;
             FrameworkElement.LanguageProperty.OverrideMetadata(

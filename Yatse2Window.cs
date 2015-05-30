@@ -357,6 +357,30 @@ namespace Yatse2
             _audioArtistsCollectionView.Filter = new Predicate<object>(FilterAudioArtist);
             _audioGenresCollectionView.Filter = new Predicate<object>(FilterAudioGenre);
         }
+        public static Process RunningInstance()
+        {
+            Process current = Process.GetCurrentProcess();
+            Process[] processes = Process.GetProcessesByName(current.ProcessName);
+
+            //Loop through the running processes in with the same name 
+            foreach (Process process in processes)
+            {
+                //Ignore the current process 
+                if (process.Id != current.Id)
+                {
+                    //Make sure that the process is running from the exe file. 
+                    if (Assembly.GetExecutingAssembly().Location.
+                         Replace("/", "\\") == current.MainModule.FileName)
+                    {
+                        //Return the other process instance.  
+                        return process;
+
+                    }
+                }
+            }
+            //No other instance was found, return null.  
+            return null;
+        }
 
         private void Init()
         {
@@ -377,7 +401,19 @@ namespace Yatse2
                 Logger.Instance().Log("OSInfo", "Version = " + OSInfo.VersionString, true);
                 Logger.Instance().Log("OSInfo", "Bits = " + OSInfo.RealBits, true);
                 Logger.Instance().Log("OSInfo", "Culture = " + Thread.CurrentThread.CurrentCulture.Name, true);
+                Logger.Instance().Log("Yatse 2 Debug :", "Checking for another instance");
+              
+                if (Yatse2Window.RunningInstance() != null)
+                {
+                    Logger.Instance().Log("NEW Yastse Debug:", "Duplicate Yatse2 Running Closing... ");
+                    MessageBox.Show("Duplicate Instance of Yatse, Closing....");
+                    Application.Current.Shutdown();
 
+                    //TODO:
+                    //Your application logic for duplicate 
+                    //instances would go here.
+                }
+    
                 _config.Load(_configFile);
                 _timerScreenSaver = _config.ScreensaverTimer;
                 Logger.Instance().Debug = _config.Debug;
