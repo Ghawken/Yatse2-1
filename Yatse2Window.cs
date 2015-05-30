@@ -482,6 +482,9 @@ namespace Yatse2
             {
                 Logger.Instance().LogException("Yaste2Init",e);
                 Logger.Instance().Log("Yatse2Init","Forcing close");
+                ni.Dispose();
+                ni.Icon = null;
+                
                 Close();
             }
 
@@ -1018,7 +1021,9 @@ namespace Yatse2
             {
                 _weather.Dispose();
                 _database.Close();
-            }
+                ni.Icon = null;
+                ni.Dispose();
+             }
         }
 
 

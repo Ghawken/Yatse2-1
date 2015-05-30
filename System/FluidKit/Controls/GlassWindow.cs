@@ -191,7 +191,8 @@ namespace FluidKit.Controls
 
 		private void OnCloseButtonClick(object sender, RoutedEventArgs e)
 		{
-			Close();
+           
+            Close();
 		}
 
 		private void OnMinimizeButtonClick(object sender, RoutedEventArgs e)

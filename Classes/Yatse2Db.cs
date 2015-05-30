@@ -1840,6 +1840,7 @@ namespace Yatse2.Classes
             _connected = false;
             _dbConnection.Close();
             _dbConnection.Dispose();
+           
         }
 
         private long QueryInsert(SQLiteCommand query)
