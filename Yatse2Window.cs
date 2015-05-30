@@ -178,7 +178,61 @@ namespace Yatse2
                     stbDiaporamaSwap.Begin(this);
             }
         }
+        private void StartFanart()
+        {
+            
+            switch (_config.DiaporamaMode)
+            {
+                case 0:
+                    img_Diaporama1.Stretch = Stretch.None;
+                    img_Diaporama2.Stretch = Stretch.None;
+                    break;
+                case 1:
+                    img_Diaporama1.Stretch = Stretch.Uniform;
+                    img_Diaporama2.Stretch = Stretch.Uniform;
+                    break;
+                case 2:
+                    img_Diaporama1.Stretch = Stretch.UniformToFill;
+                    img_Diaporama2.Stretch = Stretch.UniformToFill;
+                    break;
+                case 3:
+                    img_Diaporama1.Stretch = Stretch.Fill;
+                    img_Diaporama2.Stretch = Stretch.Fill;
+                    break;
+            }
+            var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            _config.FanartDirectory = appdatadirectory + @"\Kodi\userdata\addon_data\script.artworkorganizer\TVShowFanart\";
+            Logger.Instance().Log("FanART DEBUG", "Fanart Directory equals " + _config.FanartDirectory, true);
+            
+            _yatse2Properties.DiaporamaImage1 = GetRandomImagePath(_config.FanartDirectory);
+            _diaporamaCurrentImage = 1;
+            var stbDiaporamaShow = (Storyboard)TryFindResource("stb_ShowDiaporama");
+            if (stbDiaporamaShow != null)
+            {
+                stbDiaporamaShow.Begin(this);
+                _isScreenSaver = true;
+            }
+        }
 
+        private void SwitchFanart()
+        {
+            if (_diaporamaCurrentImage == 1)
+            {
+                _diaporamaCurrentImage = 2;
+                _yatse2Properties.DiaporamaImage2 = GetRandomImagePath(_config.FanartDirectory);
+                var stbDiaporamaSwap = (Storyboard)TryFindResource("stb_Diaporama_12_1");
+                if (stbDiaporamaSwap != null)
+                    stbDiaporamaSwap.Begin(this);
+            }
+            else
+            {
+                _diaporamaCurrentImage = 1;
+                _yatse2Properties.DiaporamaImage1 = GetRandomImagePath(_config.FanartDirectory);
+                var stbDiaporamaSwap = (Storyboard)TryFindResource("stb_Diaporama_21_1");
+                if (stbDiaporamaSwap != null)
+                    stbDiaporamaSwap.Begin(this);
+            }
+        }
         private void InitDatabase()
         {            
             _database.SetDebug(_config.Debug);
@@ -401,7 +455,7 @@ namespace Yatse2
                 Logger.Instance().Log("OSInfo", "Version = " + OSInfo.VersionString, true);
                 Logger.Instance().Log("OSInfo", "Bits = " + OSInfo.RealBits, true);
                 Logger.Instance().Log("OSInfo", "Culture = " + Thread.CurrentThread.CurrentCulture.Name, true);
-                Logger.Instance().Log("Yatse 2 Debug :", "Checking for another instance");
+                Logger.Instance().Log("Yatse 2 Debug :", "Checking for another instance", true);
               
                 if (Yatse2Window.RunningInstance() != null)
                 {
@@ -690,6 +744,10 @@ namespace Yatse2
                         Logger.Instance().LogDump("NEW Yastse  Debug    : DBL click tasbar event/Normal Window, Minimise Window and set MinimiseAlways to true ", _config.MinimiseAlways);
                        // this.Activate();
                                  
+                    }
+                    if (GlennMinimise ==false)
+                    {
+                        StartFanart();
                     }
                 }
             }

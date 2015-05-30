@@ -30,6 +30,7 @@ namespace Yatse2.Classes
         public bool Debug { get; set; }
         public bool SecondScreen { get; set; }
         public bool MinimiseAlways { get; set; }
+        public bool FanartAlways { get; set; }
         public bool Topmost { get; set; }
         public bool KeepFocus { get; set; }
         public bool ForceResolution { get; set; }
@@ -66,6 +67,7 @@ namespace Yatse2.Classes
         public int DiaporamaTimer { get; set; }
         public Devmode Resolution { get; set; }
         public string ImageDirectory { get; set; }
+        public string FanartDirectory { get; set; }
         public string Language { get; set; }
         public string Skin { get; set; }
         public string WeatherLoc { get; set; }
@@ -86,6 +88,7 @@ namespace Yatse2.Classes
             IsConfigured = false;
             Debug = true;
             SecondScreen = true;
+            FanartAlways = false;
             //MinimiseAlways = false;
             Topmost = true;
             Hack480 = false;
@@ -164,6 +167,7 @@ namespace Yatse2.Classes
             Debug = config.Debug;
             SecondScreen = config.SecondScreen;
             MinimiseAlways = config.MinimiseAlways;
+            FanartAlways = config.FanartAlways;
             Topmost = config.Topmost;
             KeepFocus = config.KeepFocus;
             ForceResolution = config.ForceResolution;
@@ -182,6 +186,7 @@ namespace Yatse2.Classes
                 Skin = config.Skin;
             Resolution = config.Resolution;
             ImageDirectory = config.ImageDirectory;
+            FanartDirectory = config.FanartDirectory;
             DefaultRemote = config.DefaultRemote;
             WeatherLoc = config.WeatherLoc;
             WeatherUnit = config.WeatherUnit;

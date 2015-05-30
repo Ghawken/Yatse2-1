@@ -80,6 +80,7 @@ namespace Yatse2
             chk_Settings_SecondScreen.IsChecked = _config.SecondScreen;
             chk_Settings_Topmost.IsChecked = _config.Topmost;
             chk_Settings_KeepFocus.IsChecked = _config.KeepFocus;
+            //chk_Settings_FanartAlways.IsChecked = _config.FanartAlways;
             //chk_Settings_MinimiseAlways.IsChecked = _config.MinimiseAlways;
             chk_Settings_ForceResolution.IsChecked = _config.ForceResolution;
             chk_Settings_Diaporama.IsChecked = _config.Diaporama;
