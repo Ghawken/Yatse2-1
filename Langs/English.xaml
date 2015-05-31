@@ -129,7 +129,7 @@
     <S:String x:Key="Localized_109">New version available. Do you want to update ?</S:String>
     <S:String x:Key="Localized_110">Error downloading updater. Please try again later.</S:String>
     <S:String x:Key="Localized_111">Check for updates</S:String>
-    <S:String x:Key="Localized_112">Check on start</S:String>
+    <S:String x:Key="Localized_112">Fanart Always Enabled</S:String>
     <S:String x:Key="Localized_113">You version is up to date.</S:String>
     <S:String x:Key="Localized_114">Error during check. Please try again later.</S:String>
     <S:String x:Key="Localized_115">Translations updated</S:String>
@@ -150,7 +150,7 @@
     <S:String x:Key="Localized_130">Personalize</S:String>
     <S:String x:Key="Localized_131">Weather</S:String>
     <S:String x:Key="Localized_132">Other</S:String>
-    <S:String x:Key="Localized_133">Update</S:String>
+    <S:String x:Key="Localized_133">Fanart</S:String>
     <S:String x:Key="Localized_134">Optimize cached image to Yatse resolution</S:String>
     <S:String x:Key="Localized_135">Activate Trace mode (Will slow down Yatse)</S:String>
     <S:String x:Key="Localized_136">Ignore sort tokens (Movies/TvShows)</S:String>

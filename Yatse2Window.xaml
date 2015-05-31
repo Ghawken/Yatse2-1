@@ -940,11 +940,10 @@
         					</TabItem>
         					<TabItem Header="{DynamicResource Localized_133}" FontSize="24" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Margin="0" Style="{DynamicResource TabItemStyle1}">
         						<Grid>
-        							<Button Height="25.724" Click="btn_Settings_CheckUpdate_Click" Margin="183,241,183,0" VerticalAlignment="Top" Style="{DynamicResource Button}" FontSize="16" Panel.ZIndex="5"
-        								Content="{DynamicResource Localized_111}" />
-        							<CheckBox x:Name="chk_Settings_CheckUpdate" Style="{DynamicResource CheckBox}" FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        							   <CheckBox x:Name="chk_Settings_CheckUpdate" Style="{DynamicResource CheckBox}" FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
         								Content="{DynamicResource Localized_112}" Padding="5,0,0,0" VerticalAlignment="Top" Margin="8,8,285,0" d:LayoutOverrides="VerticalAlignment" />
-        						</Grid>
+
+                                    </Grid>
         					</TabItem>
         				</TabControl>
         				<Button Width="201" Height="25.724" VerticalAlignment="Top" Style="{DynamicResource Button}" FontSize="16" Panel.ZIndex="5"
