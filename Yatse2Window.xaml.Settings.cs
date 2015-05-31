@@ -100,7 +100,7 @@ namespace Yatse2
             chk_Settings_RefreshOnConnect.IsChecked = _config.RefreshOnConnect;
             //chk_Settings_AnimatedMusicCover.IsChecked = _config.AnimatedMusicCover;
             chk_Settings_DimmingOnlyVideo.IsChecked = _config.DimmingOnlyVideo;
-            chk_Settings_CheckUpdate.IsChecked = _config.FanartAlways;
+            chk_Settings_CheckUpdate.IsChecked = _config.CheckForUpdate;
 
             chk_Settings_HideCompilationArtists.IsChecked = _config.HideCompilationArtists;
             chk_Settings_GenreToArtists.IsChecked = _config.GenreToArtists;
@@ -236,7 +236,7 @@ namespace Yatse2
                 _config.HideCompilationArtists = (bool)chk_Settings_HideCompilationArtists.IsChecked;
                 _config.GenreToArtists = (bool)chk_Settings_GenreToArtists.IsChecked;
                 _config.MusicFanartRotation = (bool)chk_Settings_MusicFanartRotation.IsChecked;
-                _config.FanartAlways = (bool)chk_Settings_CheckUpdate.IsChecked;
+                _config.CheckForUpdate = (bool)chk_Settings_CheckUpdate.IsChecked;
                 _config.MouseMode = (bool)chk_Settings_MouseMode.IsChecked;
                 _config.CropCacheImage = (bool)chk_Settings_CropCacheImage.IsChecked;
                 _config.DebugTrace = (bool)chk_Settings_DebugTrace.IsChecked;
