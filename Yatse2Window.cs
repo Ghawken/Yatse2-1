@@ -207,13 +207,23 @@ namespace Yatse2
          
        //     Logger.Instance().Log("FanART DEBUG", "Fanart Directory equals " + _config.FanartDirectory, true);
             
-            _yatse2Properties.DiaporamaImage1 = GetRandomImagePath(_config.FanartDirectory);
+            _yatse2Properties.DiaporamaImage1 = GetRandomImagePathNew(_config.FanartDirectory);
+            if (_yatse2Properties.DiaporamaImage1 == null)
+            {
+                var stbDiaporamaHide = (Storyboard)TryFindResource("stb_HideDiaporama");
+                if (stbDiaporamaHide != null)
+                {
+                    stbDiaporamaHide.Begin(this);
+                }
+                return;
+            }
             _fanartCurrentImage = 1;
             var stbDiaporamaShow = (Storyboard)TryFindResource("stb_ShowDiaporama");
             if (stbDiaporamaShow != null)
             {
                 stbDiaporamaShow.Begin(this);
                 _isfanart = true;
+                _isScreenSaver = true;
             }
         }
 
@@ -225,7 +235,7 @@ namespace Yatse2
             if (_fanartCurrentImage == 1)
             {
                 _fanartCurrentImage = 2;
-                _yatse2Properties.DiaporamaImage2 = GetRandomImagePath(_config.FanartDirectory);
+                _yatse2Properties.DiaporamaImage2 = GetRandomImagePathNew(_config.FanartDirectory);
                 var stbDiaporamaSwap = (Storyboard)TryFindResource("stb_Diaporama_12_1");
                 if (stbDiaporamaSwap != null)
                     stbDiaporamaSwap.Begin(this);
@@ -233,7 +243,7 @@ namespace Yatse2
             else
             {
                 _fanartCurrentImage = 1;
-                _yatse2Properties.DiaporamaImage1 = GetRandomImagePath(_config.FanartDirectory);
+                _yatse2Properties.DiaporamaImage1 = GetRandomImagePathNew(_config.FanartDirectory);
                 var stbDiaporamaSwap = (Storyboard)TryFindResource("stb_Diaporama_21_1");
                 if (stbDiaporamaSwap != null)
                     stbDiaporamaSwap.Begin(this);
@@ -685,7 +695,7 @@ namespace Yatse2
 
         private void CheckFanArt()
         {
-            var nowPlaying = _remote != null ? _remote.Player.NowPlaying(false) : new ApiCurrently();
+            var nowPlaying2 = _remote != null ? _remote.Player.NowPlaying(false) : new ApiCurrently();
             var FanartAlways = _config.FanartAlways;
             _config.FanartDirectory = null;
           //  Logger.Instance().Debug("MENU ", "Menu equals " + nowPlaying.CurrentMenuID, true);
@@ -694,35 +704,35 @@ namespace Yatse2
             if (FanartAlways == true)
             {
                 var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                var FanartDirectory = appdatadirectory + @"\Kodi\userdata\addon_data\script.artworkorganizer\";
+                var FanartDirectory = appdatadirectory + @"\Kodi\userdata\"; //addon_data\script.artworkorganizer\";
 
-                if (nowPlaying.CurrentMenuID == "10025")
+                if (nowPlaying2.CurrentMenuID == "10025")
                 {
-                    _config.FanartDirectory = FanartDirectory + @"MovieFanart\";
+                    _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMovie; // +@"MovieFanart\";
                     return;
                 }
-                if (nowPlaying.CurrentMenuID == "10502")
+                if (nowPlaying2.CurrentMenuID == "10502")
                 {
-                    _config.FanartDirectory = FanartDirectory + @"ArtistFanart\";
+                    _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic; // +@"ArtistFanart\";
                     return;
                 }
-                if (nowPlaying.CurrentMenuID == "10501")
+                if (nowPlaying2.CurrentMenuID == "10501")
                 {
-                    _config.FanartDirectory = FanartDirectory + @"ArtistFanart\";
+                    _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic; // +@"ArtistFanart\";
                     return;
                 }
 
-                if (nowPlaying.CurrentMenuID == "10002")
+                if (nowPlaying2.CurrentMenuID == "10002")
                 {
-                    _config.FanartDirectory = FanartDirectory + @"OwnFanart\";
+                    _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMyImages; // +@"OwnFanart\";
                     return;
                 }
-                if (nowPlaying.CurrentMenuID == "12600")
+                if (nowPlaying2.CurrentMenuID == "12600")
                 {
-                    _config.FanartDirectory = appdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
+                    _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryWeather; // ppdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
                     return;
                 }
-                if (nowPlaying.CurrentMenuID == "10004")
+                if (nowPlaying2.CurrentMenuID == "10004")
                 {
                     _config.FanartDirectory = null;
                     FanartAlways = false;
@@ -734,7 +744,7 @@ namespace Yatse2
                     return;
                 }
 
-                _config.FanartDirectory = FanartDirectory + @"TVShowFanart\";
+                _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
 
 
 
@@ -769,7 +779,10 @@ namespace Yatse2
             var nowPlaying = _remote != null ? _remote.Player.NowPlaying(false) : new ApiCurrently();
             var GlennMinimise = (_config.MinimiseAlways);
 
+
+          //  Logger.Instance().Log("Yatse2", "About to CALL CheckFanARt");
             CheckFanArt();
+        //    Logger.Instance().Log("Yatse2", "After CALL CheckFanARt");
 
 
             if ((_timer > _config.DimmingTimer) && _config.Dimming && (nowPlaying.IsPlaying))
@@ -814,57 +827,63 @@ namespace Yatse2
                     }
                     if (GlennMinimise == false && _isfanart == false && _config.FanartAlways == true)
                     {
-                        if (nowPlaying.CurrentMenuID != "10004")
+                        if (nowPlaying.CurrentMenuID != "10004" && !nowPlaying.IsPaused && !nowPlaying.IsPlaying)
                         {
                             StartFanart();
                             //Fanart Routine shoudl go here
                         }
                     }
                 }
-
-                if (nowPlaying.IsPaused)
-                {
-                    if (grd_Dimming.Visibility == Visibility.Visible)
-                    {
-                        var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
-                        if (stbDimmingShow != null)
-                            stbDimmingShow.Begin(this);
-                        Logger.Instance().LogDump("Yatse2 NEW Debug:", "Playback Paused undim ");
-                    }
-                }
-
-                if (nowPlaying.IsMuted)
-                {
-                    if (grd_Dimming.Visibility == Visibility.Visible)
-                    {
-                        var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
-                        if (stbDimmingShow != null)
-                            stbDimmingShow.Begin(this);
-                        Logger.Instance().LogDump("Yatse2 NEW Debug:", "Playback Muted undim ");
-                    }
-                }
-
-                if (_timer > _timerScreenSaver && !nowPlaying.IsPaused)
-                {
-                    StartScreensaver();
-                }
-
-
-                if (_isScreenSaver && _diaporamaCurrentImage != 0 && (_timer % _config.DiaporamaTimer) == 0)
-                {
-                    SwitchDiaporama();
-                }
-
-                if (_isfanart && _fanartCurrentImage != 0 && (_timer % _config.DiaporamaTimer) == 0)
-                {
-                    SwitchFanart();
-                }
-
-                PositionScreen();
-
-                CheckFirstLaunch();
             }
+                
+            if (nowPlaying.IsPaused)
+
+            {
+                    Logger.Instance().Log("Yatse2", "nowPlaying.Paused is called");    
+                     if (grd_Dimming.Visibility == Visibility.Visible)
+                    {
+                        var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
+                        if (stbDimmingShow != null)
+                            stbDimmingShow.Begin(this);
+                        Logger.Instance().LogDump("Yatse2 NEW Debug:", "Playback Paused undim ",true);
+                    
+                   }
+
+           }
+
+          if (nowPlaying.IsMuted)
+          {
+                    if (grd_Dimming.Visibility == Visibility.Visible)
+                    {
+                        var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
+                        if (stbDimmingShow != null)
+                            stbDimmingShow.Begin(this);
+                        Logger.Instance().LogDump("Yatse2 NEW Debug:", "Playback Muted undim ",true);
+                    }
+          }
+
+          if (_timer > _timerScreenSaver && !nowPlaying.IsPaused)
+          {
+                    StartScreensaver();
+          }
+
+
+          if (_isScreenSaver && _diaporamaCurrentImage != 0 && (_timer % _config.DiaporamaTimer) == 0)
+          {
+                    SwitchDiaporama();
+          }
+
+          if (_isfanart && _fanartCurrentImage != 0 && (_timer % _config.DiaporamaTimer) == 0)
+          {
+                    SwitchFanart();
+          }
+
+          PositionScreen();
+
+          CheckFirstLaunch();
+          
         }
+        
 
         private void StartScreensaver()
         {

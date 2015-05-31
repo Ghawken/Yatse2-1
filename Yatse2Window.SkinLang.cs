@@ -156,7 +156,38 @@ namespace Yatse2
                 throw;
             }
         }
+        private string GetRandomImagePathNew(string path)
+        { //TODO : Add parameter to change default image
+            if (string.IsNullOrEmpty(path))
+                return null;
+            try
+            {
+                var extensions = new[] { ".PNG", ".JPG", ".GIF", ".JPEG", ".BMP" };
+                var opt = _config.DiaporamaSubdirs ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+                var di = new DirectoryInfo(path);
+                return (di.GetFiles("*.*", opt)
+                    .Where(f => extensions.Contains(f.Extension.ToUpperInvariant()))
+                    .OrderBy(f => Guid.NewGuid())
+                    .FirstOrDefault()).FullName;
+            }
 
+            catch (Exception ex)
+            {
+                if (ex is ArgumentNullException ||
+                    ex is DirectoryNotFoundException ||
+                    ex is ArgumentException ||
+                    ex is SecurityException ||
+                    ex is InvalidOperationException ||
+                    ex is NullReferenceException)
+                {
+                    Logger.Instance().Log("Yatse2", "No Fanart Images - cancel show in " + path);
+                    
+                    return null;
+                                                            
+                }
+                throw;
+            }
+        }
         private void RefreshDictionaries()
         {
             Logger.Instance().Log("Yatse2", "Load dictionaries - Skin : " + _yatse2Properties.Skin + ", Lang : " + _yatse2Properties.Language);

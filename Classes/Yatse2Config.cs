@@ -68,7 +68,12 @@ namespace Yatse2.Classes
         public Devmode Resolution { get; set; }
         public string ImageDirectory { get; set; }
         public string FanartDirectory { get; set; }
+        public string FanartDirectoryTV { get; set; }
+        public string FanartDirectoryMovie { get; set; }
+        public string FanartDirectoryWeather { get; set; }
+        public string FanartDirectoryMusic { get; set; }
         public string Language { get; set; }
+        public string FanartDirectoryMyImages { get; set; }
         public string Skin { get; set; }
         public string WeatherLoc { get; set; }
         public string WeatherUnit { get; set; }
@@ -187,6 +192,11 @@ namespace Yatse2.Classes
             Resolution = config.Resolution;
             ImageDirectory = config.ImageDirectory;
             FanartDirectory = config.FanartDirectory;
+            FanartDirectoryTV = config.FanartDirectoryTV;
+            FanartDirectoryMovie = config.FanartDirectoryMovie;
+            FanartDirectoryWeather = config.FanartDirectoryWeather;
+            FanartDirectoryMyImages = config.FanartDirectoryMyImages;
+            FanartDirectoryMusic = config.FanartDirectoryMusic;
             DefaultRemote = config.DefaultRemote;
             WeatherLoc = config.WeatherLoc;
             WeatherUnit = config.WeatherUnit;
