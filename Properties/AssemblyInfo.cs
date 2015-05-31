@@ -6,11 +6,11 @@ using System.Windows;
 // Les informations générales relatives à un assembly dépendent de 
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("Yatse 2.03")]
+[assembly: AssemblyTitle("Yatse 2.10")]
 [assembly: AssemblyDescription("Yet Another Touch Screen Experiment")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Tolriq")]
-[assembly: AssemblyProduct("Yatse 2.03")]
+[assembly: AssemblyCompany("Tolriq/GH")]
+[assembly: AssemblyProduct("Yatse 2.10")]
 [assembly: AssemblyCopyright("Copyright © Tolriq 2010/11/12/13")]
 [assembly: AssemblyTrademark("Yatse 2")]
 [assembly: AssemblyCulture("")]
