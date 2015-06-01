@@ -207,10 +207,13 @@ namespace Yatse2
          
        //     Logger.Instance().Log("FanART DEBUG", "Fanart Directory equals " + _config.FanartDirectory, true);
             
+
+
+
             _yatse2Properties.DiaporamaImage1 = GetRandomImagePathNew(_config.FanartDirectory);
             if (_yatse2Properties.DiaporamaImage1 == null)
             {
-                _isfanart = false;
+                //isfanart = false;
                 var stbDiaporamaHide = (Storyboard)TryFindResource("stb_HideDiaporama");
                 if (stbDiaporamaHide != null)
                 {
@@ -218,6 +221,8 @@ namespace Yatse2
                 }
                 return;
             }
+
+
 
             _fanartCurrentImage = 1;
             var stbDiaporamaShow = (Storyboard)TryFindResource("stb_ShowDiaporama");
@@ -232,6 +237,15 @@ namespace Yatse2
         private void SwitchFanart()
         {
                      
+            if (grd_Diaporama.Visibility == Visibility.Hidden)
+            {
+                 var stbDiaporamaShow = (Storyboard)TryFindResource("stb_ShowDiaporama");
+                 if (stbDiaporamaShow != null)
+                        {
+                            stbDiaporamaShow.Begin(this);
+                        }
+            }
+            
             if (_fanartCurrentImage == 1)
             {
                 _fanartCurrentImage = 2;
@@ -734,8 +748,8 @@ namespace Yatse2
                 }
                 if (nowPlaying2.CurrentMenuID == "10004")
                 {
-                    _config.FanartDirectory = null;
-                    FanartAlways = false;
+                    //_config.FanartDirectory = null;
+                    
                     var stbDiaporamaHide = (Storyboard)TryFindResource("stb_HideDiaporama");
                     if (stbDiaporamaHide != null)
                     {
@@ -780,9 +794,9 @@ namespace Yatse2
             var GlennMinimise = (_config.MinimiseAlways);
 
 
-          //  Logger.Instance().Log("Yatse2", "About to CALL CheckFanARt");
+            //Logger.Instance().Log("Yatse2", "About to CALL CheckFanARt");
             CheckFanArt();
-        //    Logger.Instance().Log("Yatse2", "After CALL CheckFanARt");
+            //Logger.Instance().Log("Yatse2", "After CALL CheckFanARt");
 
 
             if ((_timer > _config.DimmingTimer) && _config.Dimming && (nowPlaying.IsPlaying))
