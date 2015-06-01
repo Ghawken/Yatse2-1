@@ -207,9 +207,13 @@ namespace Yatse2
          
        //     Logger.Instance().Log("FanART DEBUG", "Fanart Directory equals " + _config.FanartDirectory, true);
             
+
+
+
             _yatse2Properties.DiaporamaImage1 = GetRandomImagePathNew(_config.FanartDirectory);
             if (_yatse2Properties.DiaporamaImage1 == null)
             {
+                //isfanart = false;
                 var stbDiaporamaHide = (Storyboard)TryFindResource("stb_HideDiaporama");
                 if (stbDiaporamaHide != null)
                 {
@@ -217,6 +221,9 @@ namespace Yatse2
                 }
                 return;
             }
+
+
+
             _fanartCurrentImage = 1;
             var stbDiaporamaShow = (Storyboard)TryFindResource("stb_ShowDiaporama");
             if (stbDiaporamaShow != null)
@@ -229,8 +236,15 @@ namespace Yatse2
 
         private void SwitchFanart()
         {
-            
-            
+                     
+            if (grd_Diaporama.Visibility == Visibility.Hidden)
+            {
+                 var stbDiaporamaShow = (Storyboard)TryFindResource("stb_ShowDiaporama");
+                 if (stbDiaporamaShow != null)
+                        {
+                            stbDiaporamaShow.Begin(this);
+                        }
+            }
             
             if (_fanartCurrentImage == 1)
             {
@@ -527,10 +541,7 @@ namespace Yatse2
                 RefreshHeader();
 
                 System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
-
-                
-                string sPath2Icon = Path.Combine(Environment.CurrentDirectory, "Yatse2.ico");
-                ni.Icon = new System.Drawing.Icon(sPath2Icon);
+                ni.Icon = new System.Drawing.Icon("Yatse2.ico");
                 ni.Visible = true;
                 ni.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
                 Logger.Instance().Log("NEW Yastse Debug:","Create new Taskbar Icon, make Visible, create Double Click event ");
@@ -737,8 +748,8 @@ namespace Yatse2
                 }
                 if (nowPlaying2.CurrentMenuID == "10004")
                 {
-                    _config.FanartDirectory = null;
-                    FanartAlways = false;
+                    //_config.FanartDirectory = null;
+                    
                     var stbDiaporamaHide = (Storyboard)TryFindResource("stb_HideDiaporama");
                     if (stbDiaporamaHide != null)
                     {
@@ -762,11 +773,11 @@ namespace Yatse2
             Window glennwindow = Window.GetWindow(this);
 
 
-            //if (_config.CheckForUpdate && !_updatecheck)
-           // {
-            //    _updatecheck = true;
-               // CheckUpdate(false);
-            //}
+            if (_config.CheckForUpdate && !_updatecheck)
+            {
+                _updatecheck = true;
+                CheckUpdate(false);
+            }
 
             if (!_showHomePage)
             {
@@ -783,9 +794,9 @@ namespace Yatse2
             var GlennMinimise = (_config.MinimiseAlways);
 
 
-          //  Logger.Instance().Log("Yatse2", "About to CALL CheckFanARt");
+            //Logger.Instance().Log("Yatse2", "About to CALL CheckFanARt");
             CheckFanArt();
-        //    Logger.Instance().Log("Yatse2", "After CALL CheckFanARt");
+            //Logger.Instance().Log("Yatse2", "After CALL CheckFanARt");
 
 
             if ((_timer > _config.DimmingTimer) && _config.Dimming && (nowPlaying.IsPlaying))
@@ -828,13 +839,13 @@ namespace Yatse2
                         // this.Activate();
 
                     }
-                    if (GlennMinimise == false && _isfanart == false && _config.FanartAlways == true)
+                    if (!_isfanart && GlennMinimise == false && _config.FanartAlways == true && nowPlaying.CurrentMenuID != "10004" && !nowPlaying.IsPaused && !nowPlaying.IsPlaying)
                     {
-                        if (nowPlaying.CurrentMenuID != "10004" && !nowPlaying.IsPaused && !nowPlaying.IsPlaying && _timer > _timerScreenSaver)
-                        {
-                            StartFanart();
-                            //Fanart Routine shoudl go here
-                        }
+                         Logger.Instance().LogDump("Yatse2 FANART    : StartFanART Run & _isfanart result", _isfanart);
+                         StartFanart();
+                         Logger.Instance().LogDump("Yatse2 FANART    : StartFanART Finsihed & _isfanart result", _isfanart);
+                         //Fanart Routine shoudl go here
+                        
                     }
                 }
             }
@@ -879,6 +890,7 @@ namespace Yatse2
           if (_isfanart && _fanartCurrentImage != 0 && (_timer % _config.DiaporamaTimer) == 0)
           {
                     SwitchFanart();
+                    Logger.Instance().LogDump("Yatse2 FANART    : SWITCH FanART Run & _isfanart result", _isfanart);
           }
 
           PositionScreen();

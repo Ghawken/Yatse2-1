@@ -372,7 +372,7 @@ namespace Yatse2
                 _yatse2Properties.Currently.IsNothing = true;
                 if ((_config.Currently || _config.CurrentlyMovie) && ((grd_Dimming.Visibility != Visibility.Visible) && (grd_Diaporama.Visibility != Visibility.Visible)))
                    _isScreenSaver = false;
-                _isfanart = false;
+                   //_isfanart = false;
             }
         }
 
