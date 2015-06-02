@@ -57,6 +57,7 @@ namespace Yatse2.Classes
         public bool MusicFanartRotation { get; set; }
         public long ScreensaverTimer { get; set; }
         public long DimmingTimer { get; set; }
+        public long FanartTimer { get; set; }
         public bool GoHomeOnEndPlayback { get; set; }
         public bool CheckForUpdate { get; set; }
         public bool DiaporamaSubdirs { get; set; }
@@ -132,6 +133,7 @@ namespace Yatse2.Classes
             MinDMBitsPerPel = 32;
             MinDMPelsWidth = 800;
             DiaporamaTimer = 10;
+            FanartTimer = 5;
             DimmingTimer = 15;
             DisableScreenPositioning = false;
             MouseMode = false;
@@ -223,6 +225,7 @@ namespace Yatse2.Classes
             DiaporamaTimer = config.DiaporamaTimer;
             MouseMode = config.MouseMode;
             DimmingTimer = config.DimmingTimer;
+            FanartTimer = config.FanartTimer;
             CropCacheImage = config.CropCacheImage;
             IgnoreSortTokens = config.IgnoreSortTokens;
             SortTokens = config.SortTokens;
