@@ -541,7 +541,10 @@ namespace Yatse2
                 RefreshHeader();
 
                 System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
-                ni.Icon = new System.Drawing.Icon("Yatse2.ico");
+                string sPath2Icon = Path.Combine(Environment.CurrentDirectory, "Yatse2.ico");
+                ni.Icon = new System.Drawing.Icon(sPath2Icon);
+                
+
                 ni.Visible = true;
                 ni.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
                 Logger.Instance().Log("NEW Yastse Debug:","Create new Taskbar Icon, make Visible, create Double Click event ");
