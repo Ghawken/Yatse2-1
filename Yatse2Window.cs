@@ -721,12 +721,10 @@ namespace Yatse2
             {
                 var stbDiaporamaShow = (Storyboard)TryFindResource("stb_ShowDiaporama");
                 if (stbDiaporamaShow != null)
-                   {
+                {
                     stbDiaporamaShow.Begin(this);
-                   }
+                }
             }
-
-
 
             if (FanartAlways == true)
             {
@@ -737,42 +735,38 @@ namespace Yatse2
                 if (nowPlaying2.CurrentMenuID == "10025")
                 {
                     _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMovie; // +@"MovieFanart\";
-                }                  
+                }
                 if (nowPlaying2.CurrentMenuID == "10502")
                 {
                     _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic; // +@"ArtistFanart\";
-                    
+
                 }
                 if (nowPlaying2.CurrentMenuID == "10501")
                 {
                     _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic; // +@"ArtistFanart\";
-                    
+
                 }
 
                 if (nowPlaying2.CurrentMenuID == "10002")
                 {
                     _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMyImages; // +@"OwnFanart\";
-                    
+
                 }
                 if (nowPlaying2.CurrentMenuID == "12600")
                 {
                     _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryWeather; // ppdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
-                    
+
                 }
                 if (nowPlaying2.CurrentMenuID == "10004" && grd_Diaporama.Visibility != Visibility.Hidden)
-                   
                 {
-                                      
+
                     var stbDiaporamaHide = (Storyboard)TryFindResource("stb_HideDiaporama");
                     if (stbDiaporamaHide != null)
                     {
                         stbDiaporamaHide.Begin(this);
                     }
-                    
+
                 }
-
- 
-
 
             }
         }
@@ -781,15 +775,16 @@ namespace Yatse2
         {
             _timerHeader++;
             _timer++;
+            Logger.Instance().LogDump("Yatse2 FANART    : Timer Result", _timer);
             UpdateRemote();
             Window glennwindow = Window.GetWindow(this);
 
 
-            if (_config.CheckForUpdate && !_updatecheck)
-            {
-                _updatecheck = true;
-                CheckUpdate(false);
-            }
+            //if (_config.CheckForUpdate && !_updatecheck)
+            //{
+             //   _updatecheck = true;
+              //  CheckUpdate(false);
+            //}
 
             if (!_showHomePage)
             {
@@ -823,6 +818,7 @@ namespace Yatse2
                             stbDimmingShow.Begin(this);
                     }
                 }
+                Logger.Instance().LogDump("Yatse2 FANART    : ResetTimer Run from 2", _timer);
                 ResetTimer();
             }
 
@@ -851,12 +847,12 @@ namespace Yatse2
                         // this.Activate();
 
                     }
-                    if (!_isfanart && GlennMinimise == false && _config.FanartAlways == true && nowPlaying.CurrentMenuID != "10004" && !nowPlaying.IsPaused && !nowPlaying.IsPlaying && (_timer % _config.FanartTimer) == 0) 
+                    if (!_isfanart && GlennMinimise == false && _config.FanartAlways == true && nowPlaying.CurrentMenuID != "10004" && !nowPlaying.IsPaused && !nowPlaying.IsPlaying && ( _timer % _config.FanartTimer) == 0 ) 
                     {
                          Logger.Instance().LogDump("Yatse2 FANART    : StartFanART Run & Fanart Timer result", _timer);
                          CheckFanArt();
                          StartFanart();
-                         //Logger.Instance().LogDump("Yatse2 FANART    : StartFanART Finsihed & _timer result", _timer);
+                         Logger.Instance().LogDump("Yatse2 FANART    : StartFanART Finsihed & _timer result", _timer);
                          //Fanart Routine shoudl go here
                         
                     }
@@ -889,7 +885,7 @@ namespace Yatse2
                     }
           }
 
-          if (_timer > _timerScreenSaver && !nowPlaying.IsPaused)
+          if (_timer > _timerScreenSaver && !nowPlaying.IsPaused && _config.FanartAlways == false )
           {
                     StartScreensaver();
           }
@@ -904,7 +900,7 @@ namespace Yatse2
           {
                     CheckFanArt();
                     SwitchFanart();
-                    Logger.Instance().LogDump("Yatse2 FANART    : SWITCH FanART Run & FanartTimer result", _config.FanartTimer);
+                    Logger.Instance().LogDump("Yatse2 FANART    : SWITCH FanART Run & FanartTimer result", _timer );
           }
 
           PositionScreen();
@@ -932,6 +928,7 @@ namespace Yatse2
                     StartDiaporama();
                 }
             }
+            
             ResetTimer();
         }
 
@@ -1136,6 +1133,7 @@ namespace Yatse2
 
         private bool ShowGrid(Grid newGrid , bool history)
         {
+            Logger.Instance().LogDump("Yatse2 FANART    : ResetTimer Run from ShowGrid1", _timer);
             ResetTimer();
             if ((_currentGrid.Name == newGrid.Name) || (trp_Transition.IsTransitioning)) return false;
             Logger.Instance().Log("Yatse2", "Show Grid : " + newGrid.Name);
@@ -1173,6 +1171,7 @@ namespace Yatse2
                 if (_remote != null)
                     _remote.GiveFocus();
             }
+            Logger.Instance().LogDump("Yatse2 FANART    : ResetTimer Run", _timer);
             _timer = 0;
         }
 
