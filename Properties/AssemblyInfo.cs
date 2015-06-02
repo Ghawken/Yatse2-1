@@ -6,7 +6,7 @@ using System.Windows;
 // Les informations générales relatives à un assembly dépendent de 
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("Yatse 2.03")]
+[assembly: AssemblyTitle("Yatse2.11")]
 [assembly: AssemblyDescription("Yet Another Touch Screen Experiment")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Tolriq")]
@@ -53,4 +53,4 @@ using System.Windows;
 //[assembly: AssemblyVersion("2.0.0.101")]
 //[assembly: AssemblyFileVersion("2.0.0.101")]
 [assembly: NeutralResourcesLanguageAttribute("en")]
-[assembly: AssemblyFileVersionAttribute("4.0.0")]
+[assembly: AssemblyFileVersionAttribute("2.1.1")]

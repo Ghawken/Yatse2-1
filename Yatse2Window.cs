@@ -236,15 +236,14 @@ namespace Yatse2
 
         private void SwitchFanart()
         {
-                     
-            if (grd_Diaporama.Visibility == Visibility.Hidden)
+           /*( if (grd_Diaporama.Visibility == Visibility.Hidden )
             {
-                 var stbDiaporamaShow = (Storyboard)TryFindResource("stb_ShowDiaporama");
-                 if (stbDiaporamaShow != null)
-                        {
-                            stbDiaporamaShow.Begin(this);
-                        }
-            }
+                var stbDiaporamaShow = (Storyboard)TryFindResource("stb_ShowDiaporama");
+                if (stbDiaporamaShow != null)
+                {
+                    stbDiaporamaShow.Begin(this);
+                }
+            }*/
             
             if (_fanartCurrentImage == 1)
             {
@@ -712,54 +711,64 @@ namespace Yatse2
             var nowPlaying2 = _remote != null ? _remote.Player.NowPlaying(false) : new ApiCurrently();
             var FanartAlways = _config.FanartAlways;
             _config.FanartDirectory = null;
-          //  Logger.Instance().Debug("MENU ", "Menu equals " + nowPlaying.CurrentMenuID, true);
-          //  Logger.Instance().Debug("MENU ", "Menu equals " + nowPlaying.CurrentMenuLabel, true);
+
+            Logger.Instance().LogDump("Yatse2 FANART    : Check FanART Run & Current Menu prior", nowPlaying2.CurrentMenuLabel);
+
+            if (grd_Diaporama.Visibility == Visibility.Hidden && nowPlaying2.CurrentMenuID != "10004")
+            {
+                var stbDiaporamaShow = (Storyboard)TryFindResource("stb_ShowDiaporama");
+                if (stbDiaporamaShow != null)
+                   {
+                    stbDiaporamaShow.Begin(this);
+                   }
+            }
+
+
 
             if (FanartAlways == true)
             {
                 var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 var FanartDirectory = appdatadirectory + @"\Kodi\userdata\"; //addon_data\script.artworkorganizer\";
+                _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
 
                 if (nowPlaying2.CurrentMenuID == "10025")
                 {
                     _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMovie; // +@"MovieFanart\";
-                    return;
-                }
+                }                  
                 if (nowPlaying2.CurrentMenuID == "10502")
                 {
                     _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic; // +@"ArtistFanart\";
-                    return;
+                    
                 }
                 if (nowPlaying2.CurrentMenuID == "10501")
                 {
                     _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic; // +@"ArtistFanart\";
-                    return;
+                    
                 }
 
                 if (nowPlaying2.CurrentMenuID == "10002")
                 {
                     _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMyImages; // +@"OwnFanart\";
-                    return;
+                    
                 }
                 if (nowPlaying2.CurrentMenuID == "12600")
                 {
                     _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryWeather; // ppdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
-                    return;
-                }
-                if (nowPlaying2.CurrentMenuID == "10004")
-                {
-                    //_config.FanartDirectory = null;
                     
+                }
+                if (nowPlaying2.CurrentMenuID == "10004" && grd_Diaporama.Visibility != Visibility.Hidden)
+                   
+                {
+                                      
                     var stbDiaporamaHide = (Storyboard)TryFindResource("stb_HideDiaporama");
                     if (stbDiaporamaHide != null)
                     {
                         stbDiaporamaHide.Begin(this);
                     }
-                    return;
+                    
                 }
 
-                _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
-
+ 
 
 
             }
@@ -795,7 +804,7 @@ namespace Yatse2
 
 
             //Logger.Instance().Log("Yatse2", "About to CALL CheckFanARt");
-            CheckFanArt();
+           // CheckFanArt();
             //Logger.Instance().Log("Yatse2", "After CALL CheckFanARt");
 
 
@@ -839,11 +848,12 @@ namespace Yatse2
                         // this.Activate();
 
                     }
-                    if (!_isfanart && GlennMinimise == false && _config.FanartAlways == true && nowPlaying.CurrentMenuID != "10004" && !nowPlaying.IsPaused && !nowPlaying.IsPlaying)
+                    if (!_isfanart && GlennMinimise == false && _config.FanartAlways == true && nowPlaying.CurrentMenuID != "10004" && !nowPlaying.IsPaused && !nowPlaying.IsPlaying && (_timer % _config.FanartTimer) == 0) 
                     {
-                         Logger.Instance().LogDump("Yatse2 FANART    : StartFanART Run & _isfanart result", _isfanart);
+                         Logger.Instance().LogDump("Yatse2 FANART    : StartFanART Run & Fanart Timer result", _timer);
+                         CheckFanArt();
                          StartFanart();
-                         Logger.Instance().LogDump("Yatse2 FANART    : StartFanART Finsihed & _isfanart result", _isfanart);
+                         //Logger.Instance().LogDump("Yatse2 FANART    : StartFanART Finsihed & _timer result", _timer);
                          //Fanart Routine shoudl go here
                         
                     }
@@ -887,10 +897,11 @@ namespace Yatse2
                     SwitchDiaporama();
           }
 
-          if (_isfanart && _fanartCurrentImage != 0 && (_timer % _config.DiaporamaTimer) == 0)
+          if (_isfanart && _fanartCurrentImage != 0 && (_timer % _config.FanartTimer) == 0)
           {
+                    CheckFanArt();
                     SwitchFanart();
-                    Logger.Instance().LogDump("Yatse2 FANART    : SWITCH FanART Run & _isfanart result", _isfanart);
+                    Logger.Instance().LogDump("Yatse2 FANART    : SWITCH FanART Run & FanartTimer result", _config.FanartTimer);
           }
 
           PositionScreen();
