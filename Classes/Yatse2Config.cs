@@ -69,12 +69,15 @@ namespace Yatse2.Classes
         public Devmode Resolution { get; set; }
         public string ImageDirectory { get; set; }
         public string FanartDirectory { get; set; }
+        public string FanartCurrentPath { get; set; }
         public string FanartDirectoryTV { get; set; }
         public string FanartDirectoryMovie { get; set; }
         public string FanartDirectoryWeather { get; set; }
         public string FanartDirectoryMusic { get; set; }
         public string Language { get; set; }
         public string FanartDirectoryMyImages { get; set; }
+        public int IPPort { get; set; }
+        public string IPAddress { get; set; }
         public string Skin { get; set; }
         public string WeatherLoc { get; set; }
         public string WeatherUnit { get; set; }
@@ -193,12 +196,15 @@ namespace Yatse2.Classes
                 Skin = config.Skin;
             Resolution = config.Resolution;
             ImageDirectory = config.ImageDirectory;
+            FanartCurrentPath = config.FanartCurrentPath;
             FanartDirectory = config.FanartDirectory;
             FanartDirectoryTV = config.FanartDirectoryTV;
             FanartDirectoryMovie = config.FanartDirectoryMovie;
             FanartDirectoryWeather = config.FanartDirectoryWeather;
             FanartDirectoryMyImages = config.FanartDirectoryMyImages;
             FanartDirectoryMusic = config.FanartDirectoryMusic;
+            IPAddress = config.IPAddress;
+            IPPort = config.IPPort;
             DefaultRemote = config.DefaultRemote;
             WeatherLoc = config.WeatherLoc;
             WeatherUnit = config.WeatherUnit;

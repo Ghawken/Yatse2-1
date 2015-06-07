@@ -39,6 +39,8 @@ using Yatse2.Classes;
 using Yatse2.Libs;
 using Setup;
 using System.Windows.Automation.Peers;
+using System.Net.Sockets;
+
 
 namespace Yatse2
 {
@@ -54,6 +56,8 @@ namespace Yatse2
         private bool _startLetterDrag;
         private Point _mouseDownPoint;
         private DateTime _mouseDownTime;
+
+        public delegate void UpdateTextCallback(string message);
 
         private readonly Hashtable _yatse2Pages = new Hashtable
                             {
@@ -266,7 +270,7 @@ namespace Yatse2
         {            
             _database.SetDebug(_config.Debug);
             _database.Open(null,_config.IgnoreSortTokens,_config.SortTokens);
-
+            
             var check = _database.CheckDBVersion();
             if (check == 1) return;
             if (check == 0)
@@ -407,6 +411,50 @@ namespace Yatse2
             Directory.CreateDirectory(Helper.CachePath + @"Music\Fanarts");
         }
 
+        private void StartServer()
+        { 
+            Logger.Instance().Log("SERVER", "IN STARTSERVER - Starting Server Thread... ", true);
+            //Logger.Instance().LogDump("SERVER THREAD    : Attempting to start new Thread ", true);
+            Thread t = new Thread(NewThread) { IsBackground = true };
+            t.Start();
+            
+            Logger.Instance().Log("SERVER", "IN STARTSERVER after thread started... ", true);
+        }
+
+        private void NewThread()
+        {
+
+            IPAddress localAdd = IPAddress.Parse(_config.IPAddress);
+            TcpListener listener = new TcpListener(IPAddress.Any, _config.IPPort);
+            Logger.Instance().Log("SERVER", "Within New Thread running Listener... ", true);
+            listener.Start();
+            
+            while (true)
+            {
+                TcpClient client = listener.AcceptTcpClient();
+                NetworkStream nwStream = client.GetStream();
+                byte[] buffer = new byte[client.ReceiveBufferSize];
+                int bytesRead = nwStream.Read(buffer, 0, client.ReceiveBufferSize);
+                string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+               // Logger.Instance().LogDump("Yatse2 FANART    : Timer Result", _timer);
+                
+                Logger.Instance().Log("SERVER", "Data Received  " + dataReceived, true);
+                _config.FanartCurrentPath = dataReceived;
+                //  onfig.FanartCurrentPath = dataReceived;
+                // Console.WriteLine("The resulting messages on the server" + dataReceived);
+                //  nwStream.Write(buffer, 0, bytesRead);
+               // Console.WriteLine("\n");
+                client.Close();
+            }
+            //   listener.Stop();
+        }
+
+        private void UpdateText(string message)
+        {
+            Logger.Instance().Log("SERVER",message, true);
+        }
+
+
         private void InitProperties()
         {
 
@@ -471,6 +519,11 @@ namespace Yatse2
             try
             {
                 PreInit();
+                // Attempting to start server socket on seperate thread
+                
+                Logger.Instance().Log("SERVER", "Starting Server Thread... ",true);
+                
+
 
                 var assem = Assembly.GetEntryAssembly();
                 var assemName = assem.GetName();
@@ -538,6 +591,8 @@ namespace Yatse2
                 RefreshRemotes();
 
                 RefreshHeader();
+
+                StartServer();
 
                 System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
                 string sPath2Icon = Path.Combine(Environment.CurrentDirectory, "Yatse2.ico");
@@ -708,7 +763,10 @@ namespace Yatse2
             }
             repo.CleanTemporary();
         }
-
+        static bool IsFileURI(String path)
+        {
+            return (String.Compare(path, 0, "smb:", 0, 3, StringComparison.OrdinalIgnoreCase) == 0);
+        }
         private void CheckFanArt()
         {
             var nowPlaying2 = _remote != null ? _remote.Player.NowPlaying(false) : new ApiCurrently();
@@ -726,37 +784,55 @@ namespace Yatse2
                 }
             }
 
+
+
             if (FanartAlways == true)
             {
+                //Logger.Instance().Log("SERVER", "Fanart Directory from Socket Server  " + _config.FanartCurrentPath, true);
+
+                string CurrentPath = _config.FanartCurrentPath;
                 var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 var FanartDirectory = appdatadirectory + @"\Kodi\userdata\"; //addon_data\script.artworkorganizer\";
                 _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
-
-                if (nowPlaying2.CurrentMenuID == "10025")
+               
+                if (IsFileURI(CurrentPath) == true)
                 {
-                    _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMovie; // +@"MovieFanart\";
-                }
-                if (nowPlaying2.CurrentMenuID == "10502")
-                {
-                    _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic; // +@"ArtistFanart\";
-
-                }
-                if (nowPlaying2.CurrentMenuID == "10501")
-                {
-                    _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic; // +@"ArtistFanart\";
-
+                    char[] MyChar = { 's', 'm', 'b', ':' };
+                    string CurrentPath2 = CurrentPath.TrimStart(MyChar);
+                    CurrentPath2 = Path.GetFullPath(CurrentPath2).Replace(@"/", @"\");
+                    //Logger.Instance().Log("SERVER", "Socket returned path - smb equals  " + @CurrentPath2, true);
+                    _config.FanartDirectory = @CurrentPath2 + @"extrafanart\";
+                    //Logger.Instance().Log("SERVER", "Socket true and Fanart Directory equals  " + _config.FanartDirectory, true);
                 }
 
-                if (nowPlaying2.CurrentMenuID == "10002")
+                if (IsFileURI(CurrentPath) != true)
                 {
-                    _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMyImages; // +@"OwnFanart\";
+                    if (nowPlaying2.CurrentMenuID == "10025")
+                    {
+                        _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMovie; // +@"MovieFanart\";
+                    }
+                    if (nowPlaying2.CurrentMenuID == "10502")
+                    {
+                        _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic; // +@"ArtistFanart\";
+
+                    }
+                    if (nowPlaying2.CurrentMenuID == "10501")
+                    {
+                        _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic; // +@"ArtistFanart\";
+
+                    }
+                    if (nowPlaying2.CurrentMenuID == "10002")
+                    {
+                        _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMyImages; // +@"OwnFanart\";
+                    }
+                    if (nowPlaying2.CurrentMenuID == "12600")
+                    {
+                        _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryWeather; // ppdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
+                    }
 
                 }
-                if (nowPlaying2.CurrentMenuID == "12600")
-                {
-                    _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryWeather; // ppdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
-
-                }
+               
+                
                 if (nowPlaying2.CurrentMenuID == "10004" && grd_Diaporama.Visibility != Visibility.Hidden)
                 {
 
@@ -896,7 +972,7 @@ namespace Yatse2
                     SwitchDiaporama();
           }
 
-          if (_isfanart && _fanartCurrentImage != 0 && (_timer % _config.FanartTimer) == 0)
+          if (glennwindow.WindowState == WindowState.Normal && _isfanart && _fanartCurrentImage != 0 && (_timer % _config.FanartTimer) == 0)
           {
                     CheckFanArt();
                     SwitchFanart();
