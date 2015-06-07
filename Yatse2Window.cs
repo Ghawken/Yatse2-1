@@ -767,6 +767,16 @@ namespace Yatse2
         {
             return (String.Compare(path, 0, "smb:", 0, 3, StringComparison.OrdinalIgnoreCase) == 0);
         }
+
+       /* Have to sort out this later - presently will not deal with none smb:\\ paths
+        * private static string MakeValidFileName(string name)
+        {
+            string illegal = "\"M\"\\a/ry/ h**ad:>> a\\/:*?\"| li*tt|le|| la\"mb.?";
+            string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+            Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+            illegal = r.Replace(illegal, "");
+        }*/
+
         private void CheckFanArt()
         {
             var nowPlaying2 = _remote != null ? _remote.Player.NowPlaying(false) : new ApiCurrently();
@@ -794,7 +804,10 @@ namespace Yatse2
                 var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 var FanartDirectory = appdatadirectory + @"\Kodi\userdata\"; //addon_data\script.artworkorganizer\";
                 _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
-               
+
+                //Logger.Instance().Log("SERVER", "Fanart Directory from Socket =  " + _config.FanartCurrentPath, true);
+                //Logger.Instance().Log("SERVER", "Fanart Directory MAKEVALIDPATH equals " + MakeValidFileName(_config.FanartCurrentPath), true);
+
                 if (IsFileURI(CurrentPath) == true)
                 {
                     char[] MyChar = { 's', 'm', 'b', ':' };
