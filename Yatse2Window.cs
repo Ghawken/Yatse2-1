@@ -768,7 +768,7 @@ namespace Yatse2
             return (String.Compare(path, 0, "smb:", 0, 3, StringComparison.OrdinalIgnoreCase) == 0);
         }
 
-       /* Have to sort out this later - presently will not deal with none smb:\\ paths
+       /* Have to sort out this later - presently will not deal with none smb:\\ paths.
         * private static string MakeValidFileName(string name)
         {
             string illegal = "\"M\"\\a/ry/ h**ad:>> a\\/:*?\"| li*tt|le|| la\"mb.?";
@@ -805,6 +805,7 @@ namespace Yatse2
                 var FanartDirectory = appdatadirectory + @"\Kodi\userdata\"; //addon_data\script.artworkorganizer\";
                 _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
 
+
                 //Logger.Instance().Log("SERVER", "Fanart Directory from Socket =  " + _config.FanartCurrentPath, true);
                 //Logger.Instance().Log("SERVER", "Fanart Directory MAKEVALIDPATH equals " + MakeValidFileName(_config.FanartCurrentPath), true);
 
@@ -818,7 +819,9 @@ namespace Yatse2
                     //Logger.Instance().Log("SERVER", "Socket true and Fanart Directory equals  " + _config.FanartDirectory, true);
                 }
 
-                if (IsFileURI(CurrentPath) != true)
+                _yatse2Properties.DiaporamaImage1 = GetRandomImagePathNew(_config.FanartDirectory);
+
+                if (IsFileURI(CurrentPath) != true || _yatse2Properties.DiaporamaImage1 == null)
                 {
                     if (nowPlaying2.CurrentMenuID == "10025")
                     {
