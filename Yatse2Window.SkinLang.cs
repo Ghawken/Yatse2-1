@@ -177,8 +177,9 @@ namespace Yatse2
                     ex is DirectoryNotFoundException ||
                     ex is ArgumentException ||
                     ex is SecurityException ||
+                    ex is UnauthorizedAccessException ||
                     ex is InvalidOperationException ||
-                    ex is NullReferenceException)
+                    ex is NullReferenceException)  
                 {
                     Logger.Instance().Log("Yatse2", "No Fanart Images - cancel show in " + path);
                     

@@ -806,18 +806,33 @@ namespace Yatse2
                 _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
 
 
-                //Logger.Instance().Log("SERVER", "Fanart Directory from Socket =  " + _config.FanartCurrentPath, true);
-                //Logger.Instance().Log("SERVER", "Fanart Directory MAKEVALIDPATH equals " + MakeValidFileName(_config.FanartCurrentPath), true);
+               Logger.Instance().Log("SERVER", "Fanart Directory from Socket =  " + _config.FanartCurrentPath, true);
+               //Logger.Instance().Log("SERVER", "Fanart Directory MAKEVALIDPATH equals " + MakeValidFileName(_config.FanartCurrentPath), true);
 
-                if (IsFileURI(CurrentPath) == true)
+                // Current path from Socket is true path and video menu selected.
+                // Need to sort out season 1 etc. naming as path from Kodi varies.
+                // also if images selected want it to be slideshow of that current directory
+
+                if (IsFileURI(CurrentPath) == true && nowPlaying2.CurrentMenuID == "10025")
                 {
                     char[] MyChar = { 's', 'm', 'b', ':' };
                     string CurrentPath2 = CurrentPath.TrimStart(MyChar);
                     CurrentPath2 = Path.GetFullPath(CurrentPath2).Replace(@"/", @"\");
-                    //Logger.Instance().Log("SERVER", "Socket returned path - smb equals  " + @CurrentPath2, true);
+                    Logger.Instance().Log("SERVER", "Video Directory Socket returned path - smb equals  " + @CurrentPath2, true);
                     _config.FanartDirectory = @CurrentPath2 + @"extrafanart\";
-                    //Logger.Instance().Log("SERVER", "Socket true and Fanart Directory equals  " + _config.FanartDirectory, true);
+                    Logger.Instance().Log("SERVER", "Video Directory Socket true and Fanart Directory equals  " + _config.FanartDirectory, true);
                 }
+
+                if (IsFileURI(CurrentPath) == true && nowPlaying2.CurrentMenuID == "10002")
+                {
+                    char[] MyChar = { 's', 'm', 'b', ':' };
+                    string CurrentPath2 = CurrentPath.TrimStart(MyChar);
+                    CurrentPath2 = Path.GetFullPath(CurrentPath2).Replace(@"/", @"\");
+                    Logger.Instance().Log("SERVER", "Image Directory Selected - smb equals  " + @CurrentPath2, true);
+                    _config.FanartDirectory = @CurrentPath2;
+                    Logger.Instance().Log("SERVER", "Image Directory Selected & fanart equals  " + _config.FanartDirectory, true);
+                }
+
 
                 _yatse2Properties.DiaporamaImage1 = GetRandomImagePathNew(_config.FanartDirectory);
 
@@ -837,10 +852,10 @@ namespace Yatse2
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic; // +@"ArtistFanart\";
 
                     }
-                    if (nowPlaying2.CurrentMenuID == "10002")
-                    {
-                        _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMyImages; // +@"OwnFanart\";
-                    }
+                  //  if (nowPlaying2.CurrentMenuID == "10002")
+                  //  {
+                  //      _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMyImages; // +@"OwnFanart\";
+                  //  }
                     if (nowPlaying2.CurrentMenuID == "12600")
                     {
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryWeather; // ppdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
