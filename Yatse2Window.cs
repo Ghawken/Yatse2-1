@@ -859,47 +859,47 @@ namespace Yatse2
                     
                 }
 
+                // if no directory or no files afte above then move to default menu based settings                
 
-                _yatse2Properties.DiaporamaImage1 = GetRandomImagePathNew(_config.FanartDirectory);
-
-                if (IsFileURI(CurrentPath) != true || _yatse2Properties.DiaporamaImage1 == null)
-                {
-                    if (nowPlaying2.CurrentMenuID == "10025")
+                if (nowPlaying2.CurrentMenuID == "10025" && IsFileURI(CurrentPath) != true)
                     {
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMovie; // +@"MovieFanart\";
                     }
-                    if (nowPlaying2.CurrentMenuID == "10502")
+                    
+                if (nowPlaying2.CurrentMenuID == "10501")
                     {
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic; // +@"ArtistFanart\";
 
                     }
-                    if (nowPlaying2.CurrentMenuID == "10501")
-                    {
-                        _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic; // +@"ArtistFanart\";
-
-                    }
+                   
                   //  if (nowPlaying2.CurrentMenuID == "10002")
                   //  {
                   //      _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMyImages; // +@"OwnFanart\";
                   //  }
-                    if (nowPlaying2.CurrentMenuID == "12600")
+                if (nowPlaying2.CurrentMenuID == "12600")
                     {
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryWeather; // ppdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
                     }
-                    if (nowPlaying2.CurrentMenuID == "10000")  //Equals the home menu
+                if (nowPlaying2.CurrentMenuID == "10000")  //Equals the home menu
                     {
                        //
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV; // ppdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
                     }
+                 if (nowPlaying2.CurrentMenuID == "10502")
+                    {
+                        _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic; // +@"ArtistFanart\";
 
+                    }
 
                     //If directory empty and fanart show being displayed - change to default - which is Movies
-                    if (GetRandomImagePathNew(_config.FanartDirectory) == null && grd_Diaporama.Visibility != Visibility.Hidden )
+                if (GetRandomImagePathNew(_config.FanartDirectory) == null && grd_Diaporama.Visibility != Visibility.Hidden )
                     {
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMovie;
                     }
-                }
-               
+                
+
+
+
                 
                 if (nowPlaying2.CurrentMenuID == "10004" && grd_Diaporama.Visibility != Visibility.Hidden)
                 {
