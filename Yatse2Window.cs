@@ -821,17 +821,17 @@ namespace Yatse2
                         char[] MyChar = { 's', 'm', 'b', ':' };
                         string CurrentPath2 = CurrentPath.TrimStart(MyChar);
                         CurrentPath2 = Path.GetFullPath(CurrentPath2).Replace(@"/", @"\");
-                        Logger.Instance().Log("SERVER", "Video Directory Socket returned path - CurrentPath2 equals  " + @CurrentPath2, true);
+                        Logger.Instance().LogDump("SERVER", "Video Directory Socket returned path - CurrentPath2 equals  " + @CurrentPath2, true);
                         // Annoying and difficult - below splits the path into the first three directorys only ie. \\fileserver2012\tvss\Title of Show\  only
                         // Overcomes issues with Season 1/Season 2 etc directories and path to extrafanart
                         // Need to set number -->  will add config setting.
                         string CurrentPath3 = BreakDirectory(CurrentPath2, numberofdirectoriesdeep);
                         _config.FanartDirectory = @CurrentPath3 + @"extrafanart\";
-                        Logger.Instance().Log("SERVER", "BreakDirectory Performed and equals  " + CurrentPath3, true);
+                        Logger.Instance().LogDump("SERVER", "BreakDirectory Performed and equals  " + CurrentPath3, true);
                     }
                     catch (Exception ex)
                     {
-                        Logger.Instance().Log("SERVER", "Fanart Video Menu 10025 - Exception occured   " + ex, true);
+                        Logger.Instance().LogDump("SERVER", "Fanart Video Menu 10025 - Exception occured   " + ex, true);
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
                     } 
 
@@ -843,15 +843,15 @@ namespace Yatse2
                     {
                         char[] MyChar = { 's', 'm', 'b', ':' };
                         string CurrentPath2 = CurrentPath.TrimStart(MyChar);
-                        Logger.Instance().Log("SERVER", "CurrentPath 2 equals:" + @CurrentPath2, true);
+                        Logger.Instance().LogDump("SERVER", "CurrentPath 2 equals:" + @CurrentPath2, true);
                         CurrentPath2 = Path.GetFullPath(@CurrentPath2).Replace(@"/", @"\");
-                        Logger.Instance().Log("SERVER", "Image Directory Selected - smb equals  " + CurrentPath2, true);
+                        Logger.Instance().LogDump("SERVER", "Image Directory Selected - smb equals  " + CurrentPath2, true);
                         _config.FanartDirectory = @CurrentPath2;
-                        Logger.Instance().Log("SERVER", "Image Directory Selected & fanart equals  " + _config.FanartDirectory, true);
+                        Logger.Instance().LogDump("SERVER", "Image Directory Selected & fanart equals  " + _config.FanartDirectory, true);
                     }
                     catch (Exception ex)
                     {
-                        Logger.Instance().Log("SERVER", "Fanart Image - Exception occured   " + ex, true);
+                        Logger.Instance().LogDump("SERVER", "Fanart Image - Exception occured   " + ex, true);
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
                         
                     }
@@ -1035,7 +1035,7 @@ namespace Yatse2
             if (nowPlaying.IsPaused)
 
             {
-                    Logger.Instance().Log("Yatse2", "nowPlaying.Paused is called");    
+                    Logger.Instance().LogDump("Yatse2", "nowPlaying.Paused is called");    
                      if (grd_Dimming.Visibility == Visibility.Visible)
                     {
                         var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
