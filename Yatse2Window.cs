@@ -821,6 +821,9 @@ namespace Yatse2
                         string CurrentPath2 = CurrentPath.TrimStart(MyChar);
                         CurrentPath2 = Path.GetFullPath(CurrentPath2).Replace(@"/", @"\");
                         Logger.Instance().Log("SERVER", "Video Directory Socket returned path - CurrentPath2 equals  " + @CurrentPath2, true);
+                        // Annoying and difficult - below splits the path into the first three directorys only ie. \\fileserver2012\tvss\Title of Show\  only
+                        // Overcomes issues with Season 1/Season 2 etc directories and path to extrafanart
+                        // Need to set number -->  will add config setting.
                         string CurrentPath3 = BreakDirectory(CurrentPath2, 3);
                         _config.FanartDirectory = @CurrentPath3 + @"extrafanart\";
                         Logger.Instance().Log("SERVER", "BreakDirectory Performed and equals  " + CurrentPath3, true);
@@ -884,10 +887,12 @@ namespace Yatse2
                     }
                     if (nowPlaying2.CurrentMenuID == "10000")  //Equals the home menu
                     {
-                       //Image Slideshow - don't change directory set o
+                       /
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV; // ppdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
                     }
 
+
+                    //If directory empty and fanart show being displayed - change to default - which is Movies
                     if (GetRandomImagePathNew(_config.FanartDirectory) == null && grd_Diaporama.Visibility != Visibility.Hidden )
                     {
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMovie;
