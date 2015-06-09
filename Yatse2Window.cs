@@ -882,10 +882,15 @@ namespace Yatse2
                     {
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryWeather; // ppdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
                     }
-                    if (nowPlaying2.CurrentMenuID == "12007")
+                    if (nowPlaying2.CurrentMenuID == "10000")  //Equals the home menu
                     {
-                       // Image Slideshow - don't change directory set o
-                        //_config.FanartDirectory = FanartDirectory + _config.FanartDirectoryWeather; // ppdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
+                       //Image Slideshow - don't change directory set o
+                        _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV; // ppdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
+                    }
+
+                    if (GetRandomImagePathNew(_config.FanartDirectory) == null && grd_Diaporama.Visibility != Visibility.Hidden )
+                    {
+                        _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMovie;
                     }
                 }
                
