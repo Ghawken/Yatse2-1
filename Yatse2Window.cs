@@ -438,7 +438,7 @@ namespace Yatse2
                 string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
                // Logger.Instance().LogDump("Yatse2 FANART    : Timer Result", _timer);
                 
-                Logger.Instance().Log("SERVER", "Data Received  " + dataReceived, true);
+                Logger.Instance().LogDump("SERVER", "Data Received  " + dataReceived, true);
                 _config.FanartCurrentPath = dataReceived;
                 //  onfig.FanartCurrentPath = dataReceived;
                 // Console.WriteLine("The resulting messages on the server" + dataReceived);
@@ -807,7 +807,7 @@ namespace Yatse2
                 //_config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
 
 
-               Logger.Instance().Log("SERVER", "Fanart Directory from Socket =  " + _config.FanartCurrentPath, true);
+               Logger.Instance().LogDump("SERVER", "Fanart Directory from Socket =  " + _config.FanartCurrentPath, true);
                //Logger.Instance().Log("SERVER", "Fanart Directory MAKEVALIDPATH equals " + MakeValidFileName(_config.FanartCurrentPath), true);
 
                 // Current path from Socket is true path and video menu selected.
