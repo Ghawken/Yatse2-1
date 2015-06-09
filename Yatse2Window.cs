@@ -782,6 +782,7 @@ namespace Yatse2
             var nowPlaying2 = _remote != null ? _remote.Player.NowPlaying(false) : new ApiCurrently();
             var FanartAlways = _config.FanartAlways;
             //_config.FanartDirectory = null;
+            int numberofdirectoriesdeep = _config.FanartNumberDirectories;
 
             Logger.Instance().LogDump("Yatse2 FANART    : Check FanART Run & Current Menu prior", nowPlaying2.CurrentMenuLabel, true);
 
@@ -824,7 +825,7 @@ namespace Yatse2
                         // Annoying and difficult - below splits the path into the first three directorys only ie. \\fileserver2012\tvss\Title of Show\  only
                         // Overcomes issues with Season 1/Season 2 etc directories and path to extrafanart
                         // Need to set number -->  will add config setting.
-                        string CurrentPath3 = BreakDirectory(CurrentPath2, 3);
+                        string CurrentPath3 = BreakDirectory(CurrentPath2, numberofdirectoriesdeep);
                         _config.FanartDirectory = @CurrentPath3 + @"extrafanart\";
                         Logger.Instance().Log("SERVER", "BreakDirectory Performed and equals  " + CurrentPath3, true);
                     }
@@ -887,7 +888,7 @@ namespace Yatse2
                     }
                     if (nowPlaying2.CurrentMenuID == "10000")  //Equals the home menu
                     {
-                       /
+                       //
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV; // ppdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
                     }
 

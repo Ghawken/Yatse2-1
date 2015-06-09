@@ -69,6 +69,7 @@ namespace Yatse2.Classes
         public Devmode Resolution { get; set; }
         public string ImageDirectory { get; set; }
         public string FanartDirectory { get; set; }
+        public int FanartNumberDirectories { get; set; }
         public string FanartCurrentPath { get; set; }
         public string FanartDirectoryTV { get; set; }
         public string FanartDirectoryMovie { get; set; }
@@ -148,7 +149,15 @@ namespace Yatse2.Classes
             LongKeyPress = 500;
             DiaporamaMode = 1;
             DisableResolutionDetection = false;
-
+            FanartDirectory = "";
+            FanartDirectoryTV = @"addon_data\script.artworkorganizer\TVShowFanart\";
+            FanartDirectoryWeather = @"addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
+            FanartDirectoryMovie = @"addon_data\script.artworkorganizer\MovieFanart\";
+            FanartDirectoryMusic = @"addon_data\script.artworkorganizer\ArtistFanart\";
+            FanartDirectoryMyImages = @"addon_data\script.artworkorganizer\OwnFanart\";
+            IPAddress = "127.0.0.1";
+            IPPort = 5000;
+            FanartNumberDirectories = 3;
         }
 
         public bool Load(string configFile)
@@ -203,6 +212,7 @@ namespace Yatse2.Classes
             FanartDirectoryWeather = config.FanartDirectoryWeather;
             FanartDirectoryMyImages = config.FanartDirectoryMyImages;
             FanartDirectoryMusic = config.FanartDirectoryMusic;
+            FanartNumberDirectories = config.FanartNumberDirectories;
             IPAddress = config.IPAddress;
             IPPort = config.IPPort;
             DefaultRemote = config.DefaultRemote;
