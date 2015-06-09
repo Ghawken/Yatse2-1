@@ -781,9 +781,9 @@ namespace Yatse2
         {
             var nowPlaying2 = _remote != null ? _remote.Player.NowPlaying(false) : new ApiCurrently();
             var FanartAlways = _config.FanartAlways;
-            _config.FanartDirectory = null;
+            //_config.FanartDirectory = null;
 
-            Logger.Instance().LogDump("Yatse2 FANART    : Check FanART Run & Current Menu prior", nowPlaying2.CurrentMenuLabel);
+            Logger.Instance().LogDump("Yatse2 FANART    : Check FanART Run & Current Menu prior", nowPlaying2.CurrentMenuLabel, true);
 
             if (grd_Diaporama.Visibility == Visibility.Hidden && nowPlaying2.CurrentMenuID != "10004")
             {
@@ -803,7 +803,7 @@ namespace Yatse2
                 string CurrentPath = _config.FanartCurrentPath;
                 var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 var FanartDirectory = appdatadirectory + @"\Kodi\userdata\"; //addon_data\script.artworkorganizer\";
-                _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
+                //_config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
 
 
                Logger.Instance().Log("SERVER", "Fanart Directory from Socket =  " + _config.FanartCurrentPath, true);
@@ -815,22 +815,44 @@ namespace Yatse2
 
                 if (IsFileURI(CurrentPath) == true && nowPlaying2.CurrentMenuID == "10025")
                 {
-                    char[] MyChar = { 's', 'm', 'b', ':' };
-                    string CurrentPath2 = CurrentPath.TrimStart(MyChar);
-                    CurrentPath2 = Path.GetFullPath(CurrentPath2).Replace(@"/", @"\");
-                    Logger.Instance().Log("SERVER", "Video Directory Socket returned path - smb equals  " + @CurrentPath2, true);
-                    _config.FanartDirectory = @CurrentPath2 + @"extrafanart\";
-                    Logger.Instance().Log("SERVER", "Video Directory Socket true and Fanart Directory equals  " + _config.FanartDirectory, true);
+                    try
+                    {
+                        char[] MyChar = { 's', 'm', 'b', ':' };
+                        string CurrentPath2 = CurrentPath.TrimStart(MyChar);
+                        CurrentPath2 = Path.GetFullPath(CurrentPath2).Replace(@"/", @"\");
+                        Logger.Instance().Log("SERVER", "Video Directory Socket returned path - CurrentPath2 equals  " + @CurrentPath2, true);
+                        string CurrentPath3 = BreakDirectory(CurrentPath2, 3);
+                        _config.FanartDirectory = @CurrentPath3 + @"extrafanart\";
+                        Logger.Instance().Log("SERVER", "BreakDirectory Performed and equals  " + CurrentPath3, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Instance().Log("SERVER", "Fanart Video Menu 10025 - Exception occured   " + ex, true);
+                        _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
+                    } 
+
                 }
 
                 if (IsFileURI(CurrentPath) == true && nowPlaying2.CurrentMenuID == "10002")
                 {
-                    char[] MyChar = { 's', 'm', 'b', ':' };
-                    string CurrentPath2 = CurrentPath.TrimStart(MyChar);
-                    CurrentPath2 = Path.GetFullPath(CurrentPath2).Replace(@"/", @"\");
-                    Logger.Instance().Log("SERVER", "Image Directory Selected - smb equals  " + @CurrentPath2, true);
-                    _config.FanartDirectory = @CurrentPath2;
-                    Logger.Instance().Log("SERVER", "Image Directory Selected & fanart equals  " + _config.FanartDirectory, true);
+                    try
+                    {
+                        char[] MyChar = { 's', 'm', 'b', ':' };
+                        string CurrentPath2 = CurrentPath.TrimStart(MyChar);
+                        Logger.Instance().Log("SERVER", "CurrentPath 2 equals:" + @CurrentPath2, true);
+                        CurrentPath2 = Path.GetFullPath(@CurrentPath2).Replace(@"/", @"\");
+                        Logger.Instance().Log("SERVER", "Image Directory Selected - smb equals  " + CurrentPath2, true);
+                        _config.FanartDirectory = @CurrentPath2;
+                        Logger.Instance().Log("SERVER", "Image Directory Selected & fanart equals  " + _config.FanartDirectory, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Instance().Log("SERVER", "Fanart Image - Exception occured   " + ex, true);
+                        _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
+                        
+                    }
+                    
+                    
                 }
 
 
@@ -860,7 +882,11 @@ namespace Yatse2
                     {
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryWeather; // ppdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
                     }
-
+                    if (nowPlaying2.CurrentMenuID == "12007")
+                    {
+                       // Image Slideshow - don't change directory set o
+                        //_config.FanartDirectory = FanartDirectory + _config.FanartDirectoryWeather; // ppdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
+                    }
                 }
                
                 
@@ -877,7 +903,36 @@ namespace Yatse2
 
             }
         }
+        static string BreakDirectory(string path3, int dirnumber)
+        {
 
+            string[] directories = path3.Split(Path.DirectorySeparatorChar);
+            string previousEntry = string.Empty;
+            var count = -2;
+            if (null != directories)
+            {
+                foreach (string direc in directories)
+                {
+                    count++;
+                    string newEntry = previousEntry + Path.DirectorySeparatorChar + direc;
+                    if (!string.IsNullOrEmpty(newEntry))
+                    {
+                        if (!newEntry.Equals(Convert.ToString(Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase))
+                        {
+
+                            previousEntry = newEntry;
+                        }
+                    }
+
+                    if (count == dirnumber)
+                    {
+   
+                        return @"\" + newEntry + @"\";
+                    }
+                }
+            }
+            return null;
+        }
         private void Timer_Tick(object sender, EventArgs e)
         {
             _timerHeader++;
