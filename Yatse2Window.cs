@@ -1036,13 +1036,13 @@ namespace Yatse2
 
             {
                     Logger.Instance().LogDump("Yatse2", "nowPlaying.Paused is called");    
-                     if (grd_Dimming.Visibility == Visibility.Visible)
+                    if (grd_Dimming.Visibility == Visibility.Visible)
                     {
                         var stbDimmingShow = (Storyboard)TryFindResource("stb_HideDimming");
                         if (stbDimmingShow != null)
                             stbDimmingShow.Begin(this);
                         Logger.Instance().LogDump("Yatse2 NEW Debug:", "Playback Paused undim ",true);
-                    
+                   ResetTimer();
                    }
 
            }
@@ -1056,6 +1056,7 @@ namespace Yatse2
                             stbDimmingShow.Begin(this);
                         Logger.Instance().LogDump("Yatse2 NEW Debug:", "Playback Muted undim ",true);
                     }
+                    ResetTimer();
           }
 
           if (_timer > _timerScreenSaver && !nowPlaying.IsPaused && _config.FanartAlways == false )
