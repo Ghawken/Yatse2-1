@@ -44,6 +44,9 @@ using System.Net.Sockets;
 
 namespace Yatse2
 {
+
+
+
     public partial class Yatse2Window : IDisposable
     {
         private const string Repository = @"http://yatse.leetzone.org/repository";
@@ -594,6 +597,7 @@ namespace Yatse2
 
                 StartServer();
 
+                
                 System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
                 string sPath2Icon = Path.Combine(Environment.CurrentDirectory, "Yatse2.ico");
                 ni.Icon = new System.Drawing.Icon(sPath2Icon);
@@ -1212,23 +1216,26 @@ namespace Yatse2
             if (this.WindowState == WindowState.Minimized)
             {
                 this.WindowState = WindowState.Normal;
-                this.ShowInTaskbar = true;
+                //this.ShowInTaskbar = true;
                 _config.MinimiseAlways = false;
                 _config.FanartAlways = true;
-                this.Activate();
+                //this.Activate();
+
+                
+
                 Logger.Instance().LogDump("NEW Yastse Debug    : DBL click tasbar event/Min Window, Open Window and set MinimiseAlways to false ", _config.MinimiseAlways);
                 return;
             }
             if (this.WindowState == WindowState.Normal)
             {
                 this.WindowState = WindowState.Minimized;
-                this.ShowInTaskbar = false;
+                //this.ShowInTaskbar = false;
                 _config.MinimiseAlways = true;
                 _config.FanartAlways = false;
                 Logger.Instance().LogDump("NEW Yastse Debug    : DBL click tasbar event/Normal Window, Minimise Window and set MinimiseAlways to true ", _config.MinimiseAlways);
             }
             // Activate the form. 
-            this.Activate();
+            //this.Activate();
 
 
 
