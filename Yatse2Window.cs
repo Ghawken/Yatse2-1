@@ -46,7 +46,10 @@ using System.Net.Sockets;
 namespace Yatse2
 {
 
-
+    public static class KodiSourceData
+    {
+        public static string[] KodiSources = new string[20];
+    }
 
     public partial class Yatse2Window : IDisposable
     {
@@ -111,6 +114,7 @@ namespace Yatse2
         private Yatse2Remote _remoteInfoEdit;
         private Grid _currentGrid;
         private long _timer;
+        private Array KodiDirectories;
         private long _timerHeader;
         private bool _isScreenSaver;
         private bool _isfanart;
@@ -129,8 +133,7 @@ namespace Yatse2
         private bool _filteredArtists;
         private bool _filteredAlbums;
         private bool _setPov;
-
-
+        public string[] KodiSources;
         public string GetLocalizedString(int id)
         {
             var ret = (string)TryFindResource("Localized_" + id);
@@ -650,9 +653,15 @@ namespace Yatse2
             XmlDocument kodisource = new XmlDocument();
             kodisource.Load(@appdatadirectory+@"\Kodi\userdata\sources.xml");
             XmlNodeList KodiDirectories = kodisource.GetElementsByTagName("path");
+            //string[] KodiSources = new string[20];
+
+            int i = 0;
             foreach (XmlNode node in KodiDirectories)
             {
+                i++;
                 Logger.Instance().Log("Load Kodi Source", "Xml Data ==  " + node.InnerText, true);
+                KodiSourceData.KodiSources[i]   = node.InnerText;
+                Logger.Instance().Log("Load Kodi Source", "KodiSources Array " + i + "  " + KodiSourceData.KodiSources[i], true);
             }
 
         }
@@ -845,6 +854,7 @@ namespace Yatse2
                         string CurrentPath2 = CurrentPath.TrimStart(MyChar);
                         CurrentPath2 = Path.GetFullPath(CurrentPath2).Replace(@"/", @"\");
                         Logger.Instance().LogDump("SERVER", "Video Directory Socket returned path - CurrentPath2 equals  " + @CurrentPath2, true);
+                        Logger.Instance().LogDump("SERVER", "XML Data  " + KodiSourceData.KodiSources[1], true);
                         // Annoying and difficult - below splits the path into the first three directorys only ie. \\fileserver2012\tvss\Title of Show\  only
                         // Overcomes issues with Season 1/Season 2 etc directories and path to extrafanart
                         // Need to set number -->  will add config setting.
@@ -937,6 +947,9 @@ namespace Yatse2
 
             }
         }
+        
+        
+        
         static string BreakDirectory(string path3, int dirnumber)
         {
 

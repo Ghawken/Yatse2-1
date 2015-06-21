@@ -92,6 +92,8 @@ namespace Yatse2.Classes
         public int LongKeyPress { get; set; }
         public int DiaporamaMode { get; set; }
         public bool DisableResolutionDetection { get; set; }
+       //For Source.xml file
+        public string[] KodiSources { get; set; }
 
         public Yatse2Config()
         {
