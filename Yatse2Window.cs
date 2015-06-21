@@ -23,6 +23,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Xml;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -552,7 +553,10 @@ namespace Yatse2
                     //Your application logic for duplicate 
                     //instances would go here.
                 }
-    
+                //load local kodi source xml file to get directories base
+                //trial
+                LoadKodiSource();
+
                 _config.Load(_configFile);
                 _timerScreenSaver = _config.ScreensaverTimer;
                 Logger.Instance().Debug = _config.Debug;
@@ -637,6 +641,21 @@ namespace Yatse2
            
         }
 
+        //load Kodi Source xml and populate values to be checked against
+        //working
+        private void LoadKodiSource()
+        {
+            Logger.Instance().Log("Kodi Source", "Loading Kodi Source xml file", true);
+            var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            XmlDocument kodisource = new XmlDocument();
+            kodisource.Load(@appdatadirectory+@"\Kodi\userdata\sources.xml");
+            XmlNodeList KodiDirectories = kodisource.GetElementsByTagName("path");
+            foreach (XmlNode node in KodiDirectories)
+            {
+                Logger.Instance().Log("Load Kodi Source", "Xml Data ==  " + node.InnerText, true);
+            }
+
+        }
 
         private void PositionScreen()
         {
