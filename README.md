@@ -1,6 +1,92 @@
 # Yatse2-1
 YATSE 2 - A touch screen remote controller for XBMC (.NET 3.5)
 
+Hi (slightly more than one!)
+
+Pictures talk more than words!
+
+
+[img]http://i375.photobucket.com/albums/oo191/glennnz/Fanart%20Socket%20Example_zpsqldve04d.png[/img]
+
+[img]http://i375.photobucket.com/albums/oo191/glennnz/Fanart%20Socket%20Example%20TV_zpsquviyfe3.png[/img]
+
+[img]http://i375.photobucket.com/albums/oo191/glennnz/Fanart%20Socket%20Example%20Movie%202_zpsppbzdxjb.png[/img]
+
+
+
+Binaries to install Windows 32 - see here:
+https://github.com/Ghawken/Yatse2-1/releases/tag/Socket
+
+Okay.
+Will update with more instructions when can.
+
+But have made addition  to Yatse2 with addition of socket to kodi data connection, allowing Yatse2 to be informed about browsing menu choice/tv show etc - so fanart can be selected as required. 
+
+Uses extrafanart directories from within media folder structures.
+NB:  needs artwork.downloader to download fanart for TV and movies to extrafanart directory within media folder.  
+
+eg.
+TVShowRoot \ TV Show \ extrafanart \ (fanart here - via artwork.downloader addon)
+MovieRoot \ Movie Name \ extrafanart \
+
+Needs - service.Yatse2 to be added to %appdata%\Kodi\addons directory.  Copy the directory and paste the directory.
+Then go to Kodi, add-ons, Service and configure/enable Yatse2 service.
+Defaults to localIP and port 5000 (these can be changed if needed but hopefully not needed too)
+This service connects to Yatse2 in the background. Fairly robust connection/very low overhead.
+
+New Yatse2 Socket version of application. (Has a few other fixes/checks/logging)
+NB: Still needs normal remote to Kodi connection configured as prior, but also the socket settings.  
+Defaults as above:
+But can be change in the Yatse2.xml file below:
+  [code]<IPPort>5000</IPPort>
+  <IPAddress>127.0.0.1</IPAddress>
+[/code]
+
+Also New Setting for depth of directories before extrafanart folder: (somewhat hard to explain but used to deal with some TV shows having season1/2 like deeper directories) yatse2socket only uses the (set) number of directories truncating the rest.
+[code]
+  <FanartNumberDirectories>3</FanartNumberDirectories>
+[/code]
+
+eg.
+If Source root is \\server\tvshows
+Path to extrafanart - \\server\tvshows\showname\extrafanart
+Set this to 3
+(If browse to \\server\tvshows\showname\season 1 - only the first 3 directories will be used with extrafanart then added - giving \\server\tvshows\showname\extrafanart )
+
+Eg. And movies
+\\server\Movies\The Matrix\extrafanart
+
+Presently same depth setting is used for both Movie and TV show structure (suits me - but probably can change)
+Used to enable ongoing fanart even when browsing deeper - e.g Season1/Season2 separate directories.
+
+Also when browsing image folders - Yatse2 will start slideshow of selected image folder that you are browsing if correct permissions set for access.
+
+Issues:
+Works well with smb:// file directory structure in kodi database - which is my setup. 
+If only local files or other network connection may not correctly function.
+If have this issue:
+Let me know: " Fanart Directory from Socket" log message.
+eg msg like this in log if debug and trace enabled
+'Fanart Directory from Socket = smb://192.168.1.110/tvss/Silicon Valley/'
+
+Also Debug and Trace enabled - turn off once working!
+
+Glenn
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Hi
 
 Welcome to the newer Yatse2
