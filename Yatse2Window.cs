@@ -658,10 +658,11 @@ namespace Yatse2
             int i = 0;
             foreach (XmlNode node in KodiDirectories)
             {
-                i++;
+                
                 Logger.Instance().Log("Load Kodi Source", "Xml Data ==  " + node.InnerText, true);
                 KodiSourceData.KodiSources[i]   = node.InnerText;
                 Logger.Instance().Log("Load Kodi Source", "KodiSources Array " + i + "  " + KodiSourceData.KodiSources[i], true);
+                i++;
             }
 
         }
@@ -854,7 +855,28 @@ namespace Yatse2
                         string CurrentPath2 = CurrentPath.TrimStart(MyChar);
                         CurrentPath2 = Path.GetFullPath(CurrentPath2).Replace(@"/", @"\");
                         Logger.Instance().LogDump("SERVER", "Video Directory Socket returned path - CurrentPath2 equals  " + @CurrentPath2, true);
-                        Logger.Instance().LogDump("SERVER", "XML Data  " + KodiSourceData.KodiSources[1], true);
+                        //Logger.Instance().LogDump("SERVER", "XML Data  " + KodiSourceData.KodiSources[1], true);
+                        
+                        //Will move this to subroutine just testing here
+
+                        foreach (string path in KodiSourceData.KodiSources)
+                        {
+                            if (path  == null) break;
+                            Logger.Instance().LogDump("XML", "XML Data from foreach  " + path, true);
+                            if  (CurrentPath.Contains(path) == true)
+                                {
+                                Logger.Instance().LogDump("XML", "Contains equals true for   " + CurrentPath + " and path " + path, true);
+                                //Okay found one source path that contains current requested fanart directory - now how to get to number of directories deep
+                                string DifferencePath = @CurrentPath.Replace(path, "");
+                                Logger.Instance().LogDump("XML", "Difference PATH:" + DifferencePath, true);
+                                
+                                Logger.Instance().LogDump("XML", "PathLEFT PATH:" + PathLeft, true);   
+
+                                }
+                            }
+
+
+
                         // Annoying and difficult - below splits the path into the first three directorys only ie. \\fileserver2012\tvss\Title of Show\  only
                         // Overcomes issues with Season 1/Season 2 etc directories and path to extrafanart
                         // Need to set number -->  will add config setting.
