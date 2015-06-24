@@ -41,11 +41,25 @@ using Yatse2.Libs;
 using Setup;
 using System.Windows.Automation.Peers;
 using System.Net.Sockets;
-
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
 
 namespace Yatse2
 {
+    public static class RestoreWindowNoActivateExtension
+    {
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool ShowWindow(IntPtr hWnd, UInt32 nCmdShow);
 
+        private const int SW_SHOWNOACTIVATE = 4;
+
+        public static void RestoreNoActivate(this Window win)
+        {
+            WindowInteropHelper winHelper = new WindowInteropHelper(win);
+            ShowWindow(winHelper.Handle, SW_SHOWNOACTIVATE);
+        }
+    }
     public static class KodiSourceData
     {
         public static string[] KodiSources = new string[20];
@@ -869,8 +883,8 @@ namespace Yatse2
                                 //Okay found one source path that contains current requested fanart directory - now how to get to number of directories deep
                                 string DifferencePath = @CurrentPath.Replace(path, "");
                                 Logger.Instance().LogDump("XML", "Difference PATH:" + DifferencePath, true);
-                                
-                                Logger.Instance().LogDump("XML", "PathLEFT PATH:" + PathLeft, true);   
+                                //string PathLeft = 
+                                //Logger.Instance().LogDump("XML", "PathLEFT PATH:" + PathLeft, true);   
 
                                 }
                             }
@@ -880,6 +894,7 @@ namespace Yatse2
                         // Annoying and difficult - below splits the path into the first three directorys only ie. \\fileserver2012\tvss\Title of Show\  only
                         // Overcomes issues with Season 1/Season 2 etc directories and path to extrafanart
                         // Need to set number -->  will add config setting.
+                       
                         string CurrentPath3 = BreakDirectory(CurrentPath2, numberofdirectoriesdeep);
                         _config.FanartDirectory = @CurrentPath3 + @"extrafanart\";
                         Logger.Instance().LogDump("SERVER", "BreakDirectory Performed and equals  " + CurrentPath3, true);
