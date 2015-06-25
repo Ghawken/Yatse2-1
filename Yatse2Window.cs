@@ -870,7 +870,7 @@ namespace Yatse2
                         CurrentPath2 = Path.GetFullPath(CurrentPath2).Replace(@"/", @"\");
                         Logger.Instance().LogDump("SERVER", "Video Directory Socket returned path - CurrentPath2 equals  " + @CurrentPath2, true);
                         //Logger.Instance().LogDump("SERVER", "XML Data  " + KodiSourceData.KodiSources[1], true);
-                        
+                       /* 
                         //Will move this to subroutine just testing here
 
                         foreach (string path in KodiSourceData.KodiSources)
@@ -889,7 +889,7 @@ namespace Yatse2
                                 }
                             }
 
-
+                        */
 
                         // Annoying and difficult - below splits the path into the first three directorys only ie. \\fileserver2012\tvss\Title of Show\  only
                         // Overcomes issues with Season 1/Season 2 etc directories and path to extrafanart
@@ -1207,7 +1207,7 @@ namespace Yatse2
                 }
             }
             var screens = System.Windows.Forms.Screen.AllScreens;
-
+            Logger.Instance().LogDump("Var Screens", true);
     //        ni.BalloonTipTitle = "Minimise Setting";
     //        ni.BalloonTipText = " Minimise Always On";
 
@@ -1218,7 +1218,7 @@ namespace Yatse2
         //            this.Show();
         //            this.WindowState = WindowState.Normal;
         // //      
-
+            Logger.Instance().LogDump("Screens Length", screens.Length);
             if (screens.Length == 1 || !_config.SecondScreen)
             {
                 if (_config.ForceResolution)
@@ -1239,7 +1239,8 @@ namespace Yatse2
                 if (_config.ForceResolution)
                 {
                     var currentRes = ScreenResolution.GetDevmode(1, -1);
-                    Logger.Instance().LogDump("CurrentResolutionMultiScreen", currentRes);
+                    Logger.Instance().LogDump("Screens current Res", currentRes);
+                    Logger.Instance().LogDump("CurrentResolutionMultiScreen", currentRes, true);
                     if (currentRes.DMPelsHeight != _config.Resolution.DMPelsHeight || currentRes.DMPelsWidth != _config.Resolution.DMPelsWidth || currentRes.DMBitsPerPel != _config.Resolution.DMBitsPerPel)
                     {
                         ScreenResolution.ChangeResolutionMode(1, _config.Resolution);
@@ -1251,6 +1252,8 @@ namespace Yatse2
                 {
                     Top = scr.Bounds.Top / dy;
                     Left = scr.Bounds.Left / dx;
+                    Logger.Instance().LogDump("Screen Device Name", scr.DeviceName);
+                    Logger.Instance().LogDump("2nd Screen Details", ScreenResolution.GetDevmode(1,-1));
                     break;
                 }
             }
@@ -1258,11 +1261,14 @@ namespace Yatse2
             {
                 Width = _config.Resolution.DMPelsWidth / dx;
                 Height = _config.Resolution.DMPelsHeight / dy;
+                Logger.Instance().LogDump("Screens Width", Width);
+                Logger.Instance().LogDump("Screens Height", Height);
             }
 
             if (_config.Resolution.DMPelsHeight == 480)
             {
                 _config.Hack480 = true;
+                Logger.Instance().LogDump("DMPelHeight equals 480", _config.Resolution.DMPelsHeight);
                 brd_Home_Video.Margin = new Thickness(0, 0, 100, 180);
                 brd_Home_Music.Margin = new Thickness(0, 70, 100, 0);
                 brd_Home_Other.Margin = new Thickness(0, 320, 100, 0);
@@ -1284,7 +1290,11 @@ namespace Yatse2
             // Set the WindowState to normal if the form is minimized. 
             if (this.WindowState == WindowState.Minimized)
             {
-                this.WindowState = WindowState.Normal;
+                RestoreWindowNoActivateExtension.RestoreNoActivate(this);
+                
+                //Use No activation or focus change as bove - functioing 
+
+                //this.WindowState = WindowState.Normal;
                 //this.ShowInTaskbar = true;
                 _config.MinimiseAlways = false;
                 _config.FanartAlways = true;
@@ -1416,11 +1426,12 @@ namespace Yatse2
 
         private void ResetTimer()
         {
-            if (_config.KeepFocus && _remoteInfo != null && !_disableFocus)
+            /*if (_config.KeepFocus && _remoteInfo != null && !_disableFocus)
             {
-                if (_remote != null)
-                    _remote.GiveFocus();
-            }
+                //if (_remote != null)
+                    //No focus until press button
+                    //_remote.GiveFocus();
+            }*/
             Logger.Instance().LogDump("Yatse2 FANART    : ResetTimer Run", _timer);
             _timer = 0;
         }

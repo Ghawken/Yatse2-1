@@ -74,7 +74,7 @@ namespace Remote.XBMC.Frodo.Api
         {
             if (!MpcLoaded)
             {
-                var processes = Process.GetProcessesByName("XBMC");
+                var processes = Process.GetProcessesByName("Kodi");
                 foreach (var pFoundWindow in processes.Select(p => p.MainWindowHandle))
                 {
                     NativeMethods.SetForegroundWindow(pFoundWindow);

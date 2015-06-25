@@ -104,7 +104,7 @@ namespace Yatse2.Classes
             //MinimiseAlways = false;
             Topmost = true;
             Hack480 = false;
-            KeepFocus = true;
+            KeepFocus = false;
             ForceResolution = false;
             Diaporama = false;
             Dimming = false;

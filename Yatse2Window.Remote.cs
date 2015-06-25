@@ -326,8 +326,10 @@ namespace Yatse2
                 {
                     Logger.Instance().Log("Yatse 2 NEW DEBUG", "Window State Miniminsed Restore as Playing " + nowPlaying.FileName);
                     //glennwindow.Visibility = Visibility.Visible;
-                    glennwindow.WindowState = WindowState.Normal;
-                    Show();
+                    //Restore with no activation or focus
+                    RestoreWindowNoActivateExtension.RestoreNoActivate(glennwindow);
+                    //glennwindow.WindowState = WindowState.Normal;
+                    //Show();
                 }
                 UpdateCurrently(nowPlaying);
             }

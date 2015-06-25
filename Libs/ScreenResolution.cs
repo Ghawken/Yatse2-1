@@ -193,6 +193,7 @@ namespace Yatse2.Libs
         public static void ChangeResolution(int devNum, int modeNum)
         { 
             var d = GetDevmode(devNum, modeNum);
+            
             if (d.DMBitsPerPel != 0 && d.DMPelsWidth != 0 && d.DMPelsHeight != 0)
             {
                 var result = NativeMethods.ChangeDisplaySettingsEx(GetDeviceName(devNum), ref d, IntPtr.Zero, 0, IntPtr.Zero);
