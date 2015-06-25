@@ -434,12 +434,12 @@ namespace Yatse2
 
         private void StartServer()
         { 
-            Logger.Instance().Log("SERVER", "IN STARTSERVER - Starting Server Thread... ", true);
+            Logger.Instance().Log("SERVER", "STARTSERVER - Starting Server Thread... ", true);
             //Logger.Instance().LogDump("SERVER THREAD    : Attempting to start new Thread ", true);
             Thread t = new Thread(NewThread) { IsBackground = true };
             t.Start();
             
-            Logger.Instance().Log("SERVER", "IN STARTSERVER after thread started... ", true);
+            Logger.Instance().Log("SERVER", "STARTSERVER after thread started... ", true);
         }
 
         private void NewThread()
@@ -449,7 +449,8 @@ namespace Yatse2
             TcpListener listener = new TcpListener(IPAddress.Any, _config.IPPort);
             Logger.Instance().Log("SERVER", "Within New Thread running Listener... ", true);
             listener.Start();
-            
+            _config.FanartCurrentPath = null;
+
             while (true)
             {
                 TcpClient client = listener.AcceptTcpClient();
@@ -578,6 +579,18 @@ namespace Yatse2
                 _timerScreenSaver = _config.ScreensaverTimer;
                 Logger.Instance().Debug = _config.Debug;
                 Logger.Instance().DebugTrace = _config.DebugTrace;
+                if (_config.StartYatse2Server)
+                {
+                    StartServer();
+                }
+
+                if (!_config.StartYatse2Server)
+                {
+                    Logger.Instance().Log("SERVER:", "StartYatse2Server FALSE - SERVER NOT STARTED");
+                    _config.FanartCurrentPath = null;
+                }
+                  
+                
                 Logger.Instance().Log("Yatse2", "End load config");
                 Logger.Instance().LogDump("Yatse2",_config);
 
@@ -616,8 +629,8 @@ namespace Yatse2
 
                 RefreshHeader();
 
-                StartServer();
-
+ 
+                            
                 
                 System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
                 string sPath2Icon = Path.Combine(Environment.CurrentDirectory, "Yatse2.ico");

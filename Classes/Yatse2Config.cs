@@ -77,6 +77,7 @@ namespace Yatse2.Classes
         public string FanartDirectoryMusic { get; set; }
         public string Language { get; set; }
         public string FanartDirectoryMyImages { get; set; }
+
         public int IPPort { get; set; }
         public string IPAddress { get; set; }
         public string Skin { get; set; }
@@ -88,6 +89,7 @@ namespace Yatse2.Classes
         public bool IgnoreSortTokens { get; set; }
         public string SortTokens { get; set; }
         public bool StartWithWindows { get; set; }
+        public bool StartYatse2Server { get; set; }
         public int DefaultPlayMode { get; set; }
         public int LongKeyPress { get; set; }
         public int DiaporamaMode { get; set; }
@@ -147,6 +149,7 @@ namespace Yatse2.Classes
             SortTokens = "Le |La |Les |The |A |An |L'";
             IgnoreSortTokens = false;
             StartWithWindows = false;
+            StartYatse2Server = false;
             DefaultPlayMode = 0;
             LongKeyPress = 500;
             DiaporamaMode = 1;
@@ -248,6 +251,7 @@ namespace Yatse2.Classes
             IgnoreSortTokens = config.IgnoreSortTokens;
             SortTokens = config.SortTokens;
             StartWithWindows = config.StartWithWindows;
+            StartYatse2Server = config.StartYatse2Server;
             DefaultPlayMode = config.DefaultPlayMode;
             LongKeyPress = config.LongKeyPress;
             DiaporamaMode = config.DiaporamaMode;
