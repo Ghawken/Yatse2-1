@@ -43,6 +43,7 @@ using System.Windows.Automation.Peers;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
+using System.Windows.Forms;
 
 namespace Yatse2
 {
@@ -63,7 +64,10 @@ namespace Yatse2
     public static class KodiSourceData
     {
         public static string[] KodiSources = new string[20];
+        
     }
+
+  
 
     public partial class Yatse2Window : IDisposable
     {
@@ -153,7 +157,17 @@ namespace Yatse2
             var ret = (string)TryFindResource("Localized_" + id);
             return ret ?? "Non localized string";
         }
+        
+        [DllImport("user32.dll")]
+        static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        private void SetMonitorState()
+        {
+            Form frm = new Form();
 
+            SendMessage(frm.Handle, 0x0112, 0xF170, 2);
+
+        }
+        
         private void StartDiaporama()
         {
             switch (_config.DiaporamaMode)
@@ -564,8 +578,8 @@ namespace Yatse2
                 if (Yatse2Window.RunningInstance() != null)
                 {
                     Logger.Instance().Log("NEW Yastse Debug:", "Duplicate Yatse2 Running Closing... ");
-                    MessageBox.Show("Duplicate Instance of Yatse, Closing....");
-                    Application.Current.Shutdown();
+                    System.Windows.MessageBox.Show("Duplicate Instance of Yatse, Closing....");
+                    System.Windows.Application.Current.Shutdown();
 
                     //TODO:
                     //Your application logic for duplicate 
@@ -650,10 +664,11 @@ namespace Yatse2
                     trp_Transition.Transition = new FluidKit.Controls.NoTransition();
                 }
 
-                if (!_config.DisableResolutionDetection)
-                {
-                    Microsoft.Win32.SystemEvents.DisplaySettingsChanged += Change_Display_Settings;
-                }
+                //disable automatic resolution dection - except at start of
+                //if (!_config.DisableResolutionDetection)
+                //{
+                //    Microsoft.Win32.SystemEvents.DisplaySettingsChanged += Change_Display_Settings;
+                //}
                 Change_Display_Settings(null, null);
 
             }
