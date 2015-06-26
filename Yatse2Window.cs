@@ -74,7 +74,10 @@ namespace Yatse2
         private const string Repository = @"http://yatse.leetzone.org/repository";
         private bool _allowBeta;
         private readonly Yatse2Config _config = new Yatse2Config();
-        private readonly string _configFile = Helper.AppPath + @"Yatse2.xml";
+
+
+
+        private readonly string _configFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Yatse 3 Socket\Yatse.xml";
         private readonly Yatse2DB _database = new Yatse2DB();
         private readonly Weather _weather = new Weather();
         private long _timerScreenSaver = 120;
@@ -674,6 +677,7 @@ namespace Yatse2
             }
             catch (Exception e)
             {
+                 
                 Logger.Instance().LogException("Yaste2Init",e);
                 Logger.Instance().Log("Yatse2Init","Forcing close");
                 ni.Dispose();
@@ -690,21 +694,35 @@ namespace Yatse2
         //working
         private void LoadKodiSource()
         {
-            Logger.Instance().Log("Kodi Source", "Loading Kodi Source xml file", true);
-            var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            XmlDocument kodisource = new XmlDocument();
-            kodisource.Load(@appdatadirectory+@"\Kodi\userdata\sources.xml");
-            XmlNodeList KodiDirectories = kodisource.GetElementsByTagName("path");
-            //string[] KodiSources = new string[20];
-
-            int i = 0;
-            foreach (XmlNode node in KodiDirectories)
+            try
             {
+
+                Logger.Instance().Log("Kodi Source", "Loading Kodi Source xml file", true);
+                var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                XmlDocument kodisource = new XmlDocument();
+                kodisource.Load(@appdatadirectory + @"\Kodi\userdata\sources.xml");
+                XmlNodeList KodiDirectories = kodisource.GetElementsByTagName("path");
+                //string[] KodiSources = new string[20];
+
+                int i = 0;
+                foreach (XmlNode node in KodiDirectories)
+                {
+
+                    Logger.Instance().Log("Load Kodi Source", "Xml Data ==  " + node.InnerText, true);
+                    KodiSourceData.KodiSources[i] = node.InnerText;
+                    Logger.Instance().Log("Load Kodi Source", "KodiSources Array " + i + "  " + KodiSourceData.KodiSources[i], true);
+                    i++;
+                }
+
+            }
+            catch (Exception e)
+            {
+                if (e is FileNotFoundException )
+                {
+                    Logger.Instance().LogException("Kodi Source File NOT FOUND : ", e);
+                }
                 
-                Logger.Instance().Log("Load Kodi Source", "Xml Data ==  " + node.InnerText, true);
-                KodiSourceData.KodiSources[i]   = node.InnerText;
-                Logger.Instance().Log("Load Kodi Source", "KodiSources Array " + i + "  " + KodiSourceData.KodiSources[i], true);
-                i++;
+                Logger.Instance().LogException("Kodi Source Error", e);
             }
 
         }

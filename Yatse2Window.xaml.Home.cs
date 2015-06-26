@@ -375,7 +375,7 @@ namespace Yatse2
             Logger.Instance().Log("Yatse2", "Closing", true);
             // Turn Off Button for testing subroutines
             //SetMonitorState();
-            
+           // ScreenResolution.TurnOffDevice()
 
             //ni.Dispose();
             //ni = null;

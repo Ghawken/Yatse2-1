@@ -70,7 +70,11 @@ namespace Yatse2.Libs
         {
             get
             {
-                return AppPath + @"Cache\";
+                var appLogPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                var dataFolder = Path.Combine(appLogPath, "Yatse 3 Socket");
+                return dataFolder + @"\Cache\";
+                
+               
             }
         }
 
@@ -78,7 +82,11 @@ namespace Yatse2.Libs
         {
             get
             {
-                return AppPath + @"Log\";
+                var appLogPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                var dataFolder = Path.Combine(appLogPath,"Yatse 3 Socket");
+                return dataFolder + @"\Log\";
+                
+               
             }
         }
 

@@ -212,6 +212,13 @@ namespace Yatse2.Libs
             }
         }
 
+       /* public static void TurnOffDevice(int devNum, Devmode mode)
+        {
+            var result = NativeMethods.TurnOffMonitorEx(GetDeviceName(devNum), int null, int null, 0, int null);
+            if (result > 0)
+                return; 
+         }*/
+
         public static int[] EnumDevices()
         { 
             var devices = new ArrayList();
@@ -315,6 +322,14 @@ namespace Yatse2.Libs
             [DllImport("user32.dll", BestFitMapping = false)]
             public static extern int ChangeDisplaySettingsEx(
                string devName, ref Devmode devMode, IntPtr hwnd, int dwFlags, IntPtr lParam);
+
+          /*  [DllImport("GDI32.dll")]
+            private static extern bool SetDeviceGammaRamp(Int32 hdc, void* ramp); 
+
+     /*       [DllImport("user32.dll", BestFitMapping = false)]
+            public static extern int TurnOffMonitorEx(
+               string devName, int hwnd, int hwnd, int hwnd, int lParam);
+            */
         }
 
     }

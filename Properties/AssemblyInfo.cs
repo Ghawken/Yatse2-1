@@ -6,13 +6,13 @@ using System.Windows;
 // Les informations générales relatives à un assembly dépendent de 
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("Yatse 2.12")]
+[assembly: AssemblyTitle("Yatse3.10Socket")]
 [assembly: AssemblyDescription("Yet Another Touch Screen Experiment")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Tolriq/GH")]
-[assembly: AssemblyProduct("Yatse 2.12")]
+[assembly: AssemblyProduct("Yatse3.10Socket")]
 [assembly: AssemblyCopyright("Copyright © Tolriq 2010/11/12/13")]
-[assembly: AssemblyTrademark("Yatse 2")]
+[assembly: AssemblyTrademark("Yatse2")]
 [assembly: AssemblyCulture("")]
 
 // L'affectation de la valeur false à ComVisible rend les types invisibles dans cet assembly 

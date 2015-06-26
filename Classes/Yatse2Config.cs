@@ -101,7 +101,7 @@ namespace Yatse2.Classes
         {
             IsConfigured = false;
             Debug = true;
-            SecondScreen = true;
+            SecondScreen = false;
             FanartAlways = false;
             //MinimiseAlways = false;
             Topmost = true;
@@ -116,11 +116,11 @@ namespace Yatse2.Classes
             UseBanner = false;
             ShowOverlay = true;
             ShowEmptyMusicGenre = false;
-            ManualRefresh = false;
+            ManualRefresh = true;
             DisableAnimations = false;
             ShowEndTime = false;
             HideWatched = false;
-            RefreshOnConnect = true;
+            RefreshOnConnect = false;
             AnimatedMusicCover = true;
             DimmingOnlyVideo = true;
             DebugTrace = false;
@@ -153,7 +153,7 @@ namespace Yatse2.Classes
             DefaultPlayMode = 0;
             LongKeyPress = 500;
             DiaporamaMode = 1;
-            DisableResolutionDetection = false;
+            DisableResolutionDetection = true;
             FanartDirectory = "";
             FanartDirectoryTV = @"addon_data\script.artworkorganizer\TVShowFanart\";
             FanartDirectoryWeather = @"addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";

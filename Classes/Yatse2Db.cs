@@ -30,7 +30,9 @@ namespace Yatse2.Classes
 
     public class Yatse2DB : IDisposable
     {
-        private string _dbName = Helper.AppPath + @"Yatse2.db";
+        private string _dbName = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Yatse 3 Socket\Yatse.db";
+
+
         private bool _debug;
         private SQLiteConnection _dbConnection;
         private SQLiteTransaction _dbTrans;
