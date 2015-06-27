@@ -882,30 +882,67 @@ namespace Yatse2
             repo.CleanTemporary();
         }
         
-        private void GetFanartDirectory(string pathname)
+        private string GetFanartDirectory(string pathname)
         {
 
             foreach (string path in KodiSourceData.KodiSources)
             {
-                 if (path  == null) break;
-                 Logger.Instance().LogDump("XML", "XML Data from foreach  " + path, true);
-                 
-                if  (pathname.Contains(path) == true)
-                 {
+                Logger.Instance().LogDump("XML", "XML Data from foreach  " + path, true);
+            
+            
+                if (path == null)
+                {
+                    return null;
+                }
+                            
+               if  (pathname.Contains(path) == true)
+               {
                       Logger.Instance().LogDump("XML", "Contains equals true for   " + pathname + " and path " + path, true);
-                      //Okay found one source path that contains current requested fanart directory - now how to get to number of directories deep
-                       string DifferencePath = pathname.Replace(path, "");
-                       Logger.Instance().LogDump("XML", "Difference PATH:" + DifferencePath, true);
-                       //string PathLeft = 
-                      //Logger.Instance().LogDump("XML", "PathLEFT PATH:" + PathLeft, true);   
+                      
+                      string PathDifference = pathname.Replace(path,"");
+                      
+                      string DirectoriesLeft = Path.GetDirectoryName(PathDifference);
 
-                 }
-             }
+                      string[] elements = DirectoriesLeft.Split('\\');
+                      string result = elements[0];
+                    
+                      string ExtrafanartDirectory = path + result + @"\";
+                      Logger.Instance().LogDump("XML", "Returned ExtraFanArt Directory="+ ExtrafanartDirectory, true);
+                      return ExtrafanartDirectory;
+                 
+               }
 
+            }
+               return null;
         }
 
 
-
+        private string cleanPath(string toCleanPath, string replaceWith = "-")
+        {
+            //get just the filename - can't use Path.GetFileName since the path might be bad!  
+            string[] pathParts = toCleanPath.Split(new char[] { '\\' });
+            string newFileName = pathParts[pathParts.Length - 1];
+            //get just the path  
+            string newPath = toCleanPath.Substring(0, toCleanPath.Length - newFileName.Length);
+            //clean bad path chars  
+            foreach (char badChar in Path.GetInvalidPathChars())
+            {
+                newPath = newPath.Replace(badChar.ToString(), replaceWith);
+            }
+            //clean bad filename chars  
+            foreach (char badChar in Path.GetInvalidFileNameChars())
+            {
+                newFileName = newFileName.Replace(badChar.ToString(), replaceWith);
+            }
+            //remove duplicate "replaceWith" characters. ie: change "test-----file.txt" to "test-file.txt"  
+            if (string.IsNullOrEmpty(replaceWith) == false)
+            {
+                newPath = newPath.Replace(replaceWith.ToString() + replaceWith.ToString(), replaceWith.ToString());
+                newFileName = newFileName.Replace(replaceWith.ToString() + replaceWith.ToString(), replaceWith.ToString());
+            }
+            //return new, clean path:  
+            return newPath + newFileName;
+        }  
 
         static bool IsFileURI(String path)
         {
@@ -956,8 +993,9 @@ namespace Yatse2
             {
                 
 
-                string CurrentPath = SortOutPath(_config.FanartCurrentPath);             
+                string CurrentPath = SortOutPath(_config.FanartCurrentPath);
 
+                CurrentPath = cleanPath(CurrentPath, string.Empty);
 
                 var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 var FanartDirectory = appdatadirectory + @"\Kodi\userdata\"; //addon_data\script.artworkorganizer\";
@@ -966,23 +1004,15 @@ namespace Yatse2
 
                Logger.Instance().LogDump("SERVER", "Fanart Directory from Socket =  " + _config.FanartCurrentPath, true);
                Logger.Instance().LogDump("SERVER", "Fanart Directory NORMALISED = " + CurrentPath, true);
-               //Logger.Instance().Log("SERVER", "Fanart Directory MAKEVALIDPATH equals " + MakeValidFileName(_config.FanartCurrentPath), true);
-
-                // Current path from Socket is true path and video menu selected.
-                // Need to sort out season 1 etc. naming as path from Kodi varies.
-                // also if images selected want it to be slideshow of that current directory
 
                 if (IsFileURI(CurrentPath) == true && nowPlaying2.CurrentMenuID == "10025")
                 {
                     try
                     {
-                        char[] MyChar = { 's', 'm', 'b', ':' };
-                        string CurrentPath2 = CurrentPath.TrimStart(MyChar);
-                        CurrentPath2 = Path.GetFullPath(CurrentPath2).Replace(@"/", @"\");
+                        string CurrentPath2 = CurrentPath;
                         Logger.Instance().LogDump("SERVER", "Video Directory Socket returned path - CurrentPath2 equals  " + @CurrentPath2, true);
-
-                       
-                        string CurrentPath3 = BreakDirectory(CurrentPath2, numberofdirectoriesdeep);
+                                               
+                        string CurrentPath3 = GetFanartDirectory(CurrentPath2);
                         _config.FanartDirectory = @CurrentPath3 + @"extrafanart\";
                         Logger.Instance().LogDump("SERVER", "BreakDirectory Performed and equals  " + CurrentPath3, true);
                     }
@@ -998,11 +1028,9 @@ namespace Yatse2
                 {
                     try
                     {
-                        char[] MyChar = { 's', 'm', 'b', ':' };
-                        string CurrentPath2 = CurrentPath.TrimStart(MyChar);
-                        Logger.Instance().LogDump("SERVER", "CurrentPath 2 equals:" + @CurrentPath2, true);
-                        CurrentPath2 = Path.GetFullPath(@CurrentPath2).Replace(@"/", @"\");
-                        Logger.Instance().LogDump("SERVER", "Image Directory Selected - smb equals  " + CurrentPath2, true);
+                        
+                        string CurrentPath2 = CurrentPath;
+                        Logger.Instance().LogDump("SERVER", "Image Directory Selected - path equals  " + CurrentPath2, true);
                         _config.FanartDirectory = @CurrentPath2;
                         Logger.Instance().LogDump("SERVER", "Image Directory Selected & fanart equals  " + _config.FanartDirectory, true);
                     }
