@@ -709,7 +709,7 @@ namespace Yatse2
                 {
 
                     Logger.Instance().Log("Load Kodi Source", "Xml Data ==  " + node.InnerText, true);
-                    KodiSourceData.KodiSources[i] = node.InnerText;
+                    KodiSourceData.KodiSources[i] = SortOutPath(node.InnerText);
                     Logger.Instance().Log("Load Kodi Source", "KodiSources Array " + i + "  " + KodiSourceData.KodiSources[i], true);
                     i++;
                 }
@@ -726,6 +726,31 @@ namespace Yatse2
             }
 
         }
+
+        static string SortOutPath(string path)
+        {
+            if (String.IsNullOrEmpty(path))
+            {
+                return null;
+            }
+            
+            if (path.Length>=4 && TruncatePath(path, 4) == "smb:")
+            {
+                //Okay - this runs if path starts with Smb: and converts to UNC path format.  Which means System.IO.path commands run correctly.
+                Console.WriteLine("Must equal smb: because if true:\r\n");
+                char[] MyChar2 = { 's', 'm', 'b', ':' };
+                path = path.TrimStart(MyChar2);
+                path = Path.GetFullPath(path).Replace(@"/", @"\");
+            }
+            
+            return path;
+        }
+
+        static string TruncatePath(string str, int maxLength)
+        {
+            return str.Substring(0, Math.Min(str.Length, maxLength));
+        }
+
 
         private void PositionScreen()
         {
