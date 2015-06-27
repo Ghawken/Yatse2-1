@@ -881,10 +881,47 @@ namespace Yatse2
             }
             repo.CleanTemporary();
         }
+        
+        private void GetFanartDirectory(string pathname)
+        {
+
+            foreach (string path in KodiSourceData.KodiSources)
+            {
+                 if (path  == null) break;
+                 Logger.Instance().LogDump("XML", "XML Data from foreach  " + path, true);
+                 
+                if  (pathname.Contains(path) == true)
+                 {
+                      Logger.Instance().LogDump("XML", "Contains equals true for   " + pathname + " and path " + path, true);
+                      //Okay found one source path that contains current requested fanart directory - now how to get to number of directories deep
+                       string DifferencePath = pathname.Replace(path, "");
+                       Logger.Instance().LogDump("XML", "Difference PATH:" + DifferencePath, true);
+                       //string PathLeft = 
+                      //Logger.Instance().LogDump("XML", "PathLEFT PATH:" + PathLeft, true);   
+
+                 }
+             }
+
+        }
+
+
+
+
         static bool IsFileURI(String path)
         {
-            return (String.Compare(path, 0, "smb:", 0, 3, StringComparison.OrdinalIgnoreCase) == 0);
+            try
+            {
+                Path.GetDirectoryName(path);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance().LogDump("IsFileURI", "Fails Path Test" + path  +ex , true);
+                return false;
+
+            }
         }
+            
 
        /* Have to sort out this later - presently will not deal with none smb:\\ paths.
         * private static string MakeValidFileName(string name)
@@ -917,15 +954,18 @@ namespace Yatse2
 
             if (FanartAlways == true)
             {
-                //Logger.Instance().Log("SERVER", "Fanart Directory from Socket Server  " + _config.FanartCurrentPath, true);
+                
 
-                string CurrentPath = _config.FanartCurrentPath;
+                string CurrentPath = SortOutPath(_config.FanartCurrentPath);             
+
+
                 var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 var FanartDirectory = appdatadirectory + @"\Kodi\userdata\"; //addon_data\script.artworkorganizer\";
                 //_config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
 
 
                Logger.Instance().LogDump("SERVER", "Fanart Directory from Socket =  " + _config.FanartCurrentPath, true);
+               Logger.Instance().LogDump("SERVER", "Fanart Directory NORMALISED = " + CurrentPath, true);
                //Logger.Instance().Log("SERVER", "Fanart Directory MAKEVALIDPATH equals " + MakeValidFileName(_config.FanartCurrentPath), true);
 
                 // Current path from Socket is true path and video menu selected.
@@ -940,31 +980,7 @@ namespace Yatse2
                         string CurrentPath2 = CurrentPath.TrimStart(MyChar);
                         CurrentPath2 = Path.GetFullPath(CurrentPath2).Replace(@"/", @"\");
                         Logger.Instance().LogDump("SERVER", "Video Directory Socket returned path - CurrentPath2 equals  " + @CurrentPath2, true);
-                        //Logger.Instance().LogDump("SERVER", "XML Data  " + KodiSourceData.KodiSources[1], true);
-                       /* 
-                        //Will move this to subroutine just testing here
 
-                        foreach (string path in KodiSourceData.KodiSources)
-                        {
-                            if (path  == null) break;
-                            Logger.Instance().LogDump("XML", "XML Data from foreach  " + path, true);
-                            if  (CurrentPath.Contains(path) == true)
-                                {
-                                Logger.Instance().LogDump("XML", "Contains equals true for   " + CurrentPath + " and path " + path, true);
-                                //Okay found one source path that contains current requested fanart directory - now how to get to number of directories deep
-                                string DifferencePath = @CurrentPath.Replace(path, "");
-                                Logger.Instance().LogDump("XML", "Difference PATH:" + DifferencePath, true);
-                                //string PathLeft = 
-                                //Logger.Instance().LogDump("XML", "PathLEFT PATH:" + PathLeft, true);   
-
-                                }
-                            }
-
-                        */
-
-                        // Annoying and difficult - below splits the path into the first three directorys only ie. \\fileserver2012\tvss\Title of Show\  only
-                        // Overcomes issues with Season 1/Season 2 etc directories and path to extrafanart
-                        // Need to set number -->  will add config setting.
                        
                         string CurrentPath3 = BreakDirectory(CurrentPath2, numberofdirectoriesdeep);
                         _config.FanartDirectory = @CurrentPath3 + @"extrafanart\";
