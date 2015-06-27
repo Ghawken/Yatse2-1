@@ -44,6 +44,7 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Windows.Forms;
+using System.Windows.Media;
 
 namespace Yatse2
 {
@@ -74,9 +75,6 @@ namespace Yatse2
         private const string Repository = @"http://yatse.leetzone.org/repository";
         private bool _allowBeta;
         private readonly Yatse2Config _config = new Yatse2Config();
-
-
-
         private readonly string _configFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Yatse 3 Socket\Yatse.xml";
         private readonly Yatse2DB _database = new Yatse2DB();
         private readonly Weather _weather = new Weather();

@@ -3,6 +3,7 @@ using System.Resources;
 using System.Runtime.InteropServices;
 using System.Windows;
 
+
 // Les informations générales relatives à un assembly dépendent de 
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
@@ -14,6 +15,7 @@ using System.Windows;
 [assembly: AssemblyCopyright("Copyright © Tolriq 2010/11/12/13")]
 [assembly: AssemblyTrademark("Yatse2")]
 [assembly: AssemblyCulture("")]
+
 
 // L'affectation de la valeur false à ComVisible rend les types invisibles dans cet assembly 
 // aux composants COM. Si vous devez accéder à un type dans cet assembly à partir de 

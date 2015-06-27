@@ -34,6 +34,7 @@ namespace Yatse2.Libs
 
         private static readonly Helper TheInstance = new Helper();
         private Helper() { }
+       
         public static Helper Instance
         {
             get { return TheInstance; }

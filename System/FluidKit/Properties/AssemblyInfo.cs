@@ -34,7 +34,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Resources;
-
+using System.Windows.Media;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
@@ -47,6 +47,7 @@ using System.Resources;
 [assembly : AssemblyCopyright("Copyright ©  2008")]
 [assembly : AssemblyTrademark("")]
 [assembly : AssemblyCulture("")]
+[assembly: DisableDpiAwareness]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
