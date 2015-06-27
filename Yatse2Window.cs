@@ -734,7 +734,7 @@ namespace Yatse2
                 if (String.IsNullOrEmpty(path))
                 {
                     Logger.Instance().LogDump("SortOUT", "path Empty set to null  " + path, true);
-                    return null;
+                    return "";
                 }
 
                 if (path.Length >= 4 && TruncatePath(path, 4) == "smb:")
@@ -754,7 +754,7 @@ namespace Yatse2
             catch (Exception ex)
             {
                 Logger.Instance().LogDump("SortOUT", "Exception caught " + path, true);
-                return null;
+                return "";
             }
         }
 
@@ -896,41 +896,48 @@ namespace Yatse2
         
         private string GetFanartDirectory(string pathname)
         {
-
-            foreach (string path in KodiSourceData.KodiSources)
+            try
             {
-                Logger.Instance().LogDump("XML", "XML Data from foreach  " + path, true);
-            
-            
-               if (path == null)
-               {
-                   return null;
-               }
-              
-               if (path == pathname)
-               {
-                   return path;
-               }
-              
-               if  (pathname.Contains(path) == true)
-               {
-                      Logger.Instance().LogDump("XML", "Contains equals true for   " + pathname + " and path " + path, true);
-                      
-                      string PathDifference = pathname.Replace(path,"");
-                      
-                      string DirectoriesLeft = Path.GetDirectoryName(PathDifference);
+                foreach (string path in KodiSourceData.KodiSources)
+                {
+                    Logger.Instance().LogDump("XML", "XML Data from foreach  " + path, true);
 
-                      string[] elements = DirectoriesLeft.Split('\\');
-                      string result = elements[0];
-                    
-                      string ExtrafanartDirectory = path + result + @"\";
-                      Logger.Instance().LogDump("XML", "Returned ExtraFanArt Directory="+ ExtrafanartDirectory, true);
-                      return ExtrafanartDirectory;
-                 
-               }
 
+                    if (path == null)
+                    {
+                        return null;
+                    }
+
+                    if (path == pathname)
+                    {
+                        return path;
+                    }
+
+                    if (pathname.Contains(path) == true)
+                    {
+                        Logger.Instance().LogDump("XML", "Contains equals true for   " + pathname + " and path " + path, true);
+
+                        string PathDifference = pathname.Replace(path, "");
+
+                        string DirectoriesLeft = Path.GetDirectoryName(PathDifference);
+
+                        string[] elements = DirectoriesLeft.Split('\\');
+                        string result = elements[0];
+
+                        string ExtrafanartDirectory = path + result + @"\";
+                        Logger.Instance().LogDump("XML", "Returned ExtraFanArt Directory=" + ExtrafanartDirectory, true);
+                        return ExtrafanartDirectory;
+
+                    }
+
+                }
+                return null;
             }
-               return null;
+            catch (Exception ex)
+            {
+                Logger.Instance().LogDump("XML", "Exception caught" + ex, true);
+                return null;
+            }
         }
 
 
@@ -1039,7 +1046,7 @@ namespace Yatse2
 
                            string CurrentPath3 = GetFanartDirectory(CurrentPath2);
                            _config.FanartDirectory = @CurrentPath3 + @"extrafanart\";
-                           Logger.Instance().LogDump("SERVER", "FanartDirectory Performed and equals  " + CurrentPath3, true);
+                           Logger.Instance().LogDump("SERVER", "FanartDirectory Performed and equals:" + _config.FanartDirectory, true);
                        }
                        catch (Exception ex)
                        {
@@ -1058,11 +1065,16 @@ namespace Yatse2
                            Logger.Instance().LogDump("SERVER", "Image Directory Selected - path equals  " + CurrentPath2, true);
                            _config.FanartDirectory = @CurrentPath2;
                            Logger.Instance().LogDump("SERVER", "Image Directory Selected & fanart equals  " + _config.FanartDirectory, true);
+                           if (GetRandomImagePathNew(_config.FanartDirectory) == null) //Empty directory or root etc
+                           {
+                               _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMyImages;
+                               Logger.Instance().LogDump("SERVER", "Image Directory & no Images: Reset to default :" + _config.FanartDirectory, true);
+                           }
                        }
                        catch (Exception ex)
                        {
                            Logger.Instance().LogDump("SERVER", "Fanart Image - Exception occured   " + ex, true);
-                           _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
+                           _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMyImages; 
                        }
 
                    }
