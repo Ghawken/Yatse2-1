@@ -729,21 +729,33 @@ namespace Yatse2
 
         static string SortOutPath(string path)
         {
-            if (String.IsNullOrEmpty(path))
+            try
             {
+                if (String.IsNullOrEmpty(path))
+                {
+                    Logger.Instance().LogDump("SortOUT", "path Empty set to null  " + path, true);
+                    return null;
+                }
+
+                if (path.Length >= 4 && TruncatePath(path, 4) == "smb:")
+                {
+                    //Okay - this runs if path starts with Smb: and converts to UNC path format.  Which means System.IO.path commands run correctly.
+                    Logger.Instance().LogDump("SortOUT", "path Smb changing to UNC " + path, true);
+                    char[] MyChar2 = { 's', 'm', 'b', ':' };
+                    path = path.TrimStart(MyChar2);
+                    Logger.Instance().LogDump("SortOUT", "Path Smb Begining Trimmed " + path, true);
+                    path = path.Replace(@"/", @"\");
+                    Logger.Instance().LogDump("SortOUT", "Escapes replaced Final Result:" + path, true);
+                    return path;
+                }
+                Logger.Instance().LogDump("SortOUT", "Neither End Result " + path, true);
+                return path;
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance().LogDump("SortOUT", "Exception caught " + path, true);
                 return null;
             }
-            
-            if (path.Length>=4 && TruncatePath(path, 4) == "smb:")
-            {
-                //Okay - this runs if path starts with Smb: and converts to UNC path format.  Which means System.IO.path commands run correctly.
-                Console.WriteLine("Must equal smb: because if true:\r\n");
-                char[] MyChar2 = { 's', 'm', 'b', ':' };
-                path = path.TrimStart(MyChar2);
-                path = Path.GetFullPath(path).Replace(@"/", @"\");
-            }
-            
-            return path;
         }
 
         static string TruncatePath(string str, int maxLength)
@@ -890,11 +902,16 @@ namespace Yatse2
                 Logger.Instance().LogDump("XML", "XML Data from foreach  " + path, true);
             
             
-                if (path == null)
-                {
-                    return null;
-                }
-                            
+               if (path == null)
+               {
+                   return null;
+               }
+              
+               if (path == pathname)
+               {
+                   return path;
+               }
+              
                if  (pathname.Contains(path) == true)
                {
                       Logger.Instance().LogDump("XML", "Contains equals true for   " + pathname + " and path " + path, true);
@@ -919,29 +936,37 @@ namespace Yatse2
 
         private string cleanPath(string toCleanPath, string replaceWith = "-")
         {
-            //get just the filename - can't use Path.GetFileName since the path might be bad!  
-            string[] pathParts = toCleanPath.Split(new char[] { '\\' });
-            string newFileName = pathParts[pathParts.Length - 1];
-            //get just the path  
-            string newPath = toCleanPath.Substring(0, toCleanPath.Length - newFileName.Length);
-            //clean bad path chars  
-            foreach (char badChar in Path.GetInvalidPathChars())
+            try
             {
-                newPath = newPath.Replace(badChar.ToString(), replaceWith);
+                //get just the filename - can't use Path.GetFileName since the path might be bad!  
+                string[] pathParts = toCleanPath.Split(new char[] { '\\' });
+                string newFileName = pathParts[pathParts.Length - 1];
+                //get just the path  
+                string newPath = toCleanPath.Substring(0, toCleanPath.Length - newFileName.Length);
+                //clean bad path chars  
+                foreach (char badChar in Path.GetInvalidPathChars())
+                {
+                    newPath = newPath.Replace(badChar.ToString(), replaceWith);
+                }
+                //clean bad filename chars  
+                foreach (char badChar in Path.GetInvalidFileNameChars())
+                {
+                    newFileName = newFileName.Replace(badChar.ToString(), replaceWith);
+                }
+                //remove duplicate "replaceWith" characters. ie: change "test-----file.txt" to "test-file.txt"  
+                if (string.IsNullOrEmpty(replaceWith) == false)
+                {
+                    newPath = newPath.Replace(replaceWith.ToString() + replaceWith.ToString(), replaceWith.ToString());
+                    newFileName = newFileName.Replace(replaceWith.ToString() + replaceWith.ToString(), replaceWith.ToString());
+                }
+                //return new, clean path:  
+                return newPath + newFileName;
             }
-            //clean bad filename chars  
-            foreach (char badChar in Path.GetInvalidFileNameChars())
+            catch (Exception ex)
             {
-                newFileName = newFileName.Replace(badChar.ToString(), replaceWith);
+                Logger.Instance().LogDump("cleanPath", "Exception caught" + ex, true);
+                return toCleanPath;
             }
-            //remove duplicate "replaceWith" characters. ie: change "test-----file.txt" to "test-file.txt"  
-            if (string.IsNullOrEmpty(replaceWith) == false)
-            {
-                newPath = newPath.Replace(replaceWith.ToString() + replaceWith.ToString(), replaceWith.ToString());
-                newFileName = newFileName.Replace(replaceWith.ToString() + replaceWith.ToString(), replaceWith.ToString());
-            }
-            //return new, clean path:  
-            return newPath + newFileName;
         }  
 
         static bool IsFileURI(String path)
@@ -953,7 +978,7 @@ namespace Yatse2
             }
             catch (Exception ex)
             {
-                Logger.Instance().LogDump("IsFileURI", "Fails Path Test" + path  +ex , true);
+                Logger.Instance().LogDump("IsFileURI", "Fails Path Test" + path , true);
                 return false;
 
             }
@@ -998,52 +1023,50 @@ namespace Yatse2
                 CurrentPath = cleanPath(CurrentPath, string.Empty);
 
                 var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                var FanartDirectory = appdatadirectory + @"\Kodi\userdata\"; //addon_data\script.artworkorganizer\";
-                //_config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
+                var FanartDirectory = appdatadirectory + @"\Kodi\userdata\"; 
 
+               Logger.Instance().LogDump("SERVER", "Fanart Directory from Socket =:" + _config.FanartCurrentPath, true);
+               Logger.Instance().LogDump("SERVER", "Fanart Directory NORMALISED =:" + CurrentPath, true);
 
-               Logger.Instance().LogDump("SERVER", "Fanart Directory from Socket =  " + _config.FanartCurrentPath, true);
-               Logger.Instance().LogDump("SERVER", "Fanart Directory NORMALISED = " + CurrentPath, true);
+               if (IsFileURI(CurrentPath) == true)
+               {
+                   if (nowPlaying2.CurrentMenuID == "10025")
+                   {
+                       try
+                       {
+                           string CurrentPath2 = CurrentPath;
+                           Logger.Instance().LogDump("SERVER", "Video Directory Socket returned path - CurrentPath2 equals  " + @CurrentPath2, true);
 
-                if (IsFileURI(CurrentPath) == true && nowPlaying2.CurrentMenuID == "10025")
-                {
-                    try
-                    {
-                        string CurrentPath2 = CurrentPath;
-                        Logger.Instance().LogDump("SERVER", "Video Directory Socket returned path - CurrentPath2 equals  " + @CurrentPath2, true);
-                                               
-                        string CurrentPath3 = GetFanartDirectory(CurrentPath2);
-                        _config.FanartDirectory = @CurrentPath3 + @"extrafanart\";
-                        Logger.Instance().LogDump("SERVER", "BreakDirectory Performed and equals  " + CurrentPath3, true);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Instance().LogDump("SERVER", "Fanart Video Menu 10025 - Exception occured   " + ex, true);
-                        _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
-                    } 
+                           string CurrentPath3 = GetFanartDirectory(CurrentPath2);
+                           _config.FanartDirectory = @CurrentPath3 + @"extrafanart\";
+                           Logger.Instance().LogDump("SERVER", "FanartDirectory Performed and equals  " + CurrentPath3, true);
+                       }
+                       catch (Exception ex)
+                       {
+                           Logger.Instance().LogDump("SERVER", "Fanart Video Menu 10025 - Exception occured   " + ex, true);
+                           _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
+                       }
 
-                }
+                   }
 
-                if (IsFileURI(CurrentPath) == true && nowPlaying2.CurrentMenuID == "10002")
-                {
-                    try
-                    {
-                        
-                        string CurrentPath2 = CurrentPath;
-                        Logger.Instance().LogDump("SERVER", "Image Directory Selected - path equals  " + CurrentPath2, true);
-                        _config.FanartDirectory = @CurrentPath2;
-                        Logger.Instance().LogDump("SERVER", "Image Directory Selected & fanart equals  " + _config.FanartDirectory, true);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Instance().LogDump("SERVER", "Fanart Image - Exception occured   " + ex, true);
-                        _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
-                        
-                    }
-                    
-                    
-                }
+                   if (nowPlaying2.CurrentMenuID == "10002")
+                   {
+                       try
+                       {
 
+                           string CurrentPath2 = CurrentPath;
+                           Logger.Instance().LogDump("SERVER", "Image Directory Selected - path equals  " + CurrentPath2, true);
+                           _config.FanartDirectory = @CurrentPath2;
+                           Logger.Instance().LogDump("SERVER", "Image Directory Selected & fanart equals  " + _config.FanartDirectory, true);
+                       }
+                       catch (Exception ex)
+                       {
+                           Logger.Instance().LogDump("SERVER", "Fanart Image - Exception occured   " + ex, true);
+                           _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV;
+                       }
+
+                   }
+               }
                 // if no directory or no files afte above then move to default menu based settings                
 
                 if (nowPlaying2.CurrentMenuID == "10025" && IsFileURI(CurrentPath) != true)
@@ -1068,7 +1091,7 @@ namespace Yatse2
                 if (nowPlaying2.CurrentMenuID == "10000")  //Equals the home menu
                     {
                        //
-                        _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV; // ppdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
+                        _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV; 
                     }
                  if (nowPlaying2.CurrentMenuID == "10502")
                     {
