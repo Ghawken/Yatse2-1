@@ -942,8 +942,12 @@
         						<Grid>
 
         							<CheckBox x:Name="chk_Settings_CheckUpdate" Style="{DynamicResource CheckBox}" FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
-        								Content="{DynamicResource Localized_112}" Padding="5,0,0,0" VerticalAlignment="Top" Margin="8,8,285,0" d:LayoutOverrides="VerticalAlignment" />
-        						</Grid>
+        								Content="{DynamicResource Localized_112}" Padding="5,0,0,0" Margin="8,8,185,0" VerticalAlignment="Top" />
+                                    <CheckBox x:Name="chk_Settings_StartYatse2Server" Style="{DynamicResource CheckBox}" FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Content="{DynamicResource Localized_141}" Padding="5,0,0,0" Margin="8,48.723,185,0" VerticalAlignment="Top" />
+                                    <CheckBox x:Name="chk_Settings_MinimiseAlways" Style="{DynamicResource CheckBox}" FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Content="{DynamicResource Localized_142}" Padding="5,0,0,0" Margin="8,89.393,185,0" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" />
+                                 </Grid>
         					</TabItem>
         				</TabControl>
         				<Button Width="201" Height="25.724" VerticalAlignment="Top" Style="{DynamicResource Button}" FontSize="16" Panel.ZIndex="5"

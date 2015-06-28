@@ -115,7 +115,8 @@ namespace Yatse2
             chk_Settings_CropCacheImage.IsChecked = _config.CropCacheImage;
             chk_Settings_IgnoreSortTokens.IsChecked = _config.IgnoreSortTokens;
             chk_Settings_StartWithWindows.IsChecked = _config.StartWithWindows;
-
+            chk_Settings_StartYatse2Server.IsChecked = _config.StartYatse2Server;
+            chk_Settings_MinimiseAlways.IsChecked = _config.MinimiseAlways;
             LoadSettingsResolutions();
 
             lst_Settings_Skin.Items.Clear();
@@ -242,6 +243,8 @@ namespace Yatse2
                 _config.DebugTrace = (bool)chk_Settings_DebugTrace.IsChecked;
                 _config.IgnoreSortTokens = (bool) chk_Settings_IgnoreSortTokens.IsChecked;
                 _config.StartWithWindows = (bool)chk_Settings_StartWithWindows.IsChecked;
+                _config.StartYatse2Server = (bool)chk_Settings_StartYatse2Server.IsChecked;
+                _config.MinimiseAlways = (bool)chk_Settings_MinimiseAlways.IsChecked;
                 // ReSharper restore PossibleInvalidOperationException
             }
             catch (InvalidOperationException) { }
