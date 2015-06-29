@@ -165,10 +165,20 @@ namespace Yatse2
                 var extensions = new[] { ".PNG", ".JPG", ".GIF", ".JPEG", ".BMP" };
                 var opt = _config.DiaporamaSubdirs ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
                 var di = new DirectoryInfo(path);
-                return (di.GetFiles("*.*", opt)
+                //Random R = new Random();
+                var rgfiles = (di.GetFiles("*.*", opt)
                     .Where(f => extensions.Contains(f.Extension.ToUpperInvariant()))
                     .OrderBy(f => Guid.NewGuid())
                     .FirstOrDefault()).FullName;
+               // Logger.Instance().Log("IMAGES", "GetRandom Results " + rgfiles);
+                //return rgfiles;
+                
+                 return (di.GetFiles("*.*", opt)
+                    .Where(f => extensions.Contains(f.Extension.ToUpperInvariant()))
+                    .OrderBy(f => Guid.NewGuid())
+                    .FirstOrDefault()).FullName;
+                
+                    
             }
 
             catch (Exception ex)

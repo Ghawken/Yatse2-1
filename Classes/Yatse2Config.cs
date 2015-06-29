@@ -211,7 +211,7 @@ namespace Yatse2.Classes
             Resolution = config.Resolution;
             ImageDirectory = config.ImageDirectory;
             FanartCurrentPath = config.FanartCurrentPath;
-            FanartDirectory = config.FanartDirectory;
+            //FanartDirectory = config.FanartDirectory;
             FanartDirectoryTV = config.FanartDirectoryTV;
             FanartDirectoryMovie = config.FanartDirectoryMovie;
             FanartDirectoryWeather = config.FanartDirectoryWeather;

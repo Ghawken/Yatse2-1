@@ -35,6 +35,7 @@ namespace Yatse2.Classes
         public static readonly DependencyProperty LanguageProperty =
             DependencyProperty.Register("Language", typeof(string), typeof(Yatse2Properties));
 
+
         public string Language
         {
             get { return (string)GetValue(LanguageProperty); }

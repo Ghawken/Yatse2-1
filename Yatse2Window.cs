@@ -44,7 +44,7 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Windows.Forms;
-using System.Windows.Media;
+
 
 namespace Yatse2
 {
@@ -452,6 +452,7 @@ namespace Yatse2
             Logger.Instance().Log("SERVER", "STARTSERVER - Starting Server Thread... ", true);
             //Logger.Instance().LogDump("SERVER THREAD    : Attempting to start new Thread ", true);
             Thread t = new Thread(NewThread) { IsBackground = true };
+            t.IsBackground = true;
             t.Start();
             
             Logger.Instance().Log("SERVER", "STARTSERVER after thread started... ", true);
@@ -594,16 +595,7 @@ namespace Yatse2
                 _timerScreenSaver = _config.ScreensaverTimer;
                 Logger.Instance().Debug = _config.Debug;
                 Logger.Instance().DebugTrace = _config.DebugTrace;
-                if (_config.StartYatse2Server)
-                {
-                    StartServer();
-                }
 
-                if (!_config.StartYatse2Server)
-                {
-                    Logger.Instance().Log("SERVER:", "StartYatse2Server FALSE - SERVER NOT STARTED");
-                    _config.FanartCurrentPath = null;
-                }
                   
                 
                 Logger.Instance().Log("Yatse2", "End load config");
@@ -671,17 +663,26 @@ namespace Yatse2
                 //    Microsoft.Win32.SystemEvents.DisplaySettingsChanged += Change_Display_Settings;
                 //}
                 Change_Display_Settings(null, null);
+               
+                if (_config.StartYatse2Server)
+                {
+                    StartServer();
+                }
 
+                if (!_config.StartYatse2Server)
+                {
+                    Logger.Instance().Log("SERVER:", "StartYatse2Server FALSE - SERVER NOT STARTED");
+                    _config.FanartCurrentPath = null;
+                }
             }
             catch (Exception e)
             {
                  
                 Logger.Instance().LogException("Yaste2Init",e);
+           
+                //System.Windows.Application.Current.Shutdown();
                 Logger.Instance().Log("Yatse2Init","Forcing close");
-                ni.Dispose();
-                ni.Icon = null;
-                
-                Close();
+                System.Windows.Application.Current.Shutdown();
             }
 
             Logger.Instance().Log("Yatse2", "End init", true);
