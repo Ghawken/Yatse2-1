@@ -380,7 +380,7 @@ namespace Yatse2
             //ni.Dispose();
             //ni = null;
             //Close();
-            Application.Current.Shutdown();
+            System.Windows.Application.Current.Shutdown();
         }
 
         private void btn_Home_Reboot_Click(object sender, RoutedEventArgs e)

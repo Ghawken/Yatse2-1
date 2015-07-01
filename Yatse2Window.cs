@@ -939,7 +939,43 @@ namespace Yatse2
             }
         }
 
+        private string ReturnContainingSource(string pathname)
+        {
+            try
+            {
+                foreach (string path in KodiSourceData.KodiSources)
+                {
+                    Logger.Instance().LogDump("XML", "XML Data from foreach  " + path, true);
 
+
+                    if (path == null)
+                    {
+                        return null;
+                    }
+
+                    if (path == pathname)
+                    {
+                        return path;
+                    }
+
+                    if (pathname.Contains(path) == true)
+                    {
+                        Logger.Instance().LogDump("ContainingSource", "Contains equals true for   " + pathname + " and path " + path, true);
+
+
+                        return path;
+
+                    }
+
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance().LogDump("XML", "Exception caught" + ex, true);
+                return null;
+            }
+        }
         private string cleanPath(string toCleanPath, string replaceWith = "-")
         {
             try
@@ -1080,48 +1116,63 @@ namespace Yatse2
                }
                 // if no directory or no files afte above then move to default menu based settings                
 
-                if (nowPlaying2.CurrentMenuID == "10025" && IsFileURI(CurrentPath) != true)
-                    {
+             if (nowPlaying2.CurrentMenuID == "10025" && IsFileURI(CurrentPath) != true)
+             {
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMovie; // +@"MovieFanart\";
-                    }
+             }
                     
-                if (nowPlaying2.CurrentMenuID == "10501")
-                    {
+             if (nowPlaying2.CurrentMenuID == "10501")
+             {
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic; // +@"ArtistFanart\";
 
-                    }
+             }
+
+             if (nowPlaying2.CurrentMenuID == "10501")
+             {
+                 Logger.Instance().LogDump("MUSIC", "Fanart File   " + nowPlaying2.Artist, true);
+                 Logger.Instance().LogDump("MUSIC", "Fanart File   " + ReturnContainingSource( SortOutPath(  nowPlaying2.FileName)), true);
+                 _config.FanartDirectory = ReturnContainingSource(SortOutPath(nowPlaying2.FileName)) + nowPlaying2.Artist + @"\extrafanart\";
+                 Logger.Instance().LogDump("MUSIC", "Fanart location    " + _config.FanartDirectory, true);
+                 if (GetRandomImagePathNew(_config.FanartDirectory)==null)
+                 {
+                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic;
+                 }
+                 //                 _config.FanartDirectory = nowPlaying2.FileName
+             }
+                
                    
                   //  if (nowPlaying2.CurrentMenuID == "10002")
                   //  {
                   //      _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMyImages; // +@"OwnFanart\";
                   //  }
-                if (nowPlaying2.CurrentMenuID == "12600")
-                    {
+             if (nowPlaying2.CurrentMenuID == "12600")
+             {
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryWeather; // ppdatadirectory + @"\Kodi\userdata\addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
-                    }
-                if (nowPlaying2.CurrentMenuID == "10000")  //Equals the home menu
-                    {
+             
+             }
+             if (nowPlaying2.CurrentMenuID == "10000")  //Equals the home menu
+             {
                        //
-                        _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV; 
-                    }
-                 if (nowPlaying2.CurrentMenuID == "10502")
-                    {
+                     _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryTV; 
+             }
+             if (nowPlaying2.CurrentMenuID == "10502")
+             {
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic; // +@"ArtistFanart\";
 
-                    }
+             }
 
                     //If directory empty and fanart show being displayed - change to default - which is Movies
-                if (GetRandomImagePathNew(_config.FanartDirectory) == null && grd_Diaporama.Visibility != Visibility.Hidden )
-                    {
+             if (GetRandomImagePathNew(_config.FanartDirectory) == null && grd_Diaporama.Visibility != Visibility.Hidden )
+             {
                         _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMovie;
-                    }
+             }
                 
 
 
 
                 
-                if (nowPlaying2.CurrentMenuID == "10004" && grd_Diaporama.Visibility != Visibility.Hidden)
-                {
+            if (nowPlaying2.CurrentMenuID == "10004" && grd_Diaporama.Visibility != Visibility.Hidden)
+            {
 
                     var stbDiaporamaHide = (Storyboard)TryFindResource("stb_HideDiaporama");
                     if (stbDiaporamaHide != null)
@@ -1129,7 +1180,7 @@ namespace Yatse2
                         stbDiaporamaHide.Begin(this);
                     }
 
-                }
+            }
 
             }
         }
@@ -1268,8 +1319,15 @@ namespace Yatse2
                    }
 
            }
+           if (_config.FanartAlways== true && _config.Currently==false && nowPlaying.IsPlaying && nowPlaying.MediaType=="Audio"  &&  ( _timer % _config.FanartTimer) == 0 ) 
+           {
+               CheckFanArt();
+               StartFanart();
+               Logger.Instance().LogDump("Yatse2", "nowPlaying playing Audio Starting fanart " + nowPlaying.MediaType, true);
+           }
 
-          if (nowPlaying.IsMuted)
+            
+            if (nowPlaying.IsMuted)
           {
                     if (grd_Dimming.Visibility == Visibility.Visible)
                     {
