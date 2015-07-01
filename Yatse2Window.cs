@@ -1036,6 +1036,37 @@ namespace Yatse2
             illegal = r.Replace(illegal, "");
         }*/
 
+        private void CheckAudioFanart()
+        {
+            var nowPlaying2 = _remote != null ? _remote.Player.NowPlaying(false) : new ApiCurrently();
+            
+            var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            var FanartDirectory = appdatadirectory + @"\Kodi\userdata\"; 
+     
+
+            Logger.Instance().LogDump("Yatse2 Check AudioFanart    : Audio Playing", nowPlaying2.CurrentMenuLabel, true);
+
+            if (grd_Diaporama.Visibility == Visibility.Hidden)
+            {
+                var stbDiaporamaShow = (Storyboard)TryFindResource("stb_ShowDiaporama");
+                if (stbDiaporamaShow != null)
+                {
+                    stbDiaporamaShow.Begin(this);
+                }
+            }
+            
+           Logger.Instance().LogDump("MUSIC", "Fanart File   " + nowPlaying2.Artist, true);
+           Logger.Instance().LogDump("MUSIC", "Fanart File   " + ReturnContainingSource( SortOutPath(  nowPlaying2.FileName)), true);
+           _config.FanartDirectory = ReturnContainingSource(SortOutPath(nowPlaying2.FileName)) + nowPlaying2.Artist + @"\extrafanart\";
+           Logger.Instance().LogDump("MUSIC", "Fanart location    " + _config.FanartDirectory, true);
+           if (GetRandomImagePathNew(_config.FanartDirectory)==null)
+           {
+               Logger.Instance().LogDump("MUSIC", "CheckAudio Defaulting  " + nowPlaying2.Artist, true);
+               _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic;
+           }
+
+       }
+
         private void CheckFanArt()
         {
             var nowPlaying2 = _remote != null ? _remote.Player.NowPlaying(false) : new ApiCurrently();
@@ -1127,17 +1158,10 @@ namespace Yatse2
 
              }
 
-             if (nowPlaying2.CurrentMenuID == "10501")
+             if (nowPlaying2.CurrentMenuID == "10501" )
              {
-                 Logger.Instance().LogDump("MUSIC", "Fanart File   " + nowPlaying2.Artist, true);
-                 Logger.Instance().LogDump("MUSIC", "Fanart File   " + ReturnContainingSource( SortOutPath(  nowPlaying2.FileName)), true);
-                 _config.FanartDirectory = ReturnContainingSource(SortOutPath(nowPlaying2.FileName)) + nowPlaying2.Artist + @"\extrafanart\";
-                 Logger.Instance().LogDump("MUSIC", "Fanart location    " + _config.FanartDirectory, true);
-                 if (GetRandomImagePathNew(_config.FanartDirectory)==null)
-                 {
                          _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic;
-                 }
-                 //                 _config.FanartDirectory = nowPlaying2.FileName
+
              }
                 
                    
@@ -1306,7 +1330,6 @@ namespace Yatse2
             }
                 
             if (nowPlaying.IsPaused)
-
             {
                     Logger.Instance().LogDump("Yatse2", "nowPlaying.Paused is called");    
                     if (grd_Dimming.Visibility == Visibility.Visible)
@@ -1319,15 +1342,17 @@ namespace Yatse2
                    }
 
            }
-           if (_config.FanartAlways== true && _config.Currently==false && nowPlaying.IsPlaying && nowPlaying.MediaType=="Audio"  &&  ( _timer % _config.FanartTimer) == 0 ) 
+           
+            
+           if (_config.FanartAlways== true && _config.Currently==false && _isfanart==false && nowPlaying.IsPlaying && nowPlaying.MediaType=="Audio"  &&  ( _timer % _config.FanartTimer) == 0 ) 
            {
-               CheckFanArt();
+               CheckAudioFanart();
                StartFanart();
                Logger.Instance().LogDump("Yatse2", "nowPlaying playing Audio Starting fanart " + nowPlaying.MediaType, true);
            }
 
             
-            if (nowPlaying.IsMuted)
+          if (nowPlaying.IsMuted)
           {
                     if (grd_Dimming.Visibility == Visibility.Visible)
                     {
@@ -1349,12 +1374,20 @@ namespace Yatse2
           {
                     SwitchDiaporama();
           }
-
-          if (glennwindow.WindowState == WindowState.Normal && _isfanart && _fanartCurrentImage != 0 && (_timer % _config.FanartTimer) == 0)
+          
+          if (glennwindow.WindowState == WindowState.Normal && _isfanart && _fanartCurrentImage != 0 && (_timer % _config.FanartTimer) == 0 && !nowPlaying.IsPlaying)
           {
                     CheckFanArt();
                     SwitchFanart();
                     Logger.Instance().LogDump("Yatse2 FANART    : SWITCH FanART Run & FanartTimer result", _timer );
+          }
+
+
+
+          if (glennwindow.WindowState == WindowState.Normal && _isfanart && _fanartCurrentImage != 0 && (_timer % _config.FanartTimer) == 0 && nowPlaying.IsPlaying && nowPlaying.MediaType =="Audio")
+          {
+              SwitchFanart();
+
           }
 
           PositionScreen();
