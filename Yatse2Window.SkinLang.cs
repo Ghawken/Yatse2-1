@@ -59,7 +59,7 @@ namespace Yatse2
         {
             var hash = _remotePlugin.GetHashFromFileName(remotepath);
             var destFile = Helper.CachePath + @"Music\Fanarts\" + hash + ".jpg";
-
+            Logger.Instance().LogDump("GetMusicFanart", "Getting Music Fanart " + destFile, true);
             if (File.Exists(destFile)) return destFile;
 
             _remote.File.DownloadImages(new ApiImageDownloadInfo { Source = remotepath, Destination = destFile, MaxHeight = (int)Height , ToThumb = _config.CropCacheImage });
@@ -71,6 +71,7 @@ namespace Yatse2
 
             if (File.Exists(Helper.SkinPath + _config.Skin + @"\Interface\Default_Music-Fanarts.png"))
             {
+                Logger.Instance().LogDump("GetMusicFanart", "File Exists " + Helper.SkinPath + _config.Skin + @"\Interface\Default_Music-Fanarts.png", true);
                 return Helper.SkinPath + _config.Skin + @"\Interface\Default_Music-Fanarts.png";
             }
 

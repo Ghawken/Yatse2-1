@@ -216,8 +216,28 @@ namespace Yatse2
                     _yatse2Properties.Currently.MusicSong = nowPlaying.Title;
                     _yatse2Properties.Currently.MusicArtist = nowPlaying.Artist;
                     _yatse2Properties.Currently.Fanart = _config.MusicFanartRotation ? GetRandomImagePath(Helper.CachePath + @"Music\Fanarts") : GetMusicFanartPath(nowPlaying.FanartURL);
+                    
+                // Wholesale change coming up......  Move away from DB for Currently Info, instead move to extrafanart for the artist detected....
+                // Looks good - should do the same for Video Now Playing info screen
 
+                    Logger.Instance().LogDump("UpdateAUDIO", "Config Rotation:Currently Fanart equals:" + _yatse2Properties.Currently.Fanart, true);
+                    Logger.Instance().LogDump("UpdateAUDIO", "Config GetMusicFanartPath equals:" + GetMusicFanartPath(nowPlaying.FanartURL), true);
+                    var testaudiofanart = ReturnContainingSource(SortOutPath(nowPlaying.FileName)) + nowPlaying.Artist + @"\extrafanart\";
+                    Logger.Instance().LogDump("UpdateAUDIO", "testfanart equals:" + testaudiofanart, true);
+                    Logger.Instance().LogDump("UpdateAUDIO", "GetRandomImagePath ==:" + GetRandomImagePath(testaudiofanart), true);
+
+
+                    if (GetRandomImagePath(testaudiofanart)!=null)
+                    {
+                        Logger.Instance().LogDump("UpdateAUDIO", "Currently.Fanart set to testaudiofanart:" , true);
+                        _yatse2Properties.Currently.Fanart = GetRandomImagePath(testaudiofanart);
+                    }
+                       
+
+                    Logger.Instance().LogDump("UpdateAUDIO", "nowPlaying FanartURL:" + nowPlaying.FanartURL, true);
+                    Logger.Instance().LogDump("UpdateAUDIO", "Currently Fanart equals:" + _yatse2Properties.Currently.Fanart, true);
                     _yatse2Properties.Currently.Thumb = GetMusicThumbPath(nowPlaying.ThumbURL); // TODO : Change to converter
+                    Logger.Instance().LogDump("UpdateAUDIO", "Currently Thumb equals:" + _yatse2Properties.Currently.Thumb, true);
                     _yatse2Properties.Currently.MusicYear = nowPlaying.Year.ToString(CultureInfo.InvariantCulture);
                     _yatse2Properties.Currently.MusicTrack = nowPlaying.Track.ToString(CultureInfo.InvariantCulture);
                     _yatse2Properties.Currently.MusicGenre = nowPlaying.Genre;
@@ -229,6 +249,7 @@ namespace Yatse2
                         _yatse2Properties.Currently.MusicBiography = artistinfo.Count > 0 ? artistinfo[0].Biography : "No information";
                         if (!_config.MusicFanartRotation)
                             _yatse2Properties.Currently.Fanart = artistinfo.Count > 0 ? GetMusicFanartPath(artistinfo[0].Fanart) : "";
+                        Logger.Instance().LogDump("UpdateAUDIO", "Config Rotation:Currently Fanart equals:" + _yatse2Properties.Currently.Fanart, true);
                     }
                     AudioStarting();
 
