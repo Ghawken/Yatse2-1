@@ -227,7 +227,7 @@ namespace Yatse2
                     Logger.Instance().LogDump("UpdateAUDIO", "GetRandomImagePath ==:" + GetRandomImagePath(testaudiofanart), true);
 
 
-                    if (GetRandomImagePath(testaudiofanart)!=null)
+                    if (_config.MusicFanartRotation && GetRandomImagePath(testaudiofanart)!=null)
                     {
                         Logger.Instance().LogDump("UpdateAUDIO", "Currently.Fanart set to testaudiofanart:" , true);
                         _yatse2Properties.Currently.Fanart = GetRandomImagePath(testaudiofanart);
