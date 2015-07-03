@@ -17,6 +17,7 @@
 // ------------------------------------------------------------------------
 
 using System;
+using System.IO;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Media.Animation;
@@ -227,7 +228,7 @@ namespace Yatse2
                     Logger.Instance().LogDump("UpdateAUDIO", "GetRandomImagePath ==:" + GetRandomImagePath(testaudiofanart), true);
 
 
-                    if (_config.MusicFanartRotation && GetRandomImagePath(testaudiofanart)!=null)
+                    if (!_config.MusicFanartRotation && GetRandomImagePath(testaudiofanart)!=null)
                     {
                         Logger.Instance().LogDump("UpdateAUDIO", "Currently.Fanart set to testaudiofanart:" , true);
                         _yatse2Properties.Currently.Fanart = GetRandomImagePath(testaudiofanart);
@@ -241,6 +242,23 @@ namespace Yatse2
                     _yatse2Properties.Currently.MusicYear = nowPlaying.Year.ToString(CultureInfo.InvariantCulture);
                     _yatse2Properties.Currently.MusicTrack = nowPlaying.Track.ToString(CultureInfo.InvariantCulture);
                     _yatse2Properties.Currently.MusicGenre = nowPlaying.Genre;
+
+
+                    var NowPlayingFile = SortOutPath(nowPlaying.FileName);
+                    try
+                    {
+                            var pathfilename = Path.GetDirectoryName(NowPlayingFile);
+                            Logger.Instance().LogDump("UpdateAUDIO", "Thumbnail:  Nowplaying Get DirectoryName" +pathfilename, true);
+                            if (File.Exists(pathfilename+@"\cdart.png"))
+                            {
+                                _yatse2Properties.Currently.Thumb = pathfilename+@"\cdart.png";
+                            }
+                    }
+                    catch (Exception ex)
+                    {
+                            Logger.Instance().LogDump("Thumb Exception", "Thumbnail Exception Caught" +ex, true); 
+                    }
+
 
                     var songinfo = _database.GetAudioSongFromFile(_remoteInfo.Id, nowPlaying.FileName);
                     if (songinfo.Count > 0)
