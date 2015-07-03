@@ -65,7 +65,7 @@ namespace Yatse2
     public static class KodiSourceData
     {
         public static string[] KodiSources = new string[20];
-        
+        public static string[] KodiMusicSources = new string[20];
     }
 
   
@@ -699,6 +699,11 @@ namespace Yatse2
                 kodisource.Load(@appdatadirectory + @"\Kodi\userdata\sources.xml");
                 XmlNodeList KodiDirectories = kodisource.GetElementsByTagName("path");
                 //string[] KodiSources = new string[20];
+                
+                //Changes below
+                
+                
+
 
                 int i = 0;
                 foreach (XmlNode node in KodiDirectories)
@@ -708,7 +713,24 @@ namespace Yatse2
                     KodiSourceData.KodiSources[i] = SortOutPath(node.InnerText);
                     Logger.Instance().Log("Load Kodi Source", "KodiSources Array " + i + "  " + KodiSourceData.KodiSources[i], true);
                     i++;
+
                 }
+
+
+                XmlNodeList KodiMusic = kodisource.GetElementsByTagName("music");
+                i = 0;
+                foreach (XmlNode node in KodiMusic)
+                {
+
+                    Logger.Instance().Log("Load Kodi Music Source", "Xml Data ==  " + node["source"]["path"].InnerText, true);
+                    KodiSourceData.KodiMusicSources[i] = SortOutPath(node["source"]["path"].InnerText);
+                    Logger.Instance().Log("Load Kodi Music Source", "KodiSources Array " + i + "  " + KodiSourceData.KodiMusicSources[i], true);
+                    i++;
+                    
+
+                }
+
+
 
             }
             catch (Exception e)
