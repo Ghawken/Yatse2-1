@@ -223,7 +223,7 @@ namespace Yatse2
 
                     Logger.Instance().LogDump("UpdateAUDIO", "Config Rotation:Currently Fanart equals:" + _yatse2Properties.Currently.Fanart, true);
                     Logger.Instance().LogDump("UpdateAUDIO", "Config GetMusicFanartPath equals:" + GetMusicFanartPath(nowPlaying.FanartURL), true);
-                    var testaudiofanart = ReturnContainingSource(SortOutPath(nowPlaying.FileName)) + nowPlaying.Artist + @"\extrafanart\";
+                    var testaudiofanart = KodiSourceData.KodiMusicSources[0] + nowPlaying.Artist + @"\extrafanart\";
                     Logger.Instance().LogDump("UpdateAUDIO", "testfanart equals:" + testaudiofanart, true);
                     Logger.Instance().LogDump("UpdateAUDIO", "GetRandomImagePath ==:" + GetRandomImagePath(testaudiofanart), true);
 

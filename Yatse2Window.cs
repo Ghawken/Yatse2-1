@@ -737,7 +737,7 @@ namespace Yatse2
             {
                 if (e is FileNotFoundException )
                 {
-                    Logger.Instance().LogException("Kodi Source File NOT FOUND : ", e);
+                    Logger.Instance().LogException("Kodi Source File Exception/Somethingnot FOUND : ", e);
                 }
                 
                 Logger.Instance().LogException("Kodi Source Error", e);
