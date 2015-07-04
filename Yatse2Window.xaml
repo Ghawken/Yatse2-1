@@ -424,7 +424,7 @@
         						Text="{Binding Currently.MusicYear, Source={StaticResource Yatse2Properties}}" HorizontalAlignment="Left" Width="185" TextAlignment="Center" Opacity="0.9" />
         				</Grid>
         			</Border>
-                        <Rectangle x:Name="rct_Current_Music_Image" Stroke="Black" RadiusX="20" RadiusY="20" Margin="25,0,0,90" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Bottom" Height="185" MaxWidth="350" HorizontalAlignment="Left" Width="185" MouseDown="txb_Current_Music_ToggleDetail_MouseDown" >
+                        <Rectangle x:Name="rct_Current_Music_Image" Stroke="Black" StrokeThickness="0" RadiusX="20" RadiusY="20" Margin="25,0,0,90" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Bottom" Height="185" MaxWidth="350" HorizontalAlignment="Left" Width="185" MouseDown="txb_Current_Music_ToggleDetail_MouseDown" >
         				<Rectangle.Fill>
         					<ImageBrush Stretch="UniformToFill" ImageSource="{Binding Currently.Thumb, Source={StaticResource Yatse2Properties}}" />
         				</Rectangle.Fill>
