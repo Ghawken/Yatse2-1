@@ -272,6 +272,7 @@ namespace Yatse2
                     AudioStarting();
 
                     break;
+                
                 case "TvShow":
                     Logger.Instance().Log("Yatse2", "New TvShow Media : " + nowPlaying.FileName);
                     _yatse2Properties.Currently.IsTv = true;
@@ -308,6 +309,7 @@ namespace Yatse2
                     }
                     VideoStarting();
                     break;
+                
                 case "Movie":
                     _yatse2Properties.Currently.Thumb = GetVideoThumbPath(nowPlaying.ThumbURL); // TODO : Change to converter
 
@@ -338,6 +340,7 @@ namespace Yatse2
 
                     VideoStarting();
                     break;
+                
                 case "Unknown":
                     _yatse2Properties.Currently.IsUnknown = true;
                     _yatse2Properties.Currently.Thumb = GetVideoThumbPath(nowPlaying.ThumbURL); // TODO : Change to converter
@@ -346,6 +349,20 @@ namespace Yatse2
 
                     VideoStarting();
                     break;
+                //Attempt PVR support
+                case "Pvr":
+                    Logger.Instance().LogDump("Yatse2 PVR:", "Case is PVR: ", true);
+
+                    _yatse2Properties.Currently.Thumb = GetVideoThumbPath(nowPlaying.ThumbURL);
+                    Logger.Instance().LogDump("Yatse2 PVR:", "Thumb Set to " + _yatse2Properties.Currently.Thumb, true);
+
+                    _yatse2Properties.Currently.IsMovie = true;
+                    _yatse2Properties.Currently.MovieTitle = nowPlaying.Title;
+
+                    Logger.Instance().LogDump("Yatse2 PVR:", "nowPlaying Title: " + _yatse2Properties.Currently.MovieTitle, true);
+                    _yatse2Properties.Currently.Fanart = nowPlaying.ThumbURL;
+                    Logger.Instance().LogDump("Yatse2 PVR:", "Fanart is : " + _yatse2Properties.Currently.Fanart, true);
+
                 default:
                     break;
             }

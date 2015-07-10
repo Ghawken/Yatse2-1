@@ -1398,7 +1398,7 @@ namespace Yatse2
           {
                     CheckFanArt();
                     SwitchFanart();
-                    Logger.Instance().LogDump("Yatse2 FANART    : SWITCH FanART Run & FanartTimer result", _timer );
+                    _yatse2Properties.Currently.Fanart = GetVideoFanartPath(nowPlaying.FanartURL);
           }
 
 

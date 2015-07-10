@@ -221,7 +221,9 @@ namespace Remote.XBMC.Frodo.Api
                         //Attempt at PVR support:
                         if (result2["type"].ToString()=="channel")
                         {
-                            _nowPlaying.MediaType = "pvr";
+                            _nowPlaying.MediaType = "Pvr";
+                            Logger.Instance().LogDump("Yatse2 PVR:", "Type is Channel set to PVR true: ", true);
+                            
                         }
                         _nowPlaying.Genre = _parent.JsonArrayToString((JsonArray)result2["genre"]);
                         _nowPlaying.Title = result2["label"].ToString();
