@@ -217,6 +217,12 @@ namespace Remote.XBMC.Frodo.Api
                     if (_nowPlaying.MediaType == "video")
                     {
                         _nowPlaying.MediaType = result2["type"].ToString() == "episode" ? "TvShow" : "Movie";
+                        
+                        //Attempt at PVR support:
+                        if (result2["type"].ToString()=="channel")
+                        {
+                            _nowPlaying.MediaType = "pvr";
+                        }
                         _nowPlaying.Genre = _parent.JsonArrayToString((JsonArray)result2["genre"]);
                         _nowPlaying.Title = result2["label"].ToString();
                         _nowPlaying.Year = Convert.ToInt32("0" + result2["year"]);
