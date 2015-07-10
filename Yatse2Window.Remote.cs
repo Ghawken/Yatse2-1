@@ -350,6 +350,7 @@ namespace Yatse2
                     VideoStarting();
                     break;
                 //Attempt PVR support
+                
                 case "Pvr":
                     Logger.Instance().LogDump("Yatse2 PVR:", "Case is PVR: ", true);
 
@@ -362,6 +363,7 @@ namespace Yatse2
                     Logger.Instance().LogDump("Yatse2 PVR:", "nowPlaying Title: " + _yatse2Properties.Currently.MovieTitle, true);
                     _yatse2Properties.Currently.Fanart = nowPlaying.ThumbURL;
                     Logger.Instance().LogDump("Yatse2 PVR:", "Fanart is : " + _yatse2Properties.Currently.Fanart, true);
+                    break;
 
                 default:
                     break;
