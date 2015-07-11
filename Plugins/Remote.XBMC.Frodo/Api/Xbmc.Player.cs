@@ -176,6 +176,7 @@ namespace Remote.XBMC.Frodo.Api
                     var result2 = (JsonObject)_parent.JsonCommand("Player.GetItem", items);
                     var result3 = (JsonObject)_parent.JsonCommand("Application.GetProperties", appproperties);
 
+
                     if (result1 == null || result2 == null || result3 == null)
                     {
                         _nowPlaying.FileName = "";
@@ -186,6 +187,29 @@ namespace Remote.XBMC.Frodo.Api
                     }
 
                     result2 = (JsonObject)(result2)["item"];
+
+                    if (_nowPlaying.MediaType == "video")
+                    {
+                        if (result2["type"].ToString() == "channel")  //if PVR Needs to go high otherwise exception
+                        {
+                            _nowPlaying.MediaType = "Pvr";
+                            _nowPlaying.IsNewMedia = true;
+                            _nowPlaying.FileName = result2["label"].ToString();
+                            _nowPlaying.ThumbURL = result2["thumbnail"].ToString();
+                            _nowPlaying.FanartURL = result2["fanart"].ToString();
+                            _nowPlaying.Title = result2["label"].ToString();
+                            _nowPlaying.IsPaused = Convert.ToInt32("0" + result1["speed"].ToString().Replace("-", "")) == 0;
+                            _nowPlaying.IsPlaying = !_nowPlaying.IsPaused;
+                            var pvrtime = (JsonObject)result1["time"];
+                            var pvrtotal = (JsonObject)result1["totaltime"];
+                            _nowPlaying.Time = new TimeSpan(0, Convert.ToInt32("0" + pvrtime["hours"]), Convert.ToInt32("0" + pvrtime["minutes"]), Convert.ToInt32("0" + pvrtime["seconds"]));
+                            _nowPlaying.Duration = new TimeSpan(0, Convert.ToInt32("0" + pvrtotal["hours"]), Convert.ToInt32("0" + pvrtotal["minutes"]), Convert.ToInt32("0" + pvrtotal["seconds"]));
+                            _nowPlaying.Progress = Convert.ToInt32("0" + result1["percentage"].ToString().Split('.')[0]);
+                            _nowPlaying.Volume = Convert.ToInt32("0" + result3["volume"]);
+                            _nowPlaying.IsMuted = (bool)result3["muted"];
+                            return;
+                        }
+                    }
 
                     _nowPlaying.IsPaused = Convert.ToInt32("0" + result1["speed"].ToString().Replace("-", "")) == 0;
                     _nowPlaying.IsPlaying = !_nowPlaying.IsPaused;
@@ -213,17 +237,20 @@ namespace Remote.XBMC.Frodo.Api
                         _nowPlaying.ThumbURL = result2["thumbnail"].ToString();
                         _nowPlaying.FanartURL = result2["fanart"].ToString();
                     }
-
+                    
                     if (_nowPlaying.MediaType == "video")
                     {
                         _nowPlaying.MediaType = result2["type"].ToString() == "episode" ? "TvShow" : "Movie";
                         
                         //Attempt at PVR support:
-                        if (result2["type"].ToString()=="channel")
+                      /*  if (result2["type"] == "channel")
                         {
                             _nowPlaying.MediaType = "Pvr";
-                                                        
-                        }
+                            _nowPlaying.IsNewMedia = true;
+                            _nowPlaying.FileName = result2["label"].ToString();
+                                                 
+                        }*/
+                        
                         _nowPlaying.Genre = _parent.JsonArrayToString((JsonArray)result2["genre"]);
                         _nowPlaying.Title = result2["label"].ToString();
                         _nowPlaying.Year = Convert.ToInt32("0" + result2["year"]);

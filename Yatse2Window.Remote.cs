@@ -208,6 +208,7 @@ namespace Yatse2
         private void UpdateCurrently(Plugin.ApiCurrently nowPlaying )
         {
             _isPlaying = true;
+            Logger.Instance().LogDump("Yatse PVR", "MediaType equals:" + nowPlaying.MediaType, true);
             switch (nowPlaying.MediaType)
             {
                 case "Audio":
@@ -359,10 +360,12 @@ namespace Yatse2
 
                     _yatse2Properties.Currently.IsMovie = true;
                     _yatse2Properties.Currently.MovieTitle = nowPlaying.Title;
+                    nowPlaying.FileName = nowPlaying.Title;
 
                     Logger.Instance().LogDump("Yatse2 PVR:", "nowPlaying Title: " + _yatse2Properties.Currently.MovieTitle, true);
-                    _yatse2Properties.Currently.Fanart = nowPlaying.ThumbURL;
+                    _yatse2Properties.Currently.Fanart = GetVideoThumbPath(nowPlaying.ThumbURL);
                     Logger.Instance().LogDump("Yatse2 PVR:", "Fanart is : " + _yatse2Properties.Currently.Fanart, true);
+                    VideoStarting();
                     break;
 
                 default:
@@ -376,6 +379,9 @@ namespace Yatse2
                 return;
             
             var nowPlaying = _remote.Player.NowPlaying(true);
+
+            Logger.Instance().LogDump("Yatse2 PVR:", "nowPlaying.Filename is : " + nowPlaying.FileName, true);
+
             if (nowPlaying.IsNewMedia && (nowPlaying.IsPlaying || nowPlaying.IsPaused) && !String.IsNullOrEmpty(nowPlaying.FileName))
             {
                 //Glenn Added
@@ -391,6 +397,10 @@ namespace Yatse2
                 }
                 UpdateCurrently(nowPlaying);
             }
+            
+            //Need to delete below
+            //UpdateCurrently(nowPlaying);
+            
             if ((nowPlaying.IsPlaying || nowPlaying.IsPaused))
             {
                 btn_Header_Remotes.Background = GetSkinImageBrush("Menu_Remote_Connected_Playing");
