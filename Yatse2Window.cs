@@ -1364,11 +1364,11 @@ namespace Yatse2
            }
            
             
-           if (_config.FanartAlways== true && _config.Currently==false && _isfanart==false && nowPlaying.IsPlaying && nowPlaying.MediaType=="Audio"  &&  ( _timer % _config.FanartTimer) == 0 ) 
+           if (_config.FanartAlways== true && _config.Currently==false && !_isfanart && nowPlaying.IsPlaying && nowPlaying.MediaType=="Audio"  &&  ( _timer % _config.FanartTimer) == 0 ) 
            {
                CheckAudioFanart();
                StartFanart();
-               Logger.Instance().LogDump("Yatse2", "nowPlaying playing Audio Starting fanart " + nowPlaying.MediaType, true);
+               Logger.Instance().LogDump("AUDIO", "nowPlaying playing Audio Starting fanart " + nowPlaying.MediaType, true);
            }
 
             
@@ -1404,8 +1404,10 @@ namespace Yatse2
 
 
 
-          if (glennwindow.WindowState == WindowState.Normal && _isfanart && _fanartCurrentImage != 0 && (_timer % _config.FanartTimer) == 0 && nowPlaying.IsPlaying && nowPlaying.MediaType =="Audio")
+          if (glennwindow.WindowState == WindowState.Normal && _isfanart && _config.FanartAlways == true && _config.Currently == false && _fanartCurrentImage != 0 && (_timer % _config.FanartTimer) == 0 && nowPlaying.IsPlaying && nowPlaying.MediaType == "Audio")
           {
+              Logger.Instance().LogDump("AUDIO", "nowPlaying Switching Fanart" + nowPlaying.MediaType, true);
+              CheckAudioFanart();
               SwitchFanart();
 
           }
