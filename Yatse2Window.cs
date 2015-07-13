@@ -1073,10 +1073,11 @@ namespace Yatse2
                     stbDiaporamaShow.Begin(this);
                 }
             }
-            
-           Logger.Instance().LogDump("MUSIC", "Fanart File   " + nowPlaying2.Artist, true);
-           Logger.Instance().LogDump("MUSIC", "Fanart File   " + ReturnContainingSource( SortOutPath(  nowPlaying2.FileName)), true);
-           _config.FanartDirectory = ReturnContainingSource(SortOutPath(nowPlaying2.FileName)) + nowPlaying2.Artist + @"\extrafanart\";
+           // Change to kodiMusic.Source Usage
+           var ArtistExtrafanart = KodiSourceData.KodiMusicSources[0] + nowPlaying2.Artist + @"\extrafanart\";
+           Logger.Instance().LogDump("MUSIC", "Fanart File Artist Name:  " + nowPlaying2.Artist, true);
+           Logger.Instance().LogDump("MUSIC", "Fanart File   " + ArtistExtrafanart, true);
+           _config.FanartDirectory = ArtistExtrafanart;
            Logger.Instance().LogDump("MUSIC", "Fanart location    " + _config.FanartDirectory, true);
            if (GetRandomImagePathNew(_config.FanartDirectory)==null)
            {
