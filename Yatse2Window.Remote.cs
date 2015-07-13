@@ -259,7 +259,28 @@ namespace Yatse2
                     {
                             Logger.Instance().LogDump("Thumb Exception", "Thumbnail Exception Caught" +ex, true); 
                     }
-
+                   
+                    //Change Thumb if using Google play - recognise googleusercontent in string
+                    
+                    try
+                    {
+                       
+                        var pathfilename = NowPlayingFile;
+                        if (pathfilename.Contains("googleusercontent"))
+                        {
+                            Logger.Instance().LogDump("UpdateAUDIO", "Thumb GooglePlay:  Update to Skin Thumb", true);
+                            
+                            if (File.Exists(Helper.SkinPath + _config.Skin + @"\Interface\Default_Music-ThumbGoogle.png"))
+                            {
+                                _yatse2Properties.Currently.Thumb = Helper.SkinPath + _config.Skin + @"\Interface\Default_Music-ThumbGoogle.png";
+                                Logger.Instance().LogDump("UpdateAUDIO", "Thumb GooglePlay:  Changing to Google Thumb" + _yatse2Properties.Currently.Thumb, true);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Instance().LogDump("Thumb Exception", "Thumbnail Exception Caught" + ex, true);
+                    }
 
                     var songinfo = _database.GetAudioSongFromFile(_remoteInfo.Id, nowPlaying.FileName);
                     if (songinfo.Count > 0)
@@ -397,9 +418,7 @@ namespace Yatse2
                 }
                 UpdateCurrently(nowPlaying);
             }
-            
-            //Need to delete below
-            //UpdateCurrently(nowPlaying);
+
             
             if ((nowPlaying.IsPlaying || nowPlaying.IsPaused))
             {

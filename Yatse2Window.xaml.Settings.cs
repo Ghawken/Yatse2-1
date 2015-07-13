@@ -34,7 +34,7 @@ namespace Yatse2
     {
         private static void Donate()
         {
-            const string url = @"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=";
+            const string url = @"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ghawken%40hotkey%2enet%2eau&lc=AU&item_name=Yatse3%20Socket&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHostedGuest";
             Process.Start(new ProcessStartInfo(url));
         }
 
