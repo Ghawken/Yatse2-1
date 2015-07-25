@@ -204,7 +204,31 @@ namespace Yatse2
                 }
             }
         }
+        protected virtual bool IsFileLocked(string file)
+        {
+            FileStream stream = null;
 
+            try
+            {
+                stream = new FileStream(file, FileMode.Open);
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
+
+            //file is not locked
+            return false;
+        }
         private void UpdateCurrently(Plugin.ApiCurrently nowPlaying )
         {
             _isPlaying = true;
@@ -232,7 +256,22 @@ namespace Yatse2
                     if (!_config.MusicFanartRotation && GetRandomImagePath(testaudiofanart)!=null)
                     {
                         Logger.Instance().LogDump("UpdateAUDIO", "Currently.Fanart set to testaudiofanart:" , true);
-                        _yatse2Properties.Currently.Fanart = GetRandomImagePath(testaudiofanart);
+                        var FanartPathFilename = GetRandomImagePath(testaudiofanart);
+                        var FanartisLocked = true;
+                        FanartisLocked = IsFileLocked(FanartPathFilename);
+                        if ( FanartisLocked == false)
+                        {
+                            Logger.Instance().LogDump("UpdateAUDIO", "Fanart File is not locked using "+ FanartPathFilename, true); 
+                            _yatse2Properties.Currently.Fanart = FanartPathFilename;
+                        }
+                        if (FanartisLocked == true)
+                        {
+                            Logger.Instance().LogDump("UpdateAUDIO", "Fanart File is locked/using Default", true);
+                            _yatse2Properties.Currently.Fanart = Helper.SkinPath + _config.Skin + @"\Interface\Default_Diaporama.png";
+                        }
+
+                        
+                        
                     }
                        
 
