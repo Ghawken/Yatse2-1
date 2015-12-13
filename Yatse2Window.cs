@@ -1073,17 +1073,40 @@ namespace Yatse2
                     stbDiaporamaShow.Begin(this);
                 }
             }
+
+
+
+            var ArtistExtrafanart = KodiSourceData.KodiMusicSources[0] + nowPlaying2.Artist + @"\extrafanart\";
+
+            foreach (var musicsource in KodiSourceData.KodiMusicSources)
+            {
+                if (musicsource != null)
+                {
+                    var testaudiofanartcheck = musicsource + nowPlaying2.Artist + @"\extrafanart\";
+                    Logger.Instance().LogDump("UpdateAUDIO ARRAY", "Checking all sources " + testaudiofanartcheck);
+                    if (System.IO.Directory.Exists(testaudiofanartcheck))
+                    {
+                        Logger.Instance().LogDump("UpdateAUDIO ARRAY", "Directory Exists Usings - No check for contents though " + testaudiofanartcheck);
+                        ArtistExtrafanart = testaudiofanartcheck;
+                        break;
+                    }
+                }
+
+
+            }
+            
+
            // Change to kodiMusic.Source Usage
-           var ArtistExtrafanart = KodiSourceData.KodiMusicSources[0] + nowPlaying2.Artist + @"\extrafanart\";
-           Logger.Instance().LogDump("MUSIC", "Fanart File Artist Name:  " + nowPlaying2.Artist, true);
-           Logger.Instance().LogDump("MUSIC", "Fanart File   " + ArtistExtrafanart, true);
-           _config.FanartDirectory = ArtistExtrafanart;
-           Logger.Instance().LogDump("MUSIC", "Fanart location    " + _config.FanartDirectory, true);
-           if (GetRandomImagePathNew(_config.FanartDirectory)==null)
-           {
+           //var ArtistExtrafanart = KodiSourceData.KodiMusicSources[0] + nowPlaying2.Artist + @"\extrafanart\";
+            Logger.Instance().LogDump("MUSIC", "Fanart File Artist Name:  " + nowPlaying2.Artist, true);
+            Logger.Instance().LogDump("MUSIC", "Fanart File   " + ArtistExtrafanart, true);
+            _config.FanartDirectory = ArtistExtrafanart;
+            Logger.Instance().LogDump("MUSIC", "Fanart location    " + _config.FanartDirectory, true);
+            if (GetRandomImagePathNew(_config.FanartDirectory)==null)
+            {
                Logger.Instance().LogDump("MUSIC", "CheckAudio Defaulting  " + nowPlaying2.Artist, true);
                _config.FanartDirectory = FanartDirectory + _config.FanartDirectoryMusic;
-           }
+            }
 
        }
 
