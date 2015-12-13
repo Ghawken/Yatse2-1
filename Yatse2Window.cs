@@ -1358,7 +1358,8 @@ namespace Yatse2
                         if (stbDimmingShow != null)
                             stbDimmingShow.Begin(this);
                         Logger.Instance().LogDump("Yatse2 NEW Debug:", "Playback Paused undim ",true);
-                   ResetTimer();
+                        Logger.Instance().LogDump("Yatse2 FANART    : ResetTimer Run from 3", _timer);
+                        ResetTimer();
                    }
 
            }
@@ -1385,12 +1386,15 @@ namespace Yatse2
                         if (stbDimmingShow != null)
                             stbDimmingShow.Begin(this);
                         Logger.Instance().LogDump("Yatse2 NEW Debug:", "Playback Muted undim ",true);
+                        Logger.Instance().LogDump("Yatse2 FANART    : ResetTimer Run from nowPlaying.IsMuted ", _timer);
+                        ResetTimer();
                     }
-                    ResetTimer();
+                    
           }
 
           if (_timer > _timerScreenSaver && !nowPlaying.IsPaused && _config.FanartAlways == false )
           {
+                    Logger.Instance().LogDump("Yatse2 FANART    : StartScreen Saver Called", _timer);
                     StartScreensaver();
           }
 
@@ -1442,7 +1446,7 @@ namespace Yatse2
                     StartDiaporama();
                 }
             }
-            
+            Logger.Instance().LogDump("Yatse2 FANART    : ResetTimer Run from StartScreenSaver", _timer);
             ResetTimer();
         }
 

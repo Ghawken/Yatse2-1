@@ -84,6 +84,7 @@ namespace Remote.XBMC.Frodo.Api
                 _parent.Log("ERROR - MPCCOMMAND : " + cmd + " - " + e.Message);
                 if (e.Status == WebExceptionStatus.Timeout)
                 {
+
                     _parent.MpcLoaded = false;
                 }
             }
@@ -112,7 +113,7 @@ namespace Remote.XBMC.Frodo.Api
                                 var reqContent = reader.ReadToEnd();
                                 _parent.Trace(reqContent);
                                 returnContent = reqContent;
-                                returnContent = returnContent.Replace("OnStatus(", "").TrimEnd(')').Replace("'", "\"").Replace("\\\"", "'").Replace(", ",",");
+                                returnContent = returnContent.Replace("OnStatus(", "").TrimEnd(')').Replace("'", "\"").Replace("\\\"", "'").Replace(", ", ",");
                             }
                     }
                 }
@@ -122,12 +123,14 @@ namespace Remote.XBMC.Frodo.Api
                 _parent.Log("ERROR - MPCCOMMAND : Status" + " - " + e.Message);
                 if (e.Status == WebExceptionStatus.Timeout)
                 {
-                    _parent.MpcLoaded = false;
+                       _parent.Log("ERROR - MPCCOMMAND : Web Exception Thrown and MpcLoad now false");  
+                       _parent.MpcLoaded = false;
+                  
                 }
+                
             }
             return returnContent;
         }
-
         public MpcHcRemote(Xbmc parent)
         {
             _parent = parent;

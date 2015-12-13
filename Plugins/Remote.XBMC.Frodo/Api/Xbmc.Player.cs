@@ -61,6 +61,27 @@ namespace Remote.XBMC.Frodo.Api
                         _nowPlaying.Volume = Convert.ToInt32("0" + data[7], CultureInfo.InvariantCulture);
                         _nowPlaying.IsMuted = data[6] == "1";
                         _nowPlaying.Progress = (int)percent;
+
+                        if (data[1] == "Playing")
+                        {
+                            _parent.Log("XBMC PLAYER REMOTE:   Playing given Changing NowPlaying to true " + data[1]);
+                            _nowPlaying.IsPlaying = true;
+                            _nowPlaying.IsPaused = false;
+                        }
+                        if (data[1] == "Paused")
+                        {
+                            _parent.Log("XBMC PLAYER REMOTE:   Paused given Changing NowPlaying to true " + data[1]);
+                            _nowPlaying.IsPaused = true;
+                            _nowPlaying.IsPlaying = !_nowPlaying.IsPaused;
+                        }
+
+                    }
+                    if (_parent.MpcLoaded == false)
+                    {
+                        _nowPlaying.FileName = "Glenn MPC Stopped";
+                        _nowPlaying.Title = "";
+                        _nowPlaying.IsPlaying = false;
+                        _nowPlaying.IsPaused = false;
                     }
                 }
                 else
@@ -71,9 +92,11 @@ namespace Remote.XBMC.Frodo.Api
                         _nowPlaying.Title = "";
                         _nowPlaying.IsPlaying = false;
                         _nowPlaying.IsPaused = false;
+                        _parent.Log("XBMC PLAYER REMOTE:   Returning as no !Player Connected");
+
                         return;
                     }
-
+                    //_parent.Log("XBMC PLAYER REMOTE:   Check with MPC Doesnt make it here");
                     var GUIproperties = new JsonObject();
                     GUIproperties["properties"] = new[]
                                                       {
