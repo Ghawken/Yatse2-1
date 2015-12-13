@@ -259,8 +259,9 @@ namespace Yatse2
                             { 
                             var testaudiofanartcheck = musicsource + nowPlaying.Artist + @"\extrafanart\";
                             Logger.Instance().LogDump("UpdateAUDIO ARRAY", "Checking all sources " + testaudiofanartcheck);
-                            if (GetRandomImagePath(testaudiofanartcheck) != null)
+                            if (System.IO.Directory.Exists(testaudiofanartcheck)) 
                                 {
+                                 Logger.Instance().LogDump("UpdateAUDIO ARRAY", "Directory Exists Usings - No check for contents though " + testaudiofanartcheck);
                                  testaudiofanart = testaudiofanartcheck;
                                  break;
                                 }
