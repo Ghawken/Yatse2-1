@@ -252,6 +252,7 @@ namespace Yatse2
 
 
                    var testaudiofanart = KodiSourceData.KodiMusicSources[0] + nowPlaying.Artist + @"\extrafanart\"; 
+                   
                    foreach (var musicsource in KodiSourceData.KodiMusicSources)
                    {
                             if (musicsource != null)
@@ -261,6 +262,7 @@ namespace Yatse2
                             if (GetRandomImagePath(testaudiofanartcheck) != null)
                                 {
                                  testaudiofanart = testaudiofanartcheck;
+                                 break;
                                 }
                             }    
                         
