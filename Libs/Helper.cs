@@ -55,7 +55,9 @@ namespace Yatse2.Libs
         {
             get
             {
-                return AppPath + @"Skin\";
+                var appLogPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                var dataFolder = Path.Combine(appLogPath, "Yatse 3 Socket");
+                return dataFolder + @"\Skin\";
             }
         }
 

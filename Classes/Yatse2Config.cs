@@ -135,7 +135,7 @@ namespace Yatse2.Classes
             DefaultRemote = 0;
             Homepage = "Home";
             ScreensaverTimer = 120;
-            GoHomeOnEndPlayback = false;
+            GoHomeOnEndPlayback = true;
             MusicFanartRotation = false;
             DiaporamaSubdirs = true;
             MinDMBitsPerPel = 32;
