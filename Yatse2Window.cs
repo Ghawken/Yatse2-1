@@ -717,13 +717,13 @@ namespace Yatse2
                 }
 
 
-                XmlNodeList KodiMusic = kodisource.GetElementsByTagName("music");
+                XmlNodeList KodiMusic = kodisource.SelectNodes("sources/music/source");
                 i = 0;
                 foreach (XmlNode node in KodiMusic)
                 {
 
-                    Logger.Instance().Log("Load Kodi Music Source", "Xml Data ==  " + node["source"]["path"].InnerText, true);
-                    KodiSourceData.KodiMusicSources[i] = SortOutPath(node["source"]["path"].InnerText);
+                    Logger.Instance().Log("Load Kodi Music Source", "Xml Data ==  " + node["path"].InnerText, true);
+                    KodiSourceData.KodiMusicSources[i] = SortOutPath(node["path"].InnerText);
                     Logger.Instance().Log("Load Kodi Music Source", "KodiSources Array " + i + "  " + KodiSourceData.KodiMusicSources[i], true);
                     i++;
                     
