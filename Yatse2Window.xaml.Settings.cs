@@ -331,6 +331,12 @@ namespace Yatse2
             _moviesDataSource.Clear();
             _tvShowsDataSource.Clear();
         }
+        private void btn_Settings_HttpOpen_Click(object sender, RoutedEventArgs e)
+        {
+            Window1 httpWindow = new Window1();
+            httpWindow.Show();
+
+        }
 
         private void btn_Settings_WeatherLocId_Click(object sender, RoutedEventArgs e)
         {

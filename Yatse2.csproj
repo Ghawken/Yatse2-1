@@ -436,6 +436,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Window1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Yatse2Window.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -450,6 +454,9 @@
     <Compile Include="Libs\OSVersion.cs" />
     <Compile Include="ModalDialog.xaml.cs">
       <DependentUpon>ModalDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Window1.xaml.cs">
+      <DependentUpon>Window1.xaml</DependentUpon>
     </Compile>
     <Compile Include="Yatse2Window.xaml.TvSeasons.cs" />
     <Compile Include="Yatse2Window.xaml.TvEpisodes.cs" />

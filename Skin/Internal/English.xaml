@@ -160,4 +160,5 @@
     <S:String x:Key="Localized_140">Random</S:String>
     <S:String x:Key="Localized_141">Use Yatse2 Server</S:String>
     <S:String x:Key="Localized_142">Use Minimise Always</S:String>
+    <S:String x:Key="Localized_143">HTTP Send</S:String>
 </ResourceDictionary>

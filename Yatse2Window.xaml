@@ -951,7 +951,22 @@
 
                                     </Grid>
         					</TabItem>
-        				</TabControl>
+                                <TabItem Header="{DynamicResource Localized_143}" FontSize="24" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Margin="0" Style="{DynamicResource TabItemStyle1}">
+                                    <Grid>
+
+                                      <!--  <CheckBox x:Name="chk_Settings_CheckUpdate" Style="{DynamicResource CheckBox}" FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Content="{DynamicResource Localized_112}" Padding="5,0,0,0" Margin="8,8,185,0" VerticalAlignment="Top" />
+                                        <CheckBox x:Name="chk_Settings_StartYatse2Server" Style="{DynamicResource CheckBox}" FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Content="{DynamicResource Localized_141}" Padding="5,0,0,0" Margin="8,48.723,185,0" VerticalAlignment="Top" />
+                                        <CheckBox x:Name="chk_Settings_MinimiseAlways" Style="{DynamicResource CheckBox}" FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Content="{DynamicResource Localized_142}" Padding="5,0,0,0" Margin="8,89.393,185,0" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" /> -->
+                                        <Button Width="201" Height="25.724" VerticalAlignment="Top" Style="{DynamicResource Button}" FontSize="16" Panel.ZIndex="5"
+        					Content="{DynamicResource Localized_83}" Canvas.Left="8" Canvas.Top="318.538" Click="btn_Settings_HttpOpen_Click"/>
+
+                                    </Grid>
+                                </TabItem>
+
+                            </TabControl>
         				<Button Width="201" Height="25.724" VerticalAlignment="Top" Style="{DynamicResource Button}" FontSize="16" Panel.ZIndex="5"
         					Content="{DynamicResource Localized_83}" Canvas.Left="8" Canvas.Top="318.538" Click="btn_Settings_SaveSettings_Click"/>
                             <TextBlock Height="23" Text="Tolriq FORK https://github.com/Ghawken/Yatse2-1" TextWrapping="Wrap" FontSize="16" TextAlignment="Center" Foreground="{DynamicResource Default_Font_Color}" FontStyle="Italic" MouseDown="TextBlock_MouseDown" Canvas.Left="234" Canvas.Top="321" Width="436"/>
