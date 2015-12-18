@@ -117,6 +117,7 @@ namespace Yatse2
             chk_Settings_StartWithWindows.IsChecked = _config.StartWithWindows;
             chk_Settings_StartYatse2Server.IsChecked = _config.StartYatse2Server;
             chk_Settings_MinimiseAlways.IsChecked = _config.MinimiseAlways;
+            //chk_Settings_HttpSend.IsChecked = _config.HttpSend;
             LoadSettingsResolutions();
 
             lst_Settings_Skin.Items.Clear();
@@ -245,6 +246,7 @@ namespace Yatse2
                 _config.StartWithWindows = (bool)chk_Settings_StartWithWindows.IsChecked;
                 _config.StartYatse2Server = (bool)chk_Settings_StartYatse2Server.IsChecked;
                 _config.MinimiseAlways = (bool)chk_Settings_MinimiseAlways.IsChecked;
+                _config.HttpSend = (bool)chk_Settings_HttpSend.IsChecked;
                 // ReSharper restore PossibleInvalidOperationException
             }
             catch (InvalidOperationException) { }
@@ -331,7 +333,11 @@ namespace Yatse2
             _moviesDataSource.Clear();
             _tvShowsDataSource.Clear();
         }
-
+        private void btn_Settings_HttpOpen_Click(object sender, RoutedEventArgs e)
+        {
+            //httpWindow = new httpWindow();
+            //httpWindow.Show();
+        }
         private void btn_Settings_WeatherLocId_Click(object sender, RoutedEventArgs e)
         {
             grd_Settings_Weather.Visibility = Visibility.Visible;

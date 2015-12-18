@@ -30,6 +30,7 @@ namespace Yatse2.Classes
         public bool Debug { get; set; }
         public bool SecondScreen { get; set; }
         public bool MinimiseAlways { get; set; }
+        public bool HttpSend { get; set; }
         public bool FanartAlways { get; set; }
         public bool Topmost { get; set; }
         public bool KeepFocus { get; set; }
@@ -163,6 +164,7 @@ namespace Yatse2.Classes
             IPAddress = "127.0.0.1";
             IPPort = 5000;
             FanartNumberDirectories = 3;
+            HttpSend = false;
         }
 
         public bool Load(string configFile)
@@ -191,6 +193,7 @@ namespace Yatse2.Classes
             Debug = config.Debug;
             SecondScreen = config.SecondScreen;
             MinimiseAlways = config.MinimiseAlways;
+            HttpSend = config.HttpSend;
             FanartAlways = config.FanartAlways;
             Topmost = config.Topmost;
             KeepFocus = config.KeepFocus;
