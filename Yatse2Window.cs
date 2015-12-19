@@ -144,6 +144,11 @@ namespace Yatse2
         private bool _isPlaying;
         private bool _disableFocus;
 
+        private bool HttpisPlaying;
+        private bool HttpisPaused;
+        private bool HttpisMuted;
+        private bool HttpisStopped;
+
         private string _filterMovie = "";
         private string _filterTvShow = "";
         private string _filterAudioGenre = "";
@@ -1291,7 +1296,7 @@ namespace Yatse2
             Logger.Instance().LogDump("Yatse2 FANART    : Timer Result", _timer);
             UpdateRemote();
             Window glennwindow = Window.GetWindow(this);
-
+            
 
             //if (_config.CheckForUpdate && !_updatecheck)
             //{
@@ -1313,6 +1318,44 @@ namespace Yatse2
             var nowPlaying = _remote != null ? _remote.Player.NowPlaying(false) : new ApiCurrently();
             var GlennMinimise = (_config.MinimiseAlways);
 
+            //Http Send Setup
+
+            if ((_config.HttpSend))
+            
+            {
+                Logger.Instance().LogDump("HttpSend", "Checking Playback Conditions", true);
+
+                if (nowPlaying.IsPlaying == true && HttpisPlaying == false)
+                {
+                    gotoHttp(_config.HttpPlaystarted);
+                    HttpisPlaying = true;
+                    HttpisPaused = false;
+                }
+                if (nowPlaying.IsPaused == true && HttpisPaused == false)
+                {
+                    gotoHttp(_config.HttpPlaypaused);
+                    HttpisPaused = true;
+                    HttpisPlaying = false;
+                }
+                if (nowPlaying.IsMuted == true && HttpisMuted == false)
+                {
+                    gotoHttp(_config.HttpMute);
+                    HttpisMuted = true;
+                }
+                if (nowPlaying.IsPaused == false && nowPlaying.IsPlaying == false  && HttpisStopped == false)
+                {
+                    gotoHttp(_config.HttpPlaystopped);
+                    HttpisStopped = true;
+                    HttpisPlaying = false;
+                    HttpisPaused = false;
+                }
+                if (nowPlaying.IsMuted == false)
+                {
+                    HttpisMuted = false;
+                }
+
+
+            }
 
             //Logger.Instance().Log("Yatse2", "About to CALL CheckFanARt");
            // CheckFanArt();
@@ -1451,6 +1494,44 @@ namespace Yatse2
         }
         
 
+        private void gotoHttp(string url)
+        {
+            try
+            {
+
+                var logon = _config.HttpUser;
+                var password = _config.HttpPassword;
+
+                Logger.Instance().LogDump("HttpSend", "gotoHttp Called, url to send :" + url, true);
+
+                WebRequest request = WebRequest.Create(url);
+                request.Method = WebRequestMethods.Http.Get;
+                NetworkCredential networkCredential = new NetworkCredential(logon, password); // logon in format "domain\username"
+                CredentialCache myCredentialCache = new CredentialCache { { new Uri(url), "Basic", networkCredential } };
+                request.PreAuthenticate = true;
+                request.Credentials = myCredentialCache;
+                using (WebResponse response = request.GetResponse())
+                {
+                    Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+
+                    using (Stream dataStream = response.GetResponseStream())
+                    {
+                        using (StreamReader reader = new StreamReader(dataStream))
+                        {
+                            string responseFromServer = reader.ReadToEnd();
+                            Logger.Instance().LogDump("HttpSend", "url: " + url + " Response: " + responseFromServer, true);
+                            //Console.WriteLine(responseFromServer);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance().LogDump("HttpSend", "ERROR: " + url + "Ex " + ex,true);
+            }
+        
+        }
+         
         private void StartScreensaver()
         {
             if (!_isScreenSaver)
@@ -1481,6 +1562,7 @@ namespace Yatse2
                 btn_Home_Settings_Click(null, null);
             }
         }
+
 
         private void Change_Display_Settings(object sender, EventArgs e)
         {
