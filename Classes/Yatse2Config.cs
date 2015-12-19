@@ -219,6 +219,10 @@ namespace Yatse2.Classes
             HttpUseDigest = config.HttpUseDigest;
             HttpUser = config.HttpUser;
             HttpPassword = config.HttpPassword;
+            HttpPlaypaused = config.HttpPlaypaused;
+            HttpPlaystarted = config.HttpPlaystarted;
+            HttpMute = config.HttpMute;
+            HttpPlaystopped = config.HttpPlaystopped;
             // Shouldnt need to save others
             FanartAlways = config.FanartAlways;
             Topmost = config.Topmost;

@@ -972,10 +972,25 @@
         								Text="txt_Settings_HttpPassword" Padding="5,0,0,0" Margin="148,88.723,185,0" VerticalAlignment="Top" />
 
                                         <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
-        								Text="Password :" Padding="5,0,0,0" Margin="8,128.723,185,0" VerticalAlignment="Top" />
+        								Text="Playback Started:" Padding="5,0,0,0" Margin="8,128.723,185,0" VerticalAlignment="Top" />
                                         <TextBox x:Name="txt_Settings_HttpPlaystarted" Style="{DynamicResource TextBox}" FontSize="16" 
         								Text="txt_Settings_HttpPlaystarted" Padding="5,0,0,0" Margin="148,128.723,185,0" VerticalAlignment="Top" />
+                                        
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="Playback Paused:" Padding="5,0,0,0" Margin="8,168.723,185,0" VerticalAlignment="Top" />
+                                        <TextBox x:Name="txt_Settings_HttpPlaypaused" Style="{DynamicResource TextBox}" FontSize="16" 
+        								Text="txt_Settings_HttpPlaypaused" Padding="5,0,0,0" Margin="148,168.723,185,0" VerticalAlignment="Top" />
 
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="Playback Stopped:" Padding="5,0,0,0" Margin="8,208.723,185,0" VerticalAlignment="Top" />
+                                        <TextBox x:Name="txt_Settings_HttpPlaystopped" Style="{DynamicResource TextBox}" FontSize="16" 
+        								Text="txt_Settings_HttpPlaystopped" Padding="5,0,0,0" Margin="148,208.723,185,0" VerticalAlignment="Top" />
+
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="Playback Muted:" Padding="5,0,0,0" Margin="8,248.723,185,0" VerticalAlignment="Top" />
+                                        <TextBox x:Name="txt_Settings_HttpMute" Style="{DynamicResource TextBox}" FontSize="16" 
+        								Text="txt_Settings_HttpMute" Padding="5,0,0,0" Margin="148,248.723,185,0" VerticalAlignment="Top" />
+                                        
                                         <!--
                                         <CheckBox x:Name="chk_Settings_MinimiseAlways" Style="{DynamicResource CheckBox}" FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
         								Content="{DynamicResource Localized_142}" Padding="5,0,0,0" Margin="8,89.393,185,0" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" /> 
