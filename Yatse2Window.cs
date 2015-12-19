@@ -1326,24 +1326,26 @@ namespace Yatse2
 
                 if (nowPlaying.IsPlaying == true && HttpisPlaying == false)
                 {
-                    gotoHttp(_config.HttpPlaystarted);
+                    gotoHttp(_config.HttpPlaystarted, nowPlaying);
                     HttpisPlaying = true;
                     HttpisPaused = false;
+                    HttpisStopped = false;
                 }
                 if (nowPlaying.IsPaused == true && HttpisPaused == false)
                 {
-                    gotoHttp(_config.HttpPlaypaused);
+                    gotoHttp(_config.HttpPlaypaused, nowPlaying);
                     HttpisPaused = true;
                     HttpisPlaying = false;
+                    HttpisStopped = false;
                 }
                 if (nowPlaying.IsMuted == true && HttpisMuted == false)
                 {
-                    gotoHttp(_config.HttpMute);
+                    gotoHttp(_config.HttpMute, nowPlaying);
                     HttpisMuted = true;
                 }
                 if (nowPlaying.IsPaused == false && nowPlaying.IsPlaying == false  && HttpisStopped == false)
                 {
-                    gotoHttp(_config.HttpPlaystopped);
+                    gotoHttp(_config.HttpPlaystopped, nowPlaying);
                     HttpisStopped = true;
                     HttpisPlaying = false;
                     HttpisPaused = false;
@@ -1493,10 +1495,66 @@ namespace Yatse2
         }
         
 
-        private void gotoHttp(string url)
+        private void gotoHttp(string url, Plugin.ApiCurrently nowPlaying)
         {
             try
             {
+                //Add Variable Support to URL passing - mainly useful for filename?
+                var newurl = url;
+                var newString = "";
+                if (nowPlaying.FileName != null) 
+                { 
+                newurl = url.Replace("%HTTPFILENAME%", Uri.EscapeUriString(nowPlaying.FileName)); 
+                }
+                if (nowPlaying.Artist !=null)
+                {
+                newurl = newurl.Replace("%HTTPARTIST%", Uri.EscapeUriString(nowPlaying.Artist));
+                }
+                if (nowPlaying.Album != null)
+                {
+                newurl = newurl.Replace("%HTTPALBUM%", Uri.EscapeUriString(nowPlaying.Album));
+                }
+                if (nowPlaying.FanartURL != null)
+                {
+                newurl = newurl.Replace("%HTTPFANARTURL%", Uri.EscapeUriString(nowPlaying.FanartURL));
+                }
+                if (nowPlaying.MediaType != null)
+                {
+                newurl = newurl.Replace("%HTTPMEDIATYPE%", Uri.EscapeUriString(nowPlaying.MediaType));
+                }
+                if (nowPlaying.ShowTitle != null)
+                {
+                newurl = newurl.Replace("%HTTPTITLE%", Uri.EscapeUriString(nowPlaying.ShowTitle));
+                }
+                if (nowPlaying.Plot != null)
+                {
+                newurl = newurl.Replace("%HTTPPLOT%", Uri.EscapeUriString(nowPlaying.Plot));
+                }
+                           
+                
+                newurl = newurl.Replace("%HTTPSEASONNO%", Uri.EscapeUriString(nowPlaying.SeasonNumber.ToString()));
+                           
+                
+                newurl = newurl.Replace("%HTTPPROGRESS%", Uri.EscapeUriString(nowPlaying.Progress.ToString()));
+
+                newurl = newurl.Replace("%HTTPTIME%", Uri.EscapeUriString(nowPlaying.Time.ToString()));
+
+                newurl = newurl.Replace("%HTTPEPISODENO%", Uri.EscapeUriString(nowPlaying.EpisodeNumber.ToString()));
+
+
+
+
+
+
+
+
+
+               
+
+                Logger.Instance().LogDump("HttpSend", "Variables " +url + " newURL " + newurl, true);
+
+                url = newurl;
+
 
                 if (_config.HttpUseDigest == false)
                 {
