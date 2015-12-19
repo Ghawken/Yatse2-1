@@ -108,6 +108,9 @@ namespace Yatse2
 
             txt_Settings_ImagesDirectory.Text = _config.ImageDirectory;
             txt_Settings_WeatherLocId.Text = _config.WeatherLoc;
+            txt_Settings_HttpUser.Text = _config.HttpUser;
+            txt_Settings_HttpPassword.Text = _config.HttpPassword;
+            txt_Settings_HttpPlaystarted.Text = _config.HttpPlaystarted;
 
             chk_Settings_MouseMode.IsChecked = _config.MouseMode;
 
@@ -117,6 +120,10 @@ namespace Yatse2
             chk_Settings_StartWithWindows.IsChecked = _config.StartWithWindows;
             chk_Settings_StartYatse2Server.IsChecked = _config.StartYatse2Server;
             chk_Settings_MinimiseAlways.IsChecked = _config.MinimiseAlways;
+            chk_Settings_HttpSend.IsChecked = _config.HttpSend;
+            chk_Settings_HttpUseDigest.IsChecked = _config.HttpUseDigest;
+     
+
             LoadSettingsResolutions();
 
             lst_Settings_Skin.Items.Clear();
@@ -245,12 +252,19 @@ namespace Yatse2
                 _config.StartWithWindows = (bool)chk_Settings_StartWithWindows.IsChecked;
                 _config.StartYatse2Server = (bool)chk_Settings_StartYatse2Server.IsChecked;
                 _config.MinimiseAlways = (bool)chk_Settings_MinimiseAlways.IsChecked;
+                _config.HttpSend = (bool)chk_Settings_HttpSend.IsChecked;
+                _config.HttpUseDigest = (bool)chk_Settings_HttpUseDigest.IsChecked;
                 // ReSharper restore PossibleInvalidOperationException
             }
             catch (InvalidOperationException) { }
 
             _config.ImageDirectory = txt_Settings_ImagesDirectory.Text;
             _config.WeatherLoc = txt_Settings_WeatherLocId.Text;
+            
+            _config.HttpUser = txt_Settings_HttpUser.Text;
+            _config.HttpPassword = txt_Settings_HttpPassword.Text;
+            _config.HttpPlaystarted = txt_Settings_HttpPlaystarted.Text;
+
             _config.WeatherUnit = lst_Settings_WeatherUnit.SelectedIndex == 0 ? "c" : "f";
             if (lst_Settings_Language.SelectedItem != null)
                 _config.Language = lst_Settings_Language.SelectedItem.ToString();

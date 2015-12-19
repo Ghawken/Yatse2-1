@@ -161,4 +161,5 @@
     <S:String x:Key="Localized_141">Use Yatse2 Server</S:String>
     <S:String x:Key="Localized_142">Use Minimise Always</S:String>
     <S:String x:Key="Localized_143">HTTP Send</S:String>
+    <S:String x:Key="Localized_144">Username :</S:String>
 </ResourceDictionary>

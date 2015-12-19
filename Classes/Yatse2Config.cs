@@ -30,6 +30,25 @@ namespace Yatse2.Classes
         public bool Debug { get; set; }
         public bool SecondScreen { get; set; }
         public bool MinimiseAlways { get; set; }
+        
+        // Http Send Variable Changes
+        public string HttpUser { get; set; }
+
+        public string HttpPassword { get; set; }
+
+        public string HttpPlaystarted { get; set; }
+        public string HttpPlaypaused { get; set; }
+
+        public string HttpPlaystopped { get; set; }
+
+        public string HttpFilename { get; set; }
+
+        public string HttpType { get; set; }
+
+        public string HttpMute { get; set; }
+        
+        public bool HttpSend { get; set; }
+        public bool HttpUseDigest { get; set; }
         public bool FanartAlways { get; set; }
         public bool Topmost { get; set; }
         public bool KeepFocus { get; set; }
@@ -163,6 +182,10 @@ namespace Yatse2.Classes
             IPAddress = "127.0.0.1";
             IPPort = 5000;
             FanartNumberDirectories = 3;
+            HttpSend = false;
+            HttpUseDigest = false;
+            HttpUser = "";
+            HttpPassword = "";
         }
 
         public bool Load(string configFile)
@@ -191,6 +214,12 @@ namespace Yatse2.Classes
             Debug = config.Debug;
             SecondScreen = config.SecondScreen;
             MinimiseAlways = config.MinimiseAlways;
+            // Changes for Http Sending
+            HttpSend = config.HttpSend;
+            HttpUseDigest = config.HttpUseDigest;
+            HttpUser = config.HttpUser;
+            HttpPassword = config.HttpPassword;
+            // Shouldnt need to save others
             FanartAlways = config.FanartAlways;
             Topmost = config.Topmost;
             KeepFocus = config.KeepFocus;
