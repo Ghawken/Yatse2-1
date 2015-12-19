@@ -45,7 +45,6 @@ using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Windows.Forms;
 
-
 namespace Yatse2
 {
     public static class RestoreWindowNoActivateExtension
@@ -1499,36 +1498,59 @@ namespace Yatse2
             try
             {
 
-                var logon = _config.HttpUser;
-                var password = _config.HttpPassword;
-
-                Logger.Instance().LogDump("HttpSend", "gotoHttp Called, url to send :" + url, true);
-
-                WebRequest request = WebRequest.Create(url);
-                request.Method = WebRequestMethods.Http.Get;
-                NetworkCredential networkCredential = new NetworkCredential(logon, password); // logon in format "domain\username"
-                CredentialCache myCredentialCache = new CredentialCache { { new Uri(url), "Basic", networkCredential } };
-                request.PreAuthenticate = true;
-                request.Credentials = myCredentialCache;
-                using (WebResponse response = request.GetResponse())
+                if (_config.HttpUseDigest == false)
                 {
-                    Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+                    Logger.Instance().LogDump("HttpSend", "Using Basic: Url:  " + url, true);
 
-                    using (Stream dataStream = response.GetResponseStream())
+                    var logon = _config.HttpUser;
+                    var password = _config.HttpPassword;
+                    var Auth = "Basic";
+
+
+                    Logger.Instance().LogDump("HttpSend", "Using " + Auth + " Authorisation:   URL " + url, true);
+
+                    WebRequest request = WebRequest.Create(url);
+                    request.Method = WebRequestMethods.Http.Get;
+                    NetworkCredential networkCredential = new NetworkCredential(logon, password); // logon in format "domain\username"
+                    CredentialCache myCredentialCache = new CredentialCache { { new Uri(url), Auth, networkCredential } };
+                    request.PreAuthenticate = true;
+                    request.Credentials = myCredentialCache;
+                    using (WebResponse response = request.GetResponse())
                     {
-                        using (StreamReader reader = new StreamReader(dataStream))
-                        {
-                            string responseFromServer = reader.ReadToEnd();
-                            Logger.Instance().LogDump("HttpSend", "url: " + url + " Response: " + responseFromServer, true);
-                            //Console.WriteLine(responseFromServer);
-                        }
+
+                        //Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+                        Logger.Instance().LogDump("HttpSend", "Response: " + url + " Response: " + (((HttpWebResponse)response).StatusDescription), true);
+                        //using (Stream dataStream = response.GetResponseStream())
+                        // {
+                        //     using (StreamReader reader = new StreamReader(dataStream))
+                        //     {
+                        //         string responseFromServer = reader.ReadToEnd();
+                        //         Logger.Instance().LogDump("HttpSend", "url: " + url + " Response: " + responseFromServer, true);
+                        //Console.WriteLine(responseFromServer);
+                        //     }
+                        // }
                     }
                 }
+                if (_config.HttpUseDigest == true)
+                {
+                     Uri myurl = new Uri(url);
+                     string baseurl = myurl.GetComponents(UriComponents.SchemeAndServer | UriComponents.UserInfo, UriFormat.Unescaped);
+                     //var baseurl = myurl.Host;
+                     var dir = myurl.PathAndQuery;
+                     Logger.Instance().LogDump("HttpSend", "Using Digest:  Url: " + url + " BaseURL: " +baseurl + "  Dir: " + dir, true);
+                     DigestAuthFixer digest = new DigestAuthFixer(baseurl, _config.HttpUser, _config.HttpPassword);
+                     string strReturn = digest.GrabResponse(dir);
+                }           
+               
+            
             }
+
+            
             catch (Exception ex)
             {
-                Logger.Instance().LogDump("HttpSend", "ERROR: " + url + "Ex " + ex,true);
+                Logger.Instance().LogDump("HttpSend", "ERROR: " + url + "   Ex: " + ex, true);
             }
+
         
         }
          

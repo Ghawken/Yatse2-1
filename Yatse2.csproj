@@ -450,6 +450,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Digest.cs" />
     <Compile Include="Libs\Weather-WeatherChannel.cs" />
     <Compile Include="Libs\OSVersion.cs" />
     <Compile Include="ModalDialog.xaml.cs">
