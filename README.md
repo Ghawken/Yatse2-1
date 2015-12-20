@@ -1,6 +1,11 @@
 # Yatse2-1
 YATSE 2 - A touch screen remote controller for XBMC (.NET 3.5)
 
+An update to Yatse2 (Tolriq) Which is no longer supported.
+
+See Forum for uptodate info.
+http://forum.kodi.tv/showthread.php?tid=68936&page=54
+
 Hi (slightly more than one!)
 
 Pictures talk more than words!
