@@ -1026,6 +1026,49 @@
 
                                     </Grid>
                                 </TabItem>
+                                
+                                <TabItem Header="{DynamicResource Localized_145}" FontSize="24" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Margin="0" Style="{DynamicResource TabItemStyle1}">
+                                    <Grid>
+
+
+
+
+
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="Variables Supported:" Padding="5,0,0,0" HorizontalAlignment="Right" Margin="0,8,8,0" VerticalAlignment="Top" />
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="%HTTPFILENAME%" Padding="5,0,0,0" HorizontalAlignment="Right" Margin="0,38,8,0" VerticalAlignment="Top" />
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="%HTTPTITLE%" Padding="5,0,0,0" HorizontalAlignment="Right" Margin="0,58,8,0" VerticalAlignment="Top" />
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="%HTTPALBUM%" Padding="5,0,0,0" HorizontalAlignment="Right" Margin="0,78,8,0" VerticalAlignment="Top" />
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="%HTTPFANARTURL%" Padding="5,0,0,0" HorizontalAlignment="Right" Margin="0,98,8,0" VerticalAlignment="Top" />
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="%HTTPMEDIATYPE%" Padding="5,0,0,0" HorizontalAlignment="Right" Margin="0,118,8,0" VerticalAlignment="Top" />
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="%HTTPTITLE%" Padding="5,0,0,0" HorizontalAlignment="Right" Margin="0,138,8,0" VerticalAlignment="Top" />
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="%HTTPPLOT%" Padding="5,0,0,0" HorizontalAlignment="Right" Margin="0,158,8,0" VerticalAlignment="Top" />
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="%HTTPTRACK%" Padding="5,0,0,0" HorizontalAlignment="Right" Margin="0,178,8,0" VerticalAlignment="Top" />
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="%HTTPSEASONNO%" Padding="5,0,0,0" HorizontalAlignment="Right" Margin="0,198,8,0" VerticalAlignment="Top" />
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="%HTTPEPISODENO%" Padding="5,0,0,0" HorizontalAlignment="Right" Margin="0,218,8,0" VerticalAlignment="Top" />
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="%HTTPPROGRESS%" Padding="5,0,0,0" HorizontalAlignment="Right" Margin="0,238,8,0" VerticalAlignment="Top" />
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="%HTTPTIME%" Padding="5,0,0,0" HorizontalAlignment="Right" Margin="0,258,8,0" VerticalAlignment="Top" />
+
+                                        <!--
+                                        <CheckBox x:Name="chk_Settings_MinimiseAlways" Style="{DynamicResource CheckBox}" FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Content="{DynamicResource Localized_142}" Padding="5,0,0,0" Margin="8,89.393,185,0" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" /> 
+                                        <Button Width="201" Height="25.724" VerticalAlignment="Top" Style="{DynamicResource Button}" FontSize="16" Panel.ZIndex="5"
+        					Content="{DynamicResource Localized_83}" Canvas.Left="8" Canvas.Top="318.538" Click="btn_Settings_HttpOpen_Click"/> -->
+
+                                    </Grid>
+                                </TabItem>
 
                             </TabControl>
         				<Button Width="201" Height="25.724" VerticalAlignment="Top" Style="{DynamicResource Button}" FontSize="16" Panel.ZIndex="5"
