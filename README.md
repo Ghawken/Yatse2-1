@@ -3,6 +3,8 @@
     YATSE 2 - A touch screen remote controller for XBMC (.NET 3.5)
     Copyright (C) 2010-2013  Tolriq (http://yatse.leetzone.org)
 
+--------------- SOCKET Branch is the latest -------
+
 An update on Tolriq Yatse2 - 2nd screen TFT HTPC remote control and media info
 for Xbmc and Kodi.
 Functioning well with Kodi Helix 14.2 and currently Isengard 15.2Beta
