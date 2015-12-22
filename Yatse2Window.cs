@@ -103,7 +103,7 @@ namespace Yatse2
         private bool _videoFavoritesFilter;
         private bool _audioFavoritesFilter;
         private bool _failedRemoteCheck;
-        private bool _updatecheck;
+        //private bool _updatecheck;
         private Yatse2Properties _yatse2Properties;
         private MoviesCollection _moviesDataSource;
         private CollectionView _moviesCollectionView;
@@ -132,7 +132,7 @@ namespace Yatse2
         private Yatse2Remote _remoteInfoEdit;
         private Grid _currentGrid;
         private long _timer;
-        private Array KodiDirectories;
+        //private Array KodiDirectories;
         private long _timerHeader;
         private bool _isScreenSaver;
         private bool _isfanart;
@@ -775,7 +775,7 @@ namespace Yatse2
             }
             catch (Exception ex)
             {
-                Logger.Instance().LogDump("SortOUT", "Exception caught " + path, true);
+                Logger.Instance().LogDump("SortOUT", "Exception caught " + ex, true);
                 return "";
             }
         }
@@ -1322,7 +1322,7 @@ namespace Yatse2
             if ((_config.HttpSend))
             
             {
-                Logger.Instance().LogDump("HttpSend", "Checking Playback Conditions", true);
+                Logger.Instance().LogDump("HttpSend", "Checking Playback Conditions isNewMedia: "+nowPlaying.IsNewMedia, true);
 
                 if (nowPlaying.IsPlaying == true && HttpisPlaying == false)
                 {
@@ -1350,12 +1350,22 @@ namespace Yatse2
                     HttpisPlaying = false;
                     HttpisPaused = false;
                 }
-                if (nowPlaying.IsMuted == false)
+
+                if (nowPlaying.IsMuted == false && HttpisMuted == true)
                 {
+                    gotoHttp(_config.HttpUnmute, nowPlaying);
                     HttpisMuted = false;
                 }
 
-
+                if (nowPlaying.IsNewMedia== true && nowPlaying.MediaType == "Video")
+                {
+                    gotoHttp(_config.HttpMediatypeVideo, nowPlaying);
+                }
+                if (nowPlaying.IsNewMedia == true && nowPlaying.MediaType == "Audio")
+                {
+                    gotoHttp(_config.HttpMediatypeAudio, nowPlaying);
+                }
+               
             }
 
             //Logger.Instance().Log("Yatse2", "About to CALL CheckFanARt");
@@ -1501,7 +1511,13 @@ namespace Yatse2
             {
                 //Add Variable Support to URL passing - mainly useful for filename?
                 var newurl = url;
-                var newString = "";
+                
+                if (url =="")
+                {
+                    Logger.Instance().LogDump("HttpSend", "Called - URL Empty:  URL: " + url, true);
+                    return;
+                }
+
                 if (nowPlaying.FileName != null) 
                 { 
                 newurl = url.Replace("%HTTPFILENAME%", Uri.EscapeUriString(nowPlaying.FileName)); 
@@ -1606,7 +1622,7 @@ namespace Yatse2
             
             catch (Exception ex)
             {
-                Logger.Instance().LogDump("HttpSend", "ERROR: " + url + "   Ex: " + ex, true);
+                Logger.Instance().Log("HttpSend", "ERROR: For URL: " + url + "   Exception: " + ex, true);
             }
 
         

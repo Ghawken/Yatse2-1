@@ -114,8 +114,9 @@ namespace Yatse2
             txt_Settings_HttpPlaypaused.Text = _config.HttpPlaypaused;
             txt_Settings_HttpPlaystopped.Text = _config.HttpPlaystopped;
             txt_Settings_HttpMute.Text = _config.HttpMute;
-
-
+            txt_Settings_HttpUnmute.Text = _config.HttpUnmute;
+            txt_Settings_HttpMediatypeAudio.Text = _config.HttpMediatypeAudio;
+            txt_Settings_HttpMediatypeVideo.Text = _config.HttpMediatypeVideo;
             chk_Settings_MouseMode.IsChecked = _config.MouseMode;
 
             chk_Settings_DebugTrace.IsChecked = _config.DebugTrace;
@@ -272,7 +273,9 @@ namespace Yatse2
             _config.HttpPlaypaused = txt_Settings_HttpPlaypaused.Text;
             _config.HttpPlaystopped = txt_Settings_HttpPlaystopped.Text;
             _config.HttpMute = txt_Settings_HttpMute.Text;
-
+            _config.HttpUnmute = txt_Settings_HttpUnmute.Text;
+            _config.HttpMediatypeVideo = txt_Settings_HttpMediatypeVideo.Text;
+            _config.HttpMediatypeAudio = txt_Settings_HttpMediatypeAudio.Text;
             _config.WeatherUnit = lst_Settings_WeatherUnit.SelectedIndex == 0 ? "c" : "f";
             if (lst_Settings_Language.SelectedItem != null)
                 _config.Language = lst_Settings_Language.SelectedItem.ToString();
