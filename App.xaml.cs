@@ -86,7 +86,12 @@ namespace Yatse2
         public void Application_Exit(object sender, ExitEventArgs e)
         {
            Logger.Instance().Log("Yatse2App", "EXIT CALLED", true);
-           Yatse2.Classes.Yatse2Config config;            
+           //Yatse2Window.ni.Icon;
+            
+
+            Yatse2.Classes.Yatse2Config config;            
+
+
 
            string configFile = (Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Yatse 3 Socket\Yatse.xml");
            try
@@ -101,7 +106,7 @@ namespace Yatse2
            {
                if (ex is IOException || ex is InvalidOperationException)
                {
-                   Logger.Instance().Log("Yatse2Config", "Error loading settings : " + ex.Message);
+                   //Logger.Instance().Log("Yatse2Config", "Error loading settings : " + ex.Message);
                    return;
                }
                throw;

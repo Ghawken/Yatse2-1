@@ -123,7 +123,7 @@ namespace Yatse2
         private AudioGenresCollection _audioGenresDataSource;
         private CollectionView _audioGenresCollectionView;
         private AudioSongsCollection _audioSongsDataSource;
-        private System.Windows.Forms.NotifyIcon ni = null;
+        public System.Windows.Forms.NotifyIcon ni = null;
 
         private readonly Collection<string> _gridHistory = new Collection<string>();
         private long _currentRemoteId;
