@@ -957,7 +957,7 @@
                                         <CheckBox x:Name="chk_Settings_HttpSend" Style="{DynamicResource CheckBox}" FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
         								Content="{DynamicResource Localized_143}" Padding="5,0,0,0" Margin="8,8,185,0" VerticalAlignment="Top" />
                                         <CheckBox x:Name="chk_Settings_HttpUseDigest" Style="{DynamicResource CheckBox}" FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
-        								Content="Use Digest Auth (Not Working as Yet)" Padding="5,0,0,0" Margin="148,8,185,0" VerticalAlignment="Top" />
+        								Content="Use Digest Auth (?Working)" Padding="5,0,0,0" Margin="148,8,185,0" VerticalAlignment="Top" />
                                         
                                         
                                         <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
