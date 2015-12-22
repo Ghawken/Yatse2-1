@@ -26,12 +26,14 @@ using System.Windows.Markup;
 using System.Windows.Threading;
 using Setup;
 using Yatse2.Libs;
+using System.Xml.Serialization;
 
 [assembly: CLSCompliant(false)]
 namespace Yatse2
 {
     public partial class App
     {
+        public readonly Yatse2.Classes.Yatse2Config Appconfig = new Yatse2.Classes.Yatse2Config();   
 
         static Assembly AssemblyLoader(object sender, ResolveEventArgs args)
         {
@@ -79,6 +81,39 @@ namespace Yatse2
         {
             Logger.Instance().LogException("YatseApp", e.Exception );
             e.Handled = true;
+        }
+
+        public void Application_Exit(object sender, ExitEventArgs e)
+        {
+           Logger.Instance().Log("Yatse2App", "EXIT CALLED", true);
+           Yatse2.Classes.Yatse2Config config;            
+
+           string configFile = (Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Yatse 3 Socket\Yatse.xml");
+           try
+           {
+               var deserializer = new XmlSerializer(typeof(Yatse2.Classes.Yatse2Config));
+               using (TextReader textReader = new StreamReader(configFile))
+               {
+                   config = (Yatse2.Classes.Yatse2Config)deserializer.Deserialize(textReader);
+               }
+           }
+           catch (Exception ex)
+           {
+               if (ex is IOException || ex is InvalidOperationException)
+               {
+                   Logger.Instance().Log("Yatse2Config", "Error loading settings : " + ex.Message);
+                   return;
+               }
+               throw;
+           }
+            // Yatse2.Classes.Yatse2Config Appconfig;
+            //Yatse2.Classes.Yatse2Config _config = Yatse2.Classes.Yatse2Config();
+          
+            Logger.Instance().LogDump("Yatse2APP EXIT", config);
+            
+            HttpSend.HttpsendgotoHttpsimple(config, config.HttpPoweroff);
+            //Yatse2Window.gotoHttpsimple(config.HttpPoweroff);
+
         }
     }
 }

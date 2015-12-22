@@ -73,7 +73,10 @@ namespace Yatse2
     {
         private const string Repository = @"http://yatse.leetzone.org/repository";
         private bool _allowBeta;
-        private readonly Yatse2Config _config = new Yatse2Config();
+        
+        //changed below to public
+        
+        public readonly Yatse2Config _config = new Yatse2Config();
         private readonly string _configFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Yatse 3 Socket\Yatse.xml";
         private readonly Yatse2DB _database = new Yatse2DB();
         private readonly Weather _weather = new Weather();
@@ -668,6 +671,13 @@ namespace Yatse2
                 if (_config.StartYatse2Server)
                 {
                     StartServer();
+                }
+                HttpisStopped = true;
+
+                if (_config.HttpSend == true && _config.HttpPoweron != "")
+                {
+                    Logger.Instance().Log("HttpSend", "PowerON URL " + _config.HttpPoweron + "Sent.");
+                    gotoHttpsimple(_config.HttpPoweron);
                 }
 
                 if (!_config.StartYatse2Server)
@@ -1505,7 +1515,67 @@ namespace Yatse2
         }
         
 
-        private void gotoHttp(string url, Plugin.ApiCurrently nowPlaying)
+        public void gotoHttpsimple(string url)
+        {
+            try
+            {
+                 if (_config.HttpUseDigest == false)
+                {
+                    Logger.Instance().LogDump("HttpSimpleSend", "Using Basic: Url:  " + url, true);
+
+                    var logon = _config.HttpUser;
+                    var password = _config.HttpPassword;
+                    var Auth = "Basic";
+
+
+                    Logger.Instance().LogDump("HttpSimpleSend", "Using " + Auth + " Authorisation:   URL " + url, true);
+
+                    WebRequest request = WebRequest.Create(url);
+                    request.Method = WebRequestMethods.Http.Get;
+                    NetworkCredential networkCredential = new NetworkCredential(logon, password); // logon in format "domain\username"
+                    CredentialCache myCredentialCache = new CredentialCache { { new Uri(url), Auth, networkCredential } };
+                    request.PreAuthenticate = true;
+                    request.Credentials = myCredentialCache;
+                    using (WebResponse response = request.GetResponse())
+                    {
+
+                        //Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+                        Logger.Instance().LogDump("HttpSimpleSend", "Response: " + url + " Response: " + (((HttpWebResponse)response).StatusDescription), true);
+                        //using (Stream dataStream = response.GetResponseStream())
+                        // {
+                        //     using (StreamReader reader = new StreamReader(dataStream))
+                        //     {
+                        //         string responseFromServer = reader.ReadToEnd();
+                        //         Logger.Instance().LogDump("HttpSend", "url: " + url + " Response: " + responseFromServer, true);
+                        //Console.WriteLine(responseFromServer);
+                        //     }
+                        // }
+                    }
+                }
+                if (_config.HttpUseDigest == true)
+                {
+                     Uri myurl = new Uri(url);
+                     string baseurl = myurl.GetComponents(UriComponents.SchemeAndServer | UriComponents.UserInfo, UriFormat.Unescaped);
+                     //var baseurl = myurl.Host;
+                     var dir = myurl.PathAndQuery;
+                     Logger.Instance().LogDump("HttpSimpleSend", "Using Digest:  Url: " + url + " BaseURL: " +baseurl + "  Dir: " + dir, true);
+                     DigestAuthFixer digest = new DigestAuthFixer(baseurl, _config.HttpUser, _config.HttpPassword);
+                     string strReturn = digest.GrabResponse(dir);
+                }           
+               
+            
+            }
+
+            
+            catch (Exception ex)
+            {
+                Logger.Instance().Log("HttpSimpleSend", "ERROR: For URL: " + url + "   Exception: " + ex, true);
+            }
+
+            
+        }
+
+        public void gotoHttp(string url, Plugin.ApiCurrently nowPlaying)
         {
             try
             {

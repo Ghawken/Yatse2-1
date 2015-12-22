@@ -1044,8 +1044,17 @@
         								Text="MediaType Video" Padding="5,0,0,0" Margin="8,68,185,0" VerticalAlignment="Top" />
                                         <TextBox x:Name="txt_Settings_HttpMediatypeVideo" Style="{DynamicResource TextBox}" FontSize="16" 
         								Text="txt_Settings_HttpMediatypeVideo" Padding="5,0,0,0" Margin="148,68,185,0" VerticalAlignment="Top" />
-                                        
-                                        
+
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="Power ON" Padding="5,0,0,0" Margin="8,98,185,0" VerticalAlignment="Top" />
+                                        <TextBox x:Name="txt_Settings_HttpPoweron" Style="{DynamicResource TextBox}" FontSize="16" 
+        								Text="txt_Settings_HttpPoweron" Padding="5,0,0,0" Margin="148,98,185,0" VerticalAlignment="Top" />
+
+                                        <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
+        								Text="Power Off" Padding="5,0,0,0" Margin="8,128,185,0" VerticalAlignment="Top" />
+                                        <TextBox x:Name="txt_Settings_HttpPoweroff" Style="{DynamicResource TextBox}" FontSize="16" 
+        								Text="txt_Settings_HttpPoweroff" Padding="5,0,0,0" Margin="148,128,185,0" VerticalAlignment="Top" />
+
                                         <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"
         								Text="Variables Supported:" Padding="5,0,0,0" HorizontalAlignment="Right" Margin="0,8,8,0" VerticalAlignment="Top" />
                                         <TextBlock  FontSize="16" Foreground="{DynamicResource Default_Font_Color}"

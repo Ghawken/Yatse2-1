@@ -20,7 +20,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:Yatse2="clr-namespace:Yatse2"
     xmlns:Classes="clr-namespace:Yatse2.Classes" 
-    StartupUri="Yatse2Window.xaml">
+    StartupUri="Yatse2Window.xaml"
+    Exit="Application_Exit">             
     <Application.Resources>
         <ResourceDictionary>
             <Yatse2:MoviesCollection x:Key="MoviesDataSource" />

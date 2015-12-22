@@ -49,6 +49,8 @@ namespace Yatse2.Classes
         public string HttpUnmute { get; set; }
         public string HttpMediatypeAudio { get; set; }
         public string HttpMediatypeVideo { get; set; }
+        public string HttpPoweron { get; set; }
+        public string HttpPoweroff { get; set; }
         public bool HttpSend { get; set; }
         public bool HttpUseDigest { get; set; }
         public bool FanartAlways { get; set; }
@@ -227,6 +229,9 @@ namespace Yatse2.Classes
             HttpUnmute = config.HttpUnmute;
             HttpMediatypeVideo = config.HttpMediatypeVideo;
             HttpMediatypeAudio = config.HttpMediatypeAudio;
+            HttpPoweron = config.HttpPoweron;
+            HttpPoweroff = config.HttpPoweroff;
+
             HttpPlaystopped = config.HttpPlaystopped;
             // Shouldnt need to save others
             FanartAlways = config.FanartAlways;
