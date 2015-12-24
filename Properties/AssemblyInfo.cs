@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Tolriq/GH")]
 [assembly: AssemblyProduct("Yatse3.10Socket")]
-[assembly: AssemblyCopyright("Copyright © Tolriq 2010/11/12/13")]
+[assembly: AssemblyCopyright("Copyright © Tolriq 2010/11/12/13 GH 2015")]
 [assembly: AssemblyTrademark("Yatse2")]
 [assembly: AssemblyCulture("")]
 
@@ -51,8 +51,8 @@ using System.Windows;
 //
 // Vous pouvez spécifier toutes les valeurs ou indiquer les numéros de build et de révision par défaut 
 // en utilisant '*', comme indiqué ci-dessous :
-[assembly: AssemblyVersion("3.1.180.100")]
+[assembly: AssemblyVersion("3.1.181.100")]
 //[assembly: AssemblyVersion("2.0.0.101")]
 //[assembly: AssemblyFileVersion("2.0.0.101")]
 [assembly: NeutralResourcesLanguageAttribute("en")]
-[assembly: AssemblyFileVersionAttribute("3.1.180.100")]
+[assembly: AssemblyFileVersionAttribute("3.1.181.100")]

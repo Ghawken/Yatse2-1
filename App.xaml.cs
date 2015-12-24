@@ -115,9 +115,12 @@ namespace Yatse2
             //Yatse2.Classes.Yatse2Config _config = Yatse2.Classes.Yatse2Config();
           
             Logger.Instance().LogDump("Yatse2APP EXIT", config);
-            
-            HttpSend.HttpsendgotoHttpsimple(config, config.HttpPoweroff);
-            //Yatse2Window.gotoHttpsimple(config.HttpPoweroff);
+
+            if (config.HttpSend == true && config.HttpPoweroff != "")
+            {
+                HttpSend.HttpsendgotoHttpsimple(config, config.HttpPoweroff);
+            }
+                //Yatse2Window.gotoHttpsimple(config.HttpPoweroff);
 
         }
     }
