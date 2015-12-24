@@ -246,6 +246,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <None Include="app.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="Langs\Français.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
