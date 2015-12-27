@@ -23,7 +23,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 
-namespace Remote.Plex.HT.Api
+namespace Remote.Plex.Api
 {
     public enum IconType
     {

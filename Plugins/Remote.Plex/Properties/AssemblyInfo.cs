@@ -7,12 +7,12 @@ using System.Resources;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Remote.Plex.HT")]
+[assembly: AssemblyTitle("Remote.XBMC.Frodo")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Tolriq")]
-[assembly: AssemblyProduct("Remote.Plex.HT")]
-[assembly: AssemblyCopyright("Copyright © GH 2015 & Tolriq 2013")]
+[assembly: AssemblyProduct("Remote.XBMC.Frodo")]
+[assembly: AssemblyCopyright("Copyright © Tolriq 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -35,6 +35,6 @@ using System.Resources;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.0.1.0")]
-[assembly: AssemblyFileVersion("2.0.1.0")]
+[assembly: AssemblyVersion("2.0.145.0")]
+[assembly: AssemblyFileVersion("2.0.145.0")]
 [assembly: NeutralResourcesLanguageAttribute("en")]

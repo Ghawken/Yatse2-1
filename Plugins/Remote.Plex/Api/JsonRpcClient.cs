@@ -30,7 +30,7 @@ using Jayrock.Json;
 using Jayrock.Json.Conversion;
 using Setup;
 
-namespace Remote.Plex.HT.Api
+namespace Remote.Plex.Api
 {
     public class JsonRpcClient : HttpWebClientProtocol
     {

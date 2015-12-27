@@ -33,12 +33,10 @@ using Setup;
 using Timer = System.Timers.Timer;
 using System.Web;
 
-namespace Remote.Plex.HT.Api
+namespace Remote.Plex.Api
 {
-
     public class Xbmc : ApiConnection
     {
-
         private const string XbmcEventServerPort = "9777";
         public string MpcHcPort = "13579";
         private readonly XbmcEventClient _eventClient = new XbmcEventClient();
@@ -144,7 +142,6 @@ namespace Remote.Plex.HT.Api
         public string GetDownloadPath(string fileName)
         {
             if (!_configured) return null;
-            Logger.Instance().Trace("PlexHT : ", " Converted Filename " + @"http://" + IP + ":" + Port + "/image/" + HttpUtility.UrlEncode(fileName));
             return @"http://" + IP + ":" + Port + "/image/" + HttpUtility.UrlEncode(fileName);
         }
 

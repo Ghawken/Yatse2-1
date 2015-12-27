@@ -19,21 +19,17 @@
 using System;
 using System.Reflection;
 using Plugin;
-using Remote.Plex.HT.Api;
-using Complexion.Portable;
-using Complexion.Portable.PlexObjects;
-using Complexion.Win;
-
+using Remote.Plex.Api;
 
 [assembly: CLSCompliant(false)]
 
-namespace Remote.Plex.HT
+namespace Remote.Plex
 {
     public class XbmcFrodo : IYatse2RemotePlugin
     {
         public XbmcFrodo()
         {
-            Name = "Plex HT";
+            Name = "Plex";
         }
 
         public int Version
@@ -55,10 +51,10 @@ namespace Remote.Plex.HT
         {
             return new ApiSupportedFunctions
                        {
-                           MovieLibrary = false,
-                           AudioLibrary = false,
-                           TvShowLibrary = false,
-                           PictureLibrary = false
+                           MovieLibrary = true,
+                           AudioLibrary = true,
+                           TvShowLibrary = true,
+                           PictureLibrary = true
                        };
         }
 

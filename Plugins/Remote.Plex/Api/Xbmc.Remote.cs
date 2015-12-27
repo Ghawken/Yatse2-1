@@ -19,7 +19,7 @@
 using Jayrock.Json;
 using Plugin;
 
-namespace Remote.Plex.HT.Api
+namespace Remote.Plex.Api
 {
     class XbmcRemote : IApiRemote
     {

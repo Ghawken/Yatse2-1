@@ -24,7 +24,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-namespace Remote.Plex.HT.Api
+namespace Remote.Plex.Api
 {
     public class MpcHcRemote
     {

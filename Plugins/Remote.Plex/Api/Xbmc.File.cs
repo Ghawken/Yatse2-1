@@ -21,7 +21,7 @@ using System.Net;
 using System.Threading;
 using Plugin;
 
-namespace Remote.Plex.HT.Api
+namespace Remote.Plex.Api
 {
     class XbmcFile : IApiFile
     {

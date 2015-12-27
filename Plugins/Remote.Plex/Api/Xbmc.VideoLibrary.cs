@@ -21,7 +21,7 @@ using System.Collections.ObjectModel;
 using Plugin;
 using Jayrock.Json;
 
-namespace Remote.Plex.HT.Api
+namespace Remote.Plex.Api
 {
   class XbmcVideoLibrary : IApiVideoLibrary
   {

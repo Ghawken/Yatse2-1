@@ -21,7 +21,7 @@ using Plugin;
 using Jayrock.Json;
 using System;
 
-namespace Remote.Plex.HT.Api
+namespace Remote.Plex.Api
 {
   class XbmcAudioLibrary : IApiAudioLibrary
   {

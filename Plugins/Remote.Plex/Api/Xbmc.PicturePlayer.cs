@@ -16,33 +16,18 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ------------------------------------------------------------------------
 
+
 using Plugin;
 
-namespace Remote.Plex.HT.Api
+namespace Remote.Plex.Api
 {
-    class XbmcSystem : IApiSystem
+    class XbmcPicturePlayer : IApiPicturePlayer
     {
         private readonly Xbmc _parent;
 
-        public XbmcSystem(Xbmc parent)
+        public XbmcPicturePlayer(Xbmc parent)
         {
             _parent = parent;
         }
-
-        public void Quit()
-        {
-            _parent.AsyncJsonCommand("Application.Quit", null);
-        }
-
-        public void Shutdown()
-        {
-            _parent.AsyncJsonCommand("System.Shutdown", null);
-        }
-
-        public void Reboot()
-        {
-            _parent.AsyncJsonCommand("System.Reboot", null);
-        }
-
     }
 }
