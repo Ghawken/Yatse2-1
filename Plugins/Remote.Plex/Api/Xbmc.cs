@@ -17,14 +17,16 @@
 // ------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Runtime.InteropServices;
 using System.Text;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+
 using System.Threading;
 using Jayrock.Json;
 using Jayrock.Json.Conversion;
@@ -33,14 +35,23 @@ using Setup;
 using Timer = System.Timers.Timer;
 using System.Web;
 
-namespace Remote.XBMC.Frodo.Api
+using System.Threading.Tasks;
+using System.Security.Cryptography;
+using System.IO;
+using System.Xml;
+using System.Web.Script.Serialization;
+using System.Collections.Specialized;
+
+
+namespace Remote.Plex.Api
 {
 
     public class Xbmc : ApiConnection
     {
 
-        private const string XbmcEventServerPort = "9777";
+        private const string XbmcEventServerPort = "9778";
         public string MpcHcPort = "13579";
+        public string PlexAuthToken = "notset";
         private readonly XbmcEventClient _eventClient = new XbmcEventClient();
         //private const string ApiPath = "/xbmcCmds/xbmcHttp";
         private const string JsonPath = "/jsonrpc";
@@ -74,7 +85,7 @@ namespace Remote.XBMC.Frodo.Api
         {
             if (!MpcLoaded)
             {
-                var processes = Process.GetProcessesByName("Kodi");
+                var processes = Process.GetProcessesByName("Plex");
                 foreach (var pFoundWindow in processes.Select(p => p.MainWindowHandle))
                 {
                     NativeMethods.SetForegroundWindow(pFoundWindow);
@@ -94,7 +105,7 @@ namespace Remote.XBMC.Frodo.Api
             SystemRunning = new XbmcSystem(this);
             Remote = new XbmcRemote(this);
             MpcHcRemote = new MpcHcRemote(this);
-            ApiName = "XFJ";
+            ApiName = "XXX";
         }
 
         private JsonObject GetApplicationProperties(string label)
@@ -117,7 +128,7 @@ namespace Remote.XBMC.Frodo.Api
 
         public override string GetOS()
         {
-            return "Xbmc";
+            return "Windows";
         }
 
         public override string GetVersion()
@@ -246,30 +257,30 @@ namespace Remote.XBMC.Frodo.Api
             Password = password;
             _configured = true;
 
-            var check = JsonCommand("JSONRPC.Ping", null);
-            if (check == null)
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(UserName+":"+Password);
+
+            string auth = System.Convert.ToBase64String(plainTextBytes);
+            
+            PlexAuthToken = auth;
+
+            using (var client = new WebClient())
             {
-                Log("Test connection : No response");
-                return 0;
+                var values = new NameValueCollection();
+                values["Authorization"] = "Basic " + auth;
+                values["X-Plex-Client-Identifier"] = "Yatse3Socket";
+                values["X-Plex-Product"] = "Yatse 3 Socket";
+                values["X-Plex-Version"] = "0.1.0";
+
+                client.Headers.Add(values);
+
+                var response = client.UploadString("https://plex.tv/users/sign_in.json", "");
+
+                var json = new JavaScriptSerializer();
+                dynamic result = json.DeserializeObject(response);
+
+                var token = result["user"]["authentication_token"];
             }
-            Log("Test connection : Response : " + check);
-            var res = (Convert.ToString(check,CultureInfo.InvariantCulture) == "pong");
-            if (res)
-            {
-                var version = GetVersion();
-                var build = new Regex(@"r(\d+)");
-                var m = build.Match(version);
-                if (m.Success)
-                {
-                    var ver = Convert.ToInt32("0" + m.Groups[1],CultureInfo.InvariantCulture);
-                    if (ver < 29000 )
-                    {
-                        Log("Target version : " + ver + " not compatible !");
-                        return 2; // Plugin not compatible
-                    }
-                }
-                // If not build found just go will perhaps works
-            }
+
             return res ? 1 : 0;
 
         }
