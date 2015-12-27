@@ -91,7 +91,7 @@ namespace Remote.XBMC.Frodo.Api
             PicturePlayer = new XbmcPicturePlayer(this);
             VideoPlayer = new XbmcVideoPlayer(this);
             Player = new XbmcPlayer(this);
-            System = new XbmcSystem(this);
+            SystemRunning = new XbmcSystem(this);
             Remote = new XbmcRemote(this);
             MpcHcRemote = new MpcHcRemote(this);
             ApiName = "XFJ";

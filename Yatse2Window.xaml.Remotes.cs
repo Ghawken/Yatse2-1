@@ -129,7 +129,7 @@ namespace Yatse2
 
             var remote = ApiHelper.Instance().GetRemoteByApi(selitem.Api);
             remote.Configure(selitem.IP, selitem.Port, selitem.Login, selitem.Password);
-            remote.System.Reboot();
+            remote.SystemRunning.Reboot();
             remote.Close();
         }
 
@@ -140,7 +140,7 @@ namespace Yatse2
 
             var remote = ApiHelper.Instance().GetRemoteByApi(selitem.Api);
             remote.Configure(selitem.IP, selitem.Port, selitem.Login, selitem.Password);
-            remote.System.Shutdown();
+            remote.SystemRunning.Shutdown();
             remote.Close();
         }
 

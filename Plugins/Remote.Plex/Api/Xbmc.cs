@@ -33,6 +33,20 @@ using Setup;
 using Timer = System.Timers.Timer;
 using System.Web;
 
+//using System;
+using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+using System.Threading.Tasks;
+using System.Security.Cryptography;
+//using System.Text.RegularExpressions;
+//using System.Net;
+using System.IO;
+using System.Xml;
+using System.Web.Script.Serialization;
+using System.Collections.Specialized;
+
+
 namespace Remote.Plex.Api
 {
     public class Xbmc : ApiConnection
@@ -89,7 +103,7 @@ namespace Remote.Plex.Api
             PicturePlayer = new XbmcPicturePlayer(this);
             VideoPlayer = new XbmcVideoPlayer(this);
             Player = new XbmcPlayer(this);
-            System = new XbmcSystem(this);
+            SystemRunning = new XbmcSystem(this);
             Remote = new XbmcRemote(this);
             MpcHcRemote = new MpcHcRemote(this);
             ApiName = "XFJ";
@@ -243,7 +257,31 @@ namespace Remote.Plex.Api
             UserName = user;
             Password = password;
             _configured = true;
+            /*
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes("ghawken:7yhrheu5");
+            string auth = System.Convert.ToBase64String(plainTextBytes);
 
+            using (var client = new WebClient())
+            {
+                var values = new NameValueCollection();
+                values["Authorization"] = "Basic " + auth;
+                values["X-Plex-Client-Identifier"] = "Yatse3Socket";
+                values["X-Plex-Product"] = "Yatse 3 Socket";
+                values["X-Plex-Version"] = "0.1.0";
+
+                client.Headers.Add(values);
+
+                var response = client.UploadString("https://plex.tv/users/sign_in.json", "");
+
+                var json = new JavaScriptSerializer();
+                dynamic result = json.DeserializeObject(response);
+
+                var token = result["user"]["authentication_token"];
+
+                Console.WriteLine(token);
+            }
+
+            */
             var check = JsonCommand("JSONRPC.Ping", null);
             if (check == null)
             {

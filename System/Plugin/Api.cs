@@ -163,7 +163,7 @@ namespace Plugin
         public IApiPicturePlayer PicturePlayer { get; set; }
         public IApiVideoPlayer VideoPlayer { get; set; }
         public IApiPlayer Player { get; set; }
-        public IApiSystem System { get; set; }
+        public IApiSystem SystemRunning { get; set; }
         public IApiRemote Remote { get; set; }
 
         private int _connectionTimeout = 2500;
