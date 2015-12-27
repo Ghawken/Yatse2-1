@@ -22,23 +22,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Text;
-
-//using System;
-using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-using System.Threading.Tasks;
-using System.Security.Cryptography;
-using System.Text.RegularExpressions;
-using System.Net;
-using System.IO;
-using System.Xml;
-using System.Web.Script.Serialization;
-using System.Collections.Specialized;
-
-
-
 using Setup;
 using DIE = System.Drawing.Imaging.Encoder;
 
@@ -180,7 +163,7 @@ namespace Plugin
         public IApiPicturePlayer PicturePlayer { get; set; }
         public IApiVideoPlayer VideoPlayer { get; set; }
         public IApiPlayer Player { get; set; }
-        public IApiSystem SystemRunning { get; set; }
+        public IApiSystem System { get; set; }
         public IApiRemote Remote { get; set; }
 
         private int _connectionTimeout = 2500;

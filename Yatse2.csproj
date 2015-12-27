@@ -954,9 +954,9 @@
     <None Include="Skin\Default\Interface\Icon_Live.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Resource Include="Skin\Default\Interface\Icon_Mac.png">
+    <None Include="Skin\Default\Interface\Icon_Mac.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    </None>
     <None Include="Skin\Default\Interface\Icon_Windows.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -971,7 +971,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Skin\Default\Interface\Icon_Unknown.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -5008,11 +5008,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Skin\Default\Interface\Default_Music-ThumbGoogle.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Skin\Default\Interface\Icon_Plex.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
