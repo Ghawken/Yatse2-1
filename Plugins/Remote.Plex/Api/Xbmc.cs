@@ -107,7 +107,7 @@ namespace Remote.Plex.Api
             SystemRunning = new XbmcSystem(this);
             Remote = new XbmcRemote(this);
             MpcHcRemote = new MpcHcRemote(this);
-            ApiName = "XFJ";
+            ApiName = "XXX";
         }
 
         private JsonObject GetApplicationProperties(string label)
@@ -130,7 +130,7 @@ namespace Remote.Plex.Api
 
         public override string GetOS()
         {
-            return "Xbmc";
+            return "Plex";
         }
 
         public override string GetVersion()
@@ -282,6 +282,7 @@ namespace Remote.Plex.Api
 
                     var token = result["user"]["authentication_token"];
                     PlexAuthToken = token;
+                    Log("Plex connection AuthToken: " + token);
                     return 1;
                 }
             }
