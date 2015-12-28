@@ -53,6 +53,7 @@ namespace Remote.Plex.Api
     {
         private const string XbmcEventServerPort = "9777";
         public string MpcHcPort = "13579";
+        public string PlexAuthToken = "";
         private readonly XbmcEventClient _eventClient = new XbmcEventClient();
         //private const string ApiPath = "/xbmcCmds/xbmcHttp";
         private const string JsonPath = "/jsonrpc";
@@ -257,31 +258,41 @@ namespace Remote.Plex.Api
             UserName = user;
             Password = password;
             _configured = true;
-            /*
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes("ghawken:7yhrheu5");
+            
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(UserName+":"+Password);
             string auth = System.Convert.ToBase64String(plainTextBytes);
 
-            using (var client = new WebClient())
+            try
             {
-                var values = new NameValueCollection();
-                values["Authorization"] = "Basic " + auth;
-                values["X-Plex-Client-Identifier"] = "Yatse3Socket";
-                values["X-Plex-Product"] = "Yatse 3 Socket";
-                values["X-Plex-Version"] = "0.1.0";
+                using (var client = new WebClient())
+                {
+                    var values = new NameValueCollection();
+                    values["Authorization"] = "Basic " + auth;
+                    values["X-Plex-Client-Identifier"] = "Yatse3Socket";
+                    values["X-Plex-Product"] = "Yatse 3 Socket";
+                    values["X-Plex-Version"] = "0.1.0";
 
-                client.Headers.Add(values);
+                    client.Headers.Add(values);
 
-                var response = client.UploadString("https://plex.tv/users/sign_in.json", "");
+                    var response = client.UploadString("https://plex.tv/users/sign_in.json", "");
 
-                var json = new JavaScriptSerializer();
-                dynamic result = json.DeserializeObject(response);
+                    var json = new JavaScriptSerializer();
 
-                var token = result["user"]["authentication_token"];
+                    dynamic result = json.DeserializeObject(response);
 
-                Console.WriteLine(token);
+                    var token = result["user"]["authentication_token"];
+                    PlexAuthToken = token;
+                    return 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log("Plex Connection Failed : " + ip + ":" + port);
+                return 0;
             }
 
-            */
+
+            /*
             var check = JsonCommand("JSONRPC.Ping", null);
             if (check == null)
             {
@@ -307,7 +318,7 @@ namespace Remote.Plex.Api
                 // If not build found just go will perhaps works
             }
             return res ? 1 : 0;
-
+            */
         }
 
         public override void Configure(string ip, string port, string user, string password)
