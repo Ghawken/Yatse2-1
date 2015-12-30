@@ -374,7 +374,10 @@ namespace Remote.Plex.Api
                                     _nowPlaying.FileName = server.Media.Part.file;
                                     _nowPlaying.Title = server.Player.product;
                                     _parent.MpcLoaded = true;
-
+                                    _nowPlaying.MediaType = server.type == "episode" ? "TvShow" : "Movie";
+                                    _nowPlaying.Duration = new TimeSpan(0, Convert.ToInt32("0"), Convert.ToInt32("0"), Convert.ToInt32("0"), Convert.ToInt32(server.Media.duration));
+                                    _nowPlaying.Time = new TimeSpan(0,0,0,0,server.viewOffset);
+                                     
 
                                     if (server.Player.state == "paused")
                                     {
