@@ -311,6 +311,10 @@ namespace Remote.Plex.Api
                         if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
                         {
 
+                            //  Use MPC Remote
+
+                            _parent.MpcLoaded = true;
+
 
                             // Get the stream containing content returned by the server.
                             System.IO.Stream dataStream = response.GetResponseStream();
@@ -373,7 +377,7 @@ namespace Remote.Plex.Api
                                     _nowPlaying.ThumbURL = @"http://"+ _parent.IP + ":" + _parent.ServerPort+server.thumb;
                                     _nowPlaying.FileName = server.Media.Part.file;
                                     _nowPlaying.Title = server.Player.product;
-                                    _parent.MpcLoaded = true;
+                                    
                                     _nowPlaying.MediaType = server.type == "episode" ? "TvShow" : "Movie";
                                     _nowPlaying.Duration = new TimeSpan(0, Convert.ToInt32("0"), Convert.ToInt32("0"), Convert.ToInt32("0"), Convert.ToInt32(server.Media.duration));
                                     _nowPlaying.Time = new TimeSpan(0,0,0,Convert.ToInt32(server.viewOffset)/1000,0);

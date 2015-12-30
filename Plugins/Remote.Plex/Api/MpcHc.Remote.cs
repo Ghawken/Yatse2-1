@@ -55,15 +55,21 @@ namespace Remote.Plex.Api
             HttpWebRequest request;
             var returnContent = false;
 
-            var uri = @"http://" + _parent.IP + ":" + _parent.MpcHcPort + "/command.html?wm_command="+cmd;
+            var uri = @"http://" + _parent.IP + ":32400/system/players/" + _parent.ClientIPAddress + "/playback/" +cmd;
             if ( ! String.IsNullOrEmpty(parameter))
                 uri += "&" + parameter;
             try
             {
                 request = (HttpWebRequest)WebRequest.Create(new Uri(uri));
+                request.Headers.Add("X-Plex-Token", _parent.PlexAuthToken);
+                request.Headers.Add("X-Plex-Client-Identifier", "Yatse3Socket");
+                request.Headers.Add("X-Plex-Product","Yatse 3 Socket");
+                request.Headers.Add("X-Plex-Version", "0.1.0");
+
+
                 request.Method = "GET";
                 request.Timeout = 1000;
-                _parent.Log("MPCCOMMAND : " + cmd);
+                _parent.Log("Plex COMMAND via MPC : " + cmd);
                 _parent.Trace(uri);
                 using (var response = (HttpWebResponse)request.GetResponse())
                 {
@@ -81,11 +87,11 @@ namespace Remote.Plex.Api
             }
             catch (WebException e)
             {
-                _parent.Log("ERROR - MPCCOMMAND : " + cmd + " - " + e.Message);
+                _parent.Log("ERROR - PLEX via MPC Command : " + cmd + " - " + e.Message);
                 if (e.Status == WebExceptionStatus.Timeout)
                 {
 
-                    _parent.MpcLoaded = false;
+                   // _parent.MpcLoaded = false;
                 }
             }
             return returnContent;
@@ -96,7 +102,7 @@ namespace Remote.Plex.Api
             HttpWebRequest request;
             var returnContent = "";
 
-            var uri = @"http://" + _parent.IP + ":" + _parent.MpcHcPort + "/status.html";
+            var uri = @"http://" + _parent.IP + ":32400/system/players/"+_parent.ClientIPAddress+"/playback";
             try
             {
                 request = (HttpWebRequest)WebRequest.Create(new Uri(uri));
@@ -124,8 +130,7 @@ namespace Remote.Plex.Api
                 if (e.Status == WebExceptionStatus.Timeout)
                 {
                        _parent.Log("ERROR - MPCCOMMAND : Web Exception Thrown and MpcLoad now false");  
-                       _parent.MpcLoaded = false;
-                  
+                      
                 }
                 
             }
@@ -289,37 +294,37 @@ namespace Remote.Plex.Api
         public void Previous()
         {
             if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("skipminus");
+                _parent.AsyncEventButton("skipPrevious");
         }
 
         public void Rewind()
         {
             if (_parent.MpcLoaded)
-                AsyncCommand("894", "");
+                AsyncCommand("stepBack", "");
         }
 
         public void Play()
         {
             if (_parent.MpcLoaded)
-                AsyncCommand("889", "");
+                AsyncCommand("play", "");
         }
 
         public void Stop()
         {
             if (_parent.MpcLoaded)
-                AsyncCommand("816", "");
+                AsyncCommand("stop", "");
         }
 
         public void Forward()
         {
             if (_parent.MpcLoaded)
-                AsyncCommand("895", "");
+                AsyncCommand("stepForward", "");
         }
 
         public void Next()
         {
             if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("skipplus");
+                _parent.AsyncEventButton("skipNext");
         }
 
         public void One()

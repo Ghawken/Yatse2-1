@@ -117,10 +117,11 @@ namespace Remote.Plex.Api
 
         private JsonObject GetApplicationProperties(string label)
         {
-            var items = new JsonObject();
-            items["properties"] = new[] { label };
-            var res = JsonCommand("Application.GetProperties", items);
-            return res == null ? null : (JsonObject)((JsonObject)res)[label];
+            //var items = new JsonObject();
+            //items["properties"] = new[] { label };
+            //var res = JsonCommand("Application.GetProperties", items);
+            //return res == null ? null : (JsonObject)((JsonObject)res)[label];
+            return null;
         }
 
 /*
@@ -591,11 +592,59 @@ namespace Remote.Plex.Api
 
         public Object JsonCommand(string cmd, Object parameter)
         {
-            if (!_configured) 
+            if (!_configured)
+                Log("Plex:  Something not configured.");
                 return null;
 
-            var client = new JsonRpcClient { Url = GetJsonPath(), Timeout = GetTimeout()};
+
+            if (PlexAuthToken == "")
+            {
+                Log("Not Plex Token - Not checking for clients.");
+                return 0;
+                // Not Connected - failed Setup.
+                //Still need to check local player there - rather than internet server which gives Auth
+            }
+
+            string url = "http://" + IP + ":" + Port + "/";
+            Log("PLEX COMMAND: Sending to " + url);
+
+            // PMS Server Clients Page - to connect to and see whether local player is in effect.
+
+            try
+            {
+
+                var request = WebRequest.Create(url);
+                request.Headers.Add("X-Plex-Token", PlexAuthToken);
+                request.Headers.Add("X-Plex-Client-Identifier", "Yatse3Socket");
+                request.Headers.Add("X-Plex-Product","Yatse 3 Socket");
+                request.Headers.Add("X-Plex-Version","0.1.0");
+                var response = request.GetResponse();
+
+                if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+                {
+
+                    // Get the stream containing content returned by the server.
+                   // System.IO.Stream dataStream = response.GetResponseStream();
+                    // Open the stream using a StreamReader.
+                 //   System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+                    Log("Command HTTP Response OK");
+                }
+                Log("HTTP Status Not Okay - no exception failed - disconnecting");
+                return 0;
+
+            }
+            catch (Exception ex)
+            {
+                Log("Cannot send Command ERROr is server details right " + ex);
+                return 0;
+            }         
+           
+ 
+/*            var client = new JsonRpcClient { Url = GetJsonPath(), Timeout = GetTimeout()};
+                      
+            client.C
             var creds = GetCredentials();
+            
             if (creds != null)
                 client.Credentials = creds;
             object retval = null;
@@ -629,6 +678,7 @@ namespace Remote.Plex.Api
             if (retval != null)
                 Trace(retval.ToString());
             return retval;
+            */
         }
 
         public String JsonArrayToString(JsonArray array)

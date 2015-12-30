@@ -1142,8 +1142,7 @@ namespace Yatse2
                 }
             }
 
-
-
+            
             if (FanartAlways == true)
             {
                 
