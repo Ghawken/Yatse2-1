@@ -22,6 +22,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -55,6 +56,7 @@ namespace Remote.Plex.Api
     {
         private const string XbmcEventServerPort = "9777";
         public string MpcHcPort = "13579";
+        public string ClientIPAddress = "";
         public string PlexAuthToken = "";
         private readonly XbmcEventClient _eventClient = new XbmcEventClient();
         //private const string ApiPath = "/xbmcCmds/xbmcHttp";
@@ -260,6 +262,7 @@ namespace Remote.Plex.Api
 
             if (PlexAuthToken == "")
             {
+                Log("Not Plex Token - Not checking for clients.");
                 return 0;
                 // Not Connected - failed Setup.
                 //Still need to check local player there - rather than internet server which gives Auth
@@ -285,35 +288,43 @@ namespace Remote.Plex.Api
 
                     XmlSerializer serializer = new XmlSerializer(typeof(ClientsMediaContainer));
                     ClientsMediaContainer deserialized = (ClientsMediaContainer)serializer.Deserialize(reader);
+                     
+                       
 
-                    var len = deserialized.Server.Count;
-                   
-
-                    if (len == 0)
+                    if (deserialized.Server.Count == 0)
                     {
-                       Log("No connected Clients Found");
+                       Log("No connected Plex. Clients Found");
                        return 0;
                     }
 
                     foreach (var server in deserialized.Server)
                     {
-                        Console.WriteLine("Clients FOUND: " + server.Value);
-                        Console.WriteLine("name is {0} and host is {1}", server.name, server.host);
+                        Log("Clients FOUND: " + server.Value);
+                        Log("name is " + server.name + " and host is " + server.host);
 
                         if (server.host == GetLocalIPAddress())
                         {
-                            Console.WriteLine("Client Machine Found - Yah!    " + server.host + ":" + server.name);
+                            Log("Client Machine Found - Yah!    " + server.host + ":" + server.name);
+                            ClientIPAddress = server.host;
+                            return 1;
 
                         }
 
                     }
 
+                    Log("Local Client not found - disconnecting");
+                    return 0;
+
 
                 }
+                Log("HTTP Status Not Okay - no exception failed - disconnecting");
+                return 0;
+
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Cannot connect is server details right " + ex);
+                Log("Cannot connect is server details right " + ex);
+                return 0;
             }
 
 
@@ -321,7 +332,26 @@ namespace Remote.Plex.Api
 
 
         }
+        public static string GetLocalIPAddress()
+        {
+            try
+            {
 
+                var host = Dns.GetHostEntry(Dns.GetHostName());
+                foreach (var ip in host.AddressList)
+                {
+                    if (ip.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        return ip.ToString();
+                    }
+                }
+                return "No IP Obtainable";
+            }
+            catch (Exception ex)
+            {
+                return "NO IP Obtainable." + ex;
+            }
+        }
        public string GetPlexAuthToken(string ip, string port, string user, string password)
 {
 

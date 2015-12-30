@@ -18,7 +18,7 @@ namespace Remote.Plex.Api
 		
 		// ELEMENTS
 		[XmlElement("Server")]
-		public Server Server { get; set; }
+        public List<Server> Server { get; set; }
 		
 		// CONSTRUCTOR
 		public ClientsMediaContainer()
