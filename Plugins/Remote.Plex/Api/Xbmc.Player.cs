@@ -21,6 +21,11 @@ using System.Collections;
 using System.Globalization;
 using Jayrock.Json;
 using Plugin;
+using System.Web.Script.Serialization;
+using System.Xml;
+using System.Xml.Serialization;
+using System.Net;
+using Setup;
 
 namespace Remote.Plex.Api
 {
@@ -97,6 +102,9 @@ namespace Remote.Plex.Api
                         return;
                     }
                     //_parent.Log("XBMC PLAYER REMOTE:   Check with MPC Doesnt make it here");
+                    /*
+                    
+                    
                     var GUIproperties = new JsonObject();
                     GUIproperties["properties"] = new[]
                                                       {
@@ -211,6 +219,12 @@ namespace Remote.Plex.Api
 
                     result2 = (JsonObject)(result2)["item"];
 
+                  
+                     
+                  
+                     
+                     
+                    
                     if (_nowPlaying.MediaType == "video")
                     {
                         if (result2["type"].ToString() == "channel")  //if PVR Needs to go high otherwise exception
@@ -281,6 +295,87 @@ namespace Remote.Plex.Api
                         _nowPlaying.ThumbURL = result2["thumbnail"].ToString();
                         _nowPlaying.FanartURL = result2["fanart"].ToString();
                     }
+                */
+
+                    try
+                    {
+
+                        string NPurl = "http://192.168.1.206:32400/status/sessions";
+                        var request = WebRequest.Create(NPurl);
+
+                        // Need to sort out token - later
+                        //request.Headers.Add("X-Plex-Token", Plugin.ApiTvShow);
+                        var response = request.GetResponse();
+
+                        if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+                        {
+
+
+                            // Get the stream containing content returned by the server.
+                            System.IO.Stream dataStream = response.GetResponseStream();
+                            // Open the stream using a StreamReader.
+                            System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+
+                            XmlSerializer serializer = new XmlSerializer(typeof(MediaContainer));
+                            MediaContainer deserialized = (MediaContainer)serializer.Deserialize(reader);
+
+
+
+                            var length = deserialized.Video.Count;
+                            _parent.Log("Number of playing Videos: " + length);
+
+                            if (length == 0)
+                            {
+                                
+                                _nowPlaying.IsPlaying = false;
+                                return;
+                            }
+
+                            _nowPlaying.IsPlaying = true;
+                            _nowPlaying.IsPaused = false;
+                           
+                            _nowPlaying.IsNewMedia = true;
+                            _nowPlaying.MediaType = "Video";
+
+                            foreach (var server in deserialized.Video)
+                            {
+                                _nowPlaying.FanartURL = server.art;
+                                //Console.WriteLine("Grandparent art is {0} and Players is {1}", server.grandparentArt, server.Player);
+                                _nowPlaying.Title = server.title;
+                                //    Console.WriteLine("" + server.art);
+                                //    Console.WriteLine("" + server.chapterSource);
+                                _nowPlaying.Director = server.Director.tag;
+                                //     Console.WriteLine("" + server.duration);
+                                //    Console.WriteLine("" + server.grandparentArt);
+                                _nowPlaying.ShowTitle = server.grandparentTitle;
+                                //     Console.WriteLine("" + server.grandparentThumb);
+                                /*     Console.WriteLine("" + server.guid);
+                                     Console.WriteLine("" + server.index);
+                                     Console.WriteLine("" + server.indexString);
+                                     Console.WriteLine("" + server.key);
+                                     Console.WriteLine("" + server.lastViewedAt);
+                                     Console.WriteLine("Filename: " + server.Media.Part.file);
+                                 //    Console.WriteLine("" + server.Media.Part.duration);
+                               // */
+                                //     Console.WriteLine("Player Product: " + server.Player.product);
+                                _nowPlaying.Plot = server.summary;
+                                _nowPlaying.ThumbURL = server.thumb;
+                                _nowPlaying.FileName = server.Media.Part.file;
+
+                            }
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _parent.Log("Exception in NowPlaying Plex System" + ex);
+                    }
+
+
+
+
+
+
                 }
             }
         }

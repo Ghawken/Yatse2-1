@@ -214,16 +214,70 @@ namespace Remote.Plex.Api
 
         public override bool CheckConnection()
         {
+
             if (!MpcLoaded)
             {
-                var check = JsonCommand("JSONRPC.Ping", null);
-                if (check == null)
+
+                string url = GetJsonPath() + "/clients";
+                // PMS Server Clients Page - to connect to and see whether local player is in effect.
+
+                try
+                {
+
+                    var request = WebRequest.Create(url);
+                    request.Headers.Add("X-Plex-Token", PlexAuthToken);
+                    var response = request.GetResponse();
+
+                    if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+                    {
+
+                        // Get the stream containing content returned by the server.
+                        System.IO.Stream dataStream = response.GetResponseStream();
+                        // Open the stream using a StreamReader.
+                        System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+
+                        XmlSerializer serializer = new XmlSerializer(typeof(ClientsMediaContainer));
+                        ClientsMediaContainer deserialized = (ClientsMediaContainer)serializer.Deserialize(reader);
+
+
+
+                        if (deserialized.Server.Count == 0)
+                        {
+                            Log("No connected Plex. Clients Found");
+                            return false;
+                        }
+
+                        foreach (var server in deserialized.Server)
+                        {
+                            Log("Clients FOUND: " + server.Value);
+                            Log("name is " + server.name + " and host is " + server.host);
+
+                            if (server.host == GetLocalIPAddress())
+                            {
+                                Log("Client Machine Found - Yah!    " + server.host + ":" + server.name);
+                                ClientIPAddress = server.host;
+                                return true;
+
+                            }
+
+                        }
+
+                        Log("Local Client not found - disconnecting");
+                        return false;
+
+
+                    }
+                    Log("HTTP Status Not Okay - no exception failed - disconnecting");
                     return false;
-                return Convert.ToString(check,CultureInfo.InvariantCulture) == "pong";
+
+                }
+                catch (Exception ex)
+                {
+                    Log("Cannot connect is server details right " + ex);
+                    return false;
+                }
             }
-            return true; // TODO : Change if needed
-            //var result = MpcHcRemote.GetStatus();
-            //return (result == "") ? false : true;
+            return true;
         }
 
         public override bool CheckRemote(string os, string version, string additional, bool force)
@@ -478,7 +532,8 @@ namespace Remote.Plex.Api
         {
             if (!_configured) 
                 return null;
-            return @"http://" + IP + ":" + Port + JsonPath;
+            return @"http://" + IP + ":" + Port ;
+            //Changed Path for Plex -
         }
 
         public NetworkCredential GetCredentials()
