@@ -20,6 +20,8 @@ using System.ComponentModel;
 using System.Net;
 using System.Threading;
 using Plugin;
+using System.IO;
+using System.Web;
 
 namespace Remote.Plex.Api
 {
@@ -70,7 +72,7 @@ namespace Remote.Plex.Api
         {
             if (apiImageDownloadInfo == null)
                 return false;
-            var res = Download(apiImageDownloadInfo.Source, apiImageDownloadInfo.Destination);
+            var res = DownloadRemoteImageFile(apiImageDownloadInfo.Source, apiImageDownloadInfo.Destination);
             if (res)
             {
                 if (apiImageDownloadInfo.ToThumb)
@@ -118,6 +120,53 @@ namespace Remote.Plex.Api
                 _parent.Log("ERROR - DOWNLOAD : " + _parent.GetDownloadPath(fileName) + " " + e.Message);
             }
             return false;
+        }
+
+        //New File DOwnloaded for Plex Media Server.
+        private bool DownloadRemoteImageFile(string uri, string fileName)
+        {
+            try
+            {
+
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+                request.Headers.Add("X-Plex-Token", _parent.PlexAuthToken);
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                // Check that the remote file was found. The ContentType
+                // check is performed since a request for a non-existent
+                // image file might be redirected to a 404-page, which would
+                // yield the StatusCode "OK", even though the image was not
+                // found.
+                if ((response.StatusCode == HttpStatusCode.OK ||
+                    response.StatusCode == HttpStatusCode.Moved ||
+                    response.StatusCode == HttpStatusCode.Redirect))
+                {
+
+                    // if the remote file was found, download oit
+                    using (System.IO.Stream inputStream = response.GetResponseStream())
+                    using (System.IO.Stream outputStream = File.OpenWrite(fileName))
+                    {
+                        byte[] buffer = new byte[4096];
+                        int bytesRead;
+                        do
+                        {
+                            bytesRead = inputStream.Read(buffer, 0, buffer.Length);
+                            outputStream.Write(buffer, 0, bytesRead);
+                        } while (bytesRead != 0);
+                    }
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (WebException ex)
+            {
+                _parent.Log("Plex:   Something wrong with new one" + ex);
+                return false;
+            }
         }
 
         public void Dispose()

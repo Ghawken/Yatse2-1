@@ -349,7 +349,7 @@ namespace Remote.Plex.Api
                                 if (server.Player.address == _parent.ClientIPAddress)
                                 {
                                     _parent.Log("Plex: Found Local Playback");
-                                    _nowPlaying.FanartURL = @"http://image://" + _parent.IP+":"+_parent.ServerPort+server.art+".jpg";
+                                    _nowPlaying.FanartURL = @"http://" + _parent.IP+":"+_parent.ServerPort+server.art;
                                     _parent.Log("Plex: Fanart URL sorting Out:  " + _parent.IP + ":" + _parent.ServerPort + server.art);
                                     //Console.WriteLine("Grandparent art is {0} and Players is {1}", server.grandparentArt, server.Player);
                                     _nowPlaying.Title = server.title;
@@ -370,7 +370,7 @@ namespace Remote.Plex.Api
                                    // */
                                     //     Console.WriteLine("Player Product: " + server.Player.product);
                                     _nowPlaying.Plot = server.summary;
-                                    _nowPlaying.ThumbURL = @"http://image://"+ _parent.IP + ":" + _parent.ServerPort+server.thumb+".jpg";
+                                    _nowPlaying.ThumbURL = @"http://"+ _parent.IP + ":" + _parent.ServerPort+server.thumb;
                                     _nowPlaying.FileName = server.Media.Part.file;
                                     _nowPlaying.Title = server.Player.product;
                                     _parent.MpcLoaded = true;
