@@ -376,8 +376,12 @@ namespace Remote.Plex.Api
                                     _parent.MpcLoaded = true;
                                     _nowPlaying.MediaType = server.type == "episode" ? "TvShow" : "Movie";
                                     _nowPlaying.Duration = new TimeSpan(0, Convert.ToInt32("0"), Convert.ToInt32("0"), Convert.ToInt32("0"), Convert.ToInt32(server.Media.duration));
-                                    _nowPlaying.Time = new TimeSpan(0,0,0,0,server.viewOffset);
-                                     
+                                    _nowPlaying.Time = new TimeSpan(0,0,0,Convert.ToInt32(server.viewOffset)/1000,0);
+
+                                    var percent = Math.Floor(100.0 * Convert.ToInt32("0" + server.viewOffset, CultureInfo.InvariantCulture) / Convert.ToInt32("0" + server.Media.duration, CultureInfo.InvariantCulture));
+                                    if (Double.IsNaN(percent))
+                                        percent = 0;
+                                    _nowPlaying.Progress = (int)percent;
 
                                     if (server.Player.state == "paused")
                                     {
