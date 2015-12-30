@@ -33,6 +33,7 @@ using Setup;
 using Timer = System.Timers.Timer;
 using System.Web;
 
+
 //using System;
 using System.Collections.Generic;
 //using System.Linq;
@@ -43,6 +44,7 @@ using System.Security.Cryptography;
 //using System.Net;
 using System.IO;
 using System.Xml;
+using System.Xml.Serialization;
 using System.Web.Script.Serialization;
 using System.Collections.Specialized;
 
@@ -253,13 +255,83 @@ namespace Remote.Plex.Api
                 Log("Test connection : " + ip);
             else
                 Log("Test connection : " + ip + ":" + port);
+
+            PlexAuthToken = GetPlexAuthToken(ip, port, user, password);
+
+            if (PlexAuthToken == "")
+            {
+                return 0;
+                // Not Connected - failed Setup.
+                //Still need to check local player there - rather than internet server which gives Auth
+            }
+
+            string url = "http://" + ip + ":" + port + "/clients";
+            // PMS Server Clients Page - to connect to and see whether local player is in effect.
+           
+            try
+            {
+
+                var request = WebRequest.Create(url);
+                request.Headers.Add("X-Plex-Token", PlexAuthToken);
+                var response = request.GetResponse();
+
+                if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+                {
+
+                    // Get the stream containing content returned by the server.
+                    System.IO.Stream dataStream = response.GetResponseStream();
+                    // Open the stream using a StreamReader.
+                    System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+
+                    XmlSerializer serializer = new XmlSerializer(typeof(ClientsMediaContainer));
+                    ClientsMediaContainer deserialized = (ClientsMediaContainer)serializer.Deserialize(reader);
+
+                    var len = deserialized.Server.Count;
+                   
+
+                    if (len == 0)
+                    {
+                       Log("No connected Clients Found");
+                       return 0;
+                    }
+
+                    foreach (var server in deserialized.Server)
+                    {
+                        Console.WriteLine("Clients FOUND: " + server.Value);
+                        Console.WriteLine("name is {0} and host is {1}", server.name, server.host);
+
+                        if (server.host == GetLocalIPAddress())
+                        {
+                            Console.WriteLine("Client Machine Found - Yah!    " + server.host + ":" + server.name);
+
+                        }
+
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Cannot connect is server details right " + ex);
+            }
+
+
+
+
+
+        }
+
+       public string GetPlexAuthToken(string ip, string port, string user, string password)
+{
+
             IP = ip;
             Port = port;
             UserName = user;
             Password = password;
             _configured = true;
-            
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(UserName+":"+Password);
+
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(UserName + ":" + Password);
             string auth = System.Convert.ToBase64String(plainTextBytes);
 
             try
@@ -283,16 +355,17 @@ namespace Remote.Plex.Api
                     var token = result["user"]["authentication_token"];
                     PlexAuthToken = token;
                     Log("Plex connection AuthToken: " + token);
-                    return 1;
+                    return token;
                 }
             }
             catch (Exception ex)
             {
                 Log("Plex Connection Failed : " + ip + ":" + port);
-                return 0;
+                _isConnected = false;
+                return "";
             }
 
-
+        }
             /*
             var check = JsonCommand("JSONRPC.Ping", null);
             if (check == null)
@@ -320,7 +393,7 @@ namespace Remote.Plex.Api
             }
             return res ? 1 : 0;
             */
-        }
+
 
         public override void Configure(string ip, string port, string user, string password)
         {
