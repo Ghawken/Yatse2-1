@@ -462,7 +462,7 @@ namespace Yatse2
             
             var nowPlaying = _remote.Player.NowPlaying(true);
 
-            Logger.Instance().LogDump("Yatse2 PVR:", "nowPlaying.Filename is : " + nowPlaying.FileName +" nowPlaying.IsPlaying = " +nowPlaying.IsPlaying + " isPlaying " + _isPlaying , true);
+            Logger.Instance().LogDump("Yatse2 PVR:", "nowPlaying.Filename is : " + nowPlaying.FileName +" nowPlaying.IsPlaying = " +nowPlaying.IsPlaying + " isPlaying " + _isPlaying + " isNewMedia?" +nowPlaying.IsNewMedia , true);
 
             if (nowPlaying.IsNewMedia && (nowPlaying.IsPlaying || nowPlaying.IsPaused) && !String.IsNullOrEmpty(nowPlaying.FileName))
             {

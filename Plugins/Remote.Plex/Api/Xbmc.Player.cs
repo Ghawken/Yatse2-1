@@ -340,7 +340,7 @@ namespace Remote.Plex.Api
                             //_nowPlaying.IsPaused = false;
                            
                             _nowPlaying.IsNewMedia = true;
-                            _nowPlaying.MediaType = "Video";
+                            _nowPlaying.MediaType = "Movie";
                             //_nowPlaying.Title = "Plex Playing";
                             
                             foreach (var server in deserialized.Video)
@@ -349,7 +349,8 @@ namespace Remote.Plex.Api
                                 if (server.Player.address == _parent.ClientIPAddress)
                                 {
                                     _parent.Log("Plex: Found Local Playback");
-                                    _nowPlaying.FanartURL = server.art;
+                                    _nowPlaying.FanartURL = @"http://image://" + _parent.IP+":"+_parent.ServerPort+server.art+".jpg";
+                                    _parent.Log("Plex: Fanart URL sorting Out:  " + _parent.IP + ":" + _parent.ServerPort + server.art);
                                     //Console.WriteLine("Grandparent art is {0} and Players is {1}", server.grandparentArt, server.Player);
                                     _nowPlaying.Title = server.title;
                                     //    Console.WriteLine("" + server.art);
@@ -369,7 +370,7 @@ namespace Remote.Plex.Api
                                    // */
                                     //     Console.WriteLine("Player Product: " + server.Player.product);
                                     _nowPlaying.Plot = server.summary;
-                                    _nowPlaying.ThumbURL = server.thumb;
+                                    _nowPlaying.ThumbURL = @"http://image://"+ _parent.IP + ":" + _parent.ServerPort+server.thumb+".jpg";
                                     _nowPlaying.FileName = server.Media.Part.file;
                                     _nowPlaying.Title = server.Player.product;
                                     _parent.MpcLoaded = true;

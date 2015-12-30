@@ -106,6 +106,8 @@ namespace Remote.Plex.Api
                     var credentials = _parent.GetCredentials();
                     if (credentials != null)
                         client.Credentials = credentials;
+                    client.Headers.Add("X-Plex-Token", _parent.PlexAuthToken);
+                    
                     client.DownloadFile(_parent.GetDownloadPath(fileName), destination);
                 }
                 _parent.Log("DOWNLOAD : " + fileName);

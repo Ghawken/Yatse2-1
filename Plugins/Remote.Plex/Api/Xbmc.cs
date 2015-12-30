@@ -57,6 +57,7 @@ namespace Remote.Plex.Api
         private const string XbmcEventServerPort = "9777";
         public string MpcHcPort = "13579";
         public string ClientIPAddress = "";
+        public string ServerPort = "32400";
         public string PlexAuthToken = "";
         private readonly XbmcEventClient _eventClient = new XbmcEventClient();
         //private const string ApiPath = "/xbmcCmds/xbmcHttp";
@@ -161,7 +162,9 @@ namespace Remote.Plex.Api
         public string GetDownloadPath(string fileName)
         {
             if (!_configured) return null;
-            return @"http://" + IP + ":" + Port + "/image/" + HttpUtility.UrlEncode(fileName);
+           // return @"http://" + HttpUtility.UrlEncode(fileName);
+            Log("Plex API - Trying to sortout fanart URL: " +  HttpUtility.UrlEncode(fileName));
+            return HttpUtility.UrlEncode(fileName);
         }
 
         public static long StringToNumber (string input)
@@ -360,6 +363,7 @@ namespace Remote.Plex.Api
                         {
                             Log("Client Machine Found - Yah!    " + server.host + ":" + server.name);
                             ClientIPAddress = server.host;
+                            ServerPort = port;
                             return 1;
 
                         }

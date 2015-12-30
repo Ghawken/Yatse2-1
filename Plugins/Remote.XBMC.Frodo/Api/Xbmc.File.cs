@@ -104,6 +104,8 @@ namespace Remote.XBMC.Frodo.Api
                 using (var client = new WebClient())
                 {
                     var credentials = _parent.GetCredentials();
+                    //client.Headers.Add("X-Plex-Token", _parent.PlexAuthToken);
+
                     if (credentials != null)
                         client.Credentials = credentials;
                     client.DownloadFile(_parent.GetDownloadPath(fileName), destination);
