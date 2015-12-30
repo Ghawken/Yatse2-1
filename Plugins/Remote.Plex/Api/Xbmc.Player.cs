@@ -48,7 +48,7 @@ namespace Remote.Plex.Api
         {
             lock (Locker)
             {
-                if (_parent.MpcLoaded)
+                /*if (_parent.MpcLoaded)
                 {
                     var result = _parent.MpcHcRemote.GetStatus();
                     var result2 = new ArrayList();
@@ -103,8 +103,8 @@ namespace Remote.Plex.Api
                     }
                     //_parent.Log("XBMC PLAYER REMOTE:   Check with MPC Doesnt make it here");
                     /*
-                    
-                    
+                */    
+                 /*   
                     var GUIproperties = new JsonObject();
                     GUIproperties["properties"] = new[]
                                                       {
@@ -300,11 +300,12 @@ namespace Remote.Plex.Api
                     try
                     {
 
-                        string NPurl = "http://192.168.1.206:32400/status/sessions";
+                        _parent.Log("Plex: Using Parent IP equals: " +_parent.IP);
+                        string NPurl = "http://"+ _parent.IP +":32400/status/sessions";
                         var request = WebRequest.Create(NPurl);
 
-                        // Need to sort out token - later
-                        //request.Headers.Add("X-Plex-Token", Plugin.ApiTvShow);
+                        
+                        request.Headers.Add("X-Plex-Token", _parent.PlexAuthToken);
                         var response = request.GetResponse();
 
                         if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
@@ -326,44 +327,71 @@ namespace Remote.Plex.Api
 
                             if (length == 0)
                             {
-                                
+                                _nowPlaying.FileName = "";
+                                _nowPlaying.Title = "";
                                 _nowPlaying.IsPlaying = false;
+                                _nowPlaying.IsPaused = false;
+                                _nowPlaying.IsPlaying = false;
+                                _parent.Log("Plex Log: Nothing is Playing");
                                 return;
                             }
 
-                            _nowPlaying.IsPlaying = true;
-                            _nowPlaying.IsPaused = false;
+                            //_nowPlaying.IsPlaying = true;
+                            //_nowPlaying.IsPaused = false;
                            
                             _nowPlaying.IsNewMedia = true;
                             _nowPlaying.MediaType = "Video";
-
+                            //_nowPlaying.Title = "Plex Playing";
+                            
                             foreach (var server in deserialized.Video)
                             {
-                                _nowPlaying.FanartURL = server.art;
-                                //Console.WriteLine("Grandparent art is {0} and Players is {1}", server.grandparentArt, server.Player);
-                                _nowPlaying.Title = server.title;
-                                //    Console.WriteLine("" + server.art);
-                                //    Console.WriteLine("" + server.chapterSource);
-                                _nowPlaying.Director = server.Director.tag;
-                                //     Console.WriteLine("" + server.duration);
-                                //    Console.WriteLine("" + server.grandparentArt);
-                                _nowPlaying.ShowTitle = server.grandparentTitle;
-                                //     Console.WriteLine("" + server.grandparentThumb);
-                                /*     Console.WriteLine("" + server.guid);
-                                     Console.WriteLine("" + server.index);
-                                     Console.WriteLine("" + server.indexString);
-                                     Console.WriteLine("" + server.key);
-                                     Console.WriteLine("" + server.lastViewedAt);
-                                     Console.WriteLine("Filename: " + server.Media.Part.file);
-                                 //    Console.WriteLine("" + server.Media.Part.duration);
-                               // */
-                                //     Console.WriteLine("Player Product: " + server.Player.product);
-                                _nowPlaying.Plot = server.summary;
-                                _nowPlaying.ThumbURL = server.thumb;
-                                _nowPlaying.FileName = server.Media.Part.file;
+                                _parent.Log("Checking against Local Playback only Client IP: " + _parent.ClientIPAddress);
+                                if (server.Player.address == _parent.ClientIPAddress)
+                                {
+                                    _parent.Log("Plex: Found Local Playback");
+                                    _nowPlaying.FanartURL = server.art;
+                                    //Console.WriteLine("Grandparent art is {0} and Players is {1}", server.grandparentArt, server.Player);
+                                    _nowPlaying.Title = server.title;
+                                    //    Console.WriteLine("" + server.art);
+                                    //    Console.WriteLine("" + server.chapterSource);
+                                    //_nowPlaying.Director = server.Director.tag;
+                                    //     Console.WriteLine("" + server.duration);
+                                    //    Console.WriteLine("" + server.grandparentArt);
+                                    _nowPlaying.ShowTitle = server.grandparentTitle;
+                                    //     Console.WriteLine("" + server.grandparentThumb);
+                                    /*     Console.WriteLine("" + server.guid);
+                                         Console.WriteLine("" + server.index);
+                                         Console.WriteLine("" + server.indexString);
+                                         Console.WriteLine("" + server.key);
+                                         Console.WriteLine("" + server.lastViewedAt);
+                                         Console.WriteLine("Filename: " + server.Media.Part.file);
+                                     //    Console.WriteLine("" + server.Media.Part.duration);
+                                   // */
+                                    //     Console.WriteLine("Player Product: " + server.Player.product);
+                                    _nowPlaying.Plot = server.summary;
+                                    _nowPlaying.ThumbURL = server.thumb;
+                                    _nowPlaying.FileName = server.Media.Part.file;
+                                    _nowPlaying.Title = server.Player.product;
+                                    _parent.MpcLoaded = true;
 
+
+                                    if (server.Player.state == "paused")
+                                    {
+                                        _nowPlaying.IsPaused = true;
+                                        _nowPlaying.IsPlaying = false;
+                                    }
+                                    if (server.Player.state == "playing")
+                                    {
+                                        _nowPlaying.IsPaused = false;
+                                        _nowPlaying.IsPlaying = true;
+                                    }
+                                    _parent.Log("Plex Remote:  Filename" + _nowPlaying.FileName + " IsPlaying :" + _nowPlaying.IsPlaying + " IsPaused :" + _nowPlaying.IsPaused + " MediaType :" + _nowPlaying.MediaType);
+                                    return;
+                                }
                             }
 
+                            _parent.Log("Plex Remote:  Filename" + _nowPlaying.FileName + " IsPlaying :" + _nowPlaying.IsPlaying + " IsPaused :" + _nowPlaying.IsPaused + " MediaType :" + _nowPlaying.MediaType);
+                            return;
                         }
                     }
                     catch (Exception ex)
@@ -378,7 +406,7 @@ namespace Remote.Plex.Api
 
                 }
             }
-        }
+        
 
         public ApiCurrently NowPlaying(bool checkNewMedia)
         {
