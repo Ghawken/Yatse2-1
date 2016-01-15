@@ -240,11 +240,11 @@ namespace Remote.Emby.Api
                         // Open the stream using a StreamReader.
                         System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
-                        XmlSerializer serializer = new XmlSerializer(typeof(ClientsMediaContainer));
-                        ClientsMediaContainer deserialized = (ClientsMediaContainer)serializer.Deserialize(reader);
+                 //       XmlSerializer serializer = new XmlSerializer(typeof(ClientsMediaContainer));
+                   //    ClientsMediaContainer deserialized = (ClientsMediaContainer)serializer.Deserialize(reader);
 
 
-
+/*
                         if (deserialized.Server.Count == 0)
                         {
                             Log("No connected Plex. Clients Found");
@@ -265,7 +265,8 @@ namespace Remote.Emby.Api
                             }
 
                         }
-
+                        */
+ 
                         Log("Local Client not found - disconnecting");
                         return false;
 
@@ -318,71 +319,85 @@ namespace Remote.Emby.Api
 
             PlexAuthToken = GetEmbyAuthToken(ip, port, user, password);
 
-            if (PlexAuthToken == "")
+            if (String.IsNullOrEmpty(PlexAuthToken))
             {
                 Log("Not Plex Token - Not checking for clients.");
                 return 0;
                 // Not Connected - failed Setup.
                 //Still need to check local player there - rather than internet server which gives Auth
             }
+            
+            
+            string clientname = "Yatse3";
+            string devicename = "Windows";
+            string deviceID = "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
+            string applicationVersion = "1.0.0";
+            string currentUserId = "431307815ad246a3ba73e5547c3121a6"; ;
 
-            string url = "http://" + ip + ":" + port + "/clients";
-            // PMS Server Clients Page - to connect to and see whether local player is in effect.
+            var authString = @"MediaBrowser Client=""" + clientname + "\", Device=\"" + devicename + "\", DeviceId=\"" + deviceID + "\", Version=\"" + applicationVersion + "\", UserId=\"" + currentUserId + "\"";
+            string url = "http://" + ip + ":" + port + "/Sessions";
+            // Emby Sessions Server Clients Page - to connect to and see whether local player is in effect.
            
             try
             {
 
-                var request = WebRequest.Create(url);
-                request.Headers.Add("X-Plex-Token", PlexAuthToken);
+                var request = WebRequest.CreateHttp("http://"+IP+":"+Port+"/Sessions");
+                request.Method = "get";
+                request.Timeout = 5000;
+               // ASCIIEncoding encoding = new ASCIIEncoding();
+               // byte[] data = encoding.GetBytes(postArg);
+
+                //Log(postArg);
+
+                request.Headers.Add("X-MediaBrowser-Token", PlexAuthToken);
+                request.Headers.Add("Authorization", authString);
+                request.ContentType = "application/json; charset=utf-8";
+                //  request.ContentLength = postArg.Length;
+                request.Accept = "application/json";
+
+                // var response3 = request.GetRequestStream();
+                // response3.Write(data, 0, data.Length);
+
+                // Console.WriteLine(response2.Headers);
+
+
+
                 var response = request.GetResponse();
 
-                if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+
+                Log(((HttpWebResponse)response).StatusDescription);
+                Log("URI Requested = :" + response.ResponseUri);
+
+
+                using (var sr = new StreamReader(response.GetResponseStream()))
                 {
+                    string json = sr.ReadToEnd();
+                    //Console.WriteLine(json);
+                    // Gets the Whole JSON return if password etc good
+                    // dynamic object fantastic - does need Class defined to return single Object
 
-                    // Get the stream containing content returned by the server.
-                    System.IO.Stream dataStream = response.GetResponseStream();
-                    // Open the stream using a StreamReader.
-                    System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+                    return 1;
+                    Log(json);
 
-                    XmlSerializer serializer = new XmlSerializer(typeof(ClientsMediaContainer));
-                    ClientsMediaContainer deserialized = (ClientsMediaContainer)serializer.Deserialize(reader);
-                     
-                       
-
-                    if (deserialized.Server.Count == 0)
-                    {
-                       Log("No connected Plex. Clients Found");
-                       return 0;
-                    }
-
-                    foreach (var server in deserialized.Server)
-                    {
-                        Log("Clients FOUND: " + server.Value);
-                        Log("name is " + server.name + " and host is " + server.host);
-
-                        if (server.host == GetLocalIPAddress())
-                        {
-                            Log("Client Machine Found - Yah!    " + server.host + ":" + server.name);
-                            ClientIPAddress = server.host;
-                            ServerPort = port;
-                            return 1;
-
-                        }
-
-                    }
-
-                    Log("Local Client not found - disconnecting");
-                    return 0;
-
-
+                    //  dynamic obj = SimpleJson.DeserializeObject(json);
+                    // Console.WriteLine("Access Token EQUALS!   " + obj.AccessToken);
+                    // accessToken = obj.AccessToken;
                 }
-                Log("HTTP Status Not Okay - no exception failed - disconnecting");
-                return 0;
+
+
+
+
+
+
+
+
+
+
 
             }
             catch (Exception ex)
             {
-                Log("Cannot connect is server details right " + ex);
+                Log("Exception: " + ex);
                 return 0;
             }
 
@@ -482,13 +497,13 @@ namespace Remote.Emby.Api
                 ASCIIEncoding encoding = new ASCIIEncoding();
                 byte[] data = encoding.GetBytes(postArg);
 
-                Log(postArg);
+                
 
                 //request.Headers.Add("X-MediaBrowser-Token", accessToken);
                 request.Headers.Add("Authorization", authString);
                 request.ContentType = "application/json; charset=utf-8";
                 request.ContentLength = postArg.Length;
-                request.Accept = "application/json";
+                request.Accept = "application/xml";
 
                 var response3 = request.GetRequestStream();
                 response3.Write(data, 0, data.Length);
@@ -502,24 +517,50 @@ namespace Remote.Emby.Api
                 var response = request.GetResponse();
 
 
-                Log(((HttpWebResponse)response).StatusDescription);
+                Log("HTTP WEB RESPONSE GIVEN:" + ((HttpWebResponse)response).StatusDescription);
+
+                if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+                {
+
+                    // Get the stream containing content returned by the server.
+                    System.IO.Stream dataStream = response.GetResponseStream();
+                    // Open the stream using a StreamReader.
+                    System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+
+                    XmlSerializer serializer = new XmlSerializer(typeof(AuthenicateByUser.Root.AuthenticationResult));
 
 
+                    AuthenicateByUser.Root.AuthenticationResult deserialized = (AuthenicateByUser.Root.AuthenticationResult)serializer.Deserialize(reader);
 
+                    Log("EMBY Access Token:" + deserialized.AccessToken);
+                    Log("EMBY User ID: " + deserialized.User.ConnectUserId);
+
+                    if (deserialized.AccessToken != "")
+                    {
+                        Log("ACCESS TOKEN FOUND");
+                        return deserialized.AccessToken ;
+                    }
+                }
+
+
+                /*  Old Method - variably worked - moved to classes
                 using (var sr = new StreamReader(response.GetResponseStream()))
                 {
                     string json = sr.ReadToEnd();
                     //Console.WriteLine(json);
                     // Gets the Whole JSON return if password etc good
                     // dynamic object fantastic - does need Class defined to return single Object
-
-                    
+                    Log(json);
                     dynamic obj = JsonConvert.Import(json);
-                    Log(obj);
-                    Log("Access Token EQUALS!   " + obj.AccessToken);
-                    return obj.AccessToken;
-                } 
 
+                    var accessToken = obj.Name;
+                    Log("Access Token EQUALS!   " + accessToken);
+                    
+                    return accessToken;
+                } 
+                */
+
+                return "";
 
 
 
@@ -676,7 +717,7 @@ namespace Remote.Emby.Api
                 return null;
 
 
-            if (PlexAuthToken == "")
+            if (String.IsNullOrEmpty(PlexAuthToken))
             {
                 Log("Not Plex Token - Not checking for clients.");
                 return 0;

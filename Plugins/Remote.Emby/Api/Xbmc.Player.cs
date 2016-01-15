@@ -308,6 +308,7 @@ namespace Remote.Emby.Api
                         request.Headers.Add("X-Plex-Token", _parent.PlexAuthToken);
                         var response = request.GetResponse();
 
+                        /*
                         if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
                         {
 
@@ -321,12 +322,12 @@ namespace Remote.Emby.Api
                             // Open the stream using a StreamReader.
                             System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
-                            XmlSerializer serializer = new XmlSerializer(typeof(MediaContainer));
-                            MediaContainer deserialized = (MediaContainer)serializer.Deserialize(reader);
+                            XmlSerializer serializer = new XmlSerializer(typeof(ClassAuthenicateByUser.Xml2CSharp.SessionInfo));
+                            ClassAuthenicateByUser.Xml2CSharp.SessionInfo deserialized = (ClassAuthenicateByUser.Xml2CSharp.SessionInfo)serializer.Deserialize(reader);
 
 
 
-                            var length = deserialized.Video.Count;
+                            var length = deserialized.Client;
                             _parent.Log("Number of playing Videos: " + length);
 
                             if (length == 0)
@@ -347,7 +348,7 @@ namespace Remote.Emby.Api
                             _nowPlaying.MediaType = "Movie";
                             //_nowPlaying.Title = "Plex Playing";
                             
-                            foreach (var server in deserialized.Video)
+                            foreach (var server in deserialized.)
                             {
                                 _parent.Log("Checking against Local Playback only Client IP: " + _parent.ClientIPAddress);
                                 if (server.Player.address == _parent.ClientIPAddress)
@@ -371,8 +372,8 @@ namespace Remote.Emby.Api
                                          Console.WriteLine("" + server.lastViewedAt);
                                          Console.WriteLine("Filename: " + server.Media.Part.file);
                                      //    Console.WriteLine("" + server.Media.Part.duration);
-                                   // */
-                                    //     Console.WriteLine("Player Product: " + server.Player.product);
+                                   // 
+                                         Console.WriteLine("Player Product: " + server.Player.product);
                                     _nowPlaying.Plot = server.summary;
                                     _nowPlaying.ThumbURL = @"http://"+ _parent.IP + ":" + _parent.ServerPort+server.thumb;
                                     _nowPlaying.FileName = server.Media.Part.file;
@@ -405,6 +406,7 @@ namespace Remote.Emby.Api
                             _parent.Log("Plex Remote:  Filename" + _nowPlaying.FileName + " IsPlaying :" + _nowPlaying.IsPlaying + " IsPaused :" + _nowPlaying.IsPaused + " MediaType :" + _nowPlaying.MediaType);
                             return;
                         }
+        */
                     }
                     catch (Exception ex)
                     {
