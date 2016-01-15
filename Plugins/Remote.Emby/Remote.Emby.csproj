@@ -73,8 +73,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\ClassAuthenicateByUser\AuthenicateByUser.cs" />
-    <Compile Include="Api\Director.cs" />
     <Compile Include="Api\Public Users Folder\Public Users.cs" />
+    <Compile Include="Api\Sessions\Sessions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remote.Emby.cs" />
     <Compile Include="Api\JsonRpcClient.cs">

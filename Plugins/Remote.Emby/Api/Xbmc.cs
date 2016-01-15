@@ -165,7 +165,7 @@ namespace Remote.Emby.Api
         {
             if (!_configured) return null;
            // return @"http://" + HttpUtility.UrlEncode(fileName);
-            Log("Plex API - Trying to sortout fanart URL: " +  HttpUtility.UrlEncode(fileName));
+            Log("Emby API - Trying to sortout fanart URL: " +  HttpUtility.UrlEncode(fileName));
             return HttpUtility.UrlEncode(fileName);
         }
 
@@ -330,6 +330,7 @@ namespace Remote.Emby.Api
             }
 
             string AuthString = @"MediaBrowser Client=""" + clientname + "\", Device=\"" + devicename + "\", DeviceId=\"" + deviceID + "\", Version=\"" + applicationVersion + "\", UserId=\"" + CurrentUserID + "\"";
+            Log("--------- GetAuthString Returns:" + AuthString);
             return AuthString;
        }
 
@@ -339,6 +340,8 @@ namespace Remote.Emby.Api
            // string authString = GetAuthString();
 
             string url = "http://" + IP + ":" + Port + "/Users/Public";
+            Log("---------------- Getting Current User ID -------------------------");
+            Log("URL is " + url);
             try
             {
 
@@ -366,25 +369,17 @@ namespace Remote.Emby.Api
 
                     foreach (var server in deserialized.UserDto)
                     {
-                        if (server.ConnectUserName == UserName)
+                        Log("------ CurrentUSERID --  " + server.Name + " : " + server.Id);
+                        if (server.Name == UserName)
                         {
-                            Log ("Returning CurrentUserID based on Username from Public/Users: UserID:"+server.ConnectUserId+" Username "+server.ConnectUserName);
-                            return  server.ConnectUserId;
+                            Log ("----------------- Returning CurrentUserID based on Username from Public/Users: UserID:"+server.Id+" Username "+server.Name);
+                            return  server.Id;
                         }
-                        
 
                    }
 
-
                 }
                 return "";
-
-
-
-
-
-
-
 
 
             }
@@ -393,8 +388,6 @@ namespace Remote.Emby.Api
                 Log("Exception: " + ex);
                 return "";
             }
-
-
 
 
         }
@@ -410,26 +403,12 @@ namespace Remote.Emby.Api
 
             if (String.IsNullOrEmpty(PlexAuthToken))
             {
-                Log("Not Plex Token - Not checking for clients.");
+                Log("No Emby Token - Not checking for clients.");
                 return 0;
                 // Not Connected - failed Setup.
                 //Still need to check local player there - rather than internet server which gives Auth
             }
             
-            /*
-            string clientname = "Yatse3";
-            string devicename = "Windows";
-            string deviceID = "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
-            string applicationVersion = "1.0.0";
-            string currentUserId = "431307815ad246a3ba73e5547c3121a6"; ;
-
-            var authString = @"MediaBrowser Client=""" + clientname + "\", Device=\"" + devicename + "\", DeviceId=\"" + deviceID + "\", Version=\"" + applicationVersion + "\", UserId=\"" + currentUserId + "\"";
-            string url = "http://" + ip + ":" + port + "/Sessions";
-            // Emby Sessions Server Clients Page - to connect to and see whether local player is in effect.
-           
-             
-            */
-
             string authString = GetAuthString();
 
             try
@@ -438,10 +417,7 @@ namespace Remote.Emby.Api
                 var request = WebRequest.CreateHttp("http://"+ip+":"+port+"/Sessions");
                 request.Method = "get";
                 request.Timeout = 5000;
-               // ASCIIEncoding encoding = new ASCIIEncoding();
-               // byte[] data = encoding.GetBytes(postArg);
-
-                //Log(postArg);
+                Log("--------------- TEST CONNECTION: IP " + ip + ":" + port);
 
                 request.Headers.Add("X-MediaBrowser-Token", PlexAuthToken);
                 request.Headers.Add("Authorization", authString);
@@ -477,15 +453,6 @@ namespace Remote.Emby.Api
                     // Console.WriteLine("Access Token EQUALS!   " + obj.AccessToken);
                     // accessToken = obj.AccessToken;
                 }
-
-
-
-
-
-
-
-
-
 
 
             }
@@ -539,7 +506,7 @@ namespace Remote.Emby.Api
         public string GetEmbyAuthToken(string ip, string port, string user, string password)
 {
 
-            Log("Getting Emby TOKEN");
+            Log("-------------------------Getting Emby TOKEN----------------------------------");
             
             IP = ip;
             Port = port;
@@ -550,17 +517,19 @@ namespace Remote.Emby.Api
             string hostbase = @"http://" + ip + ":" + port;
             string path = "/mediabrowser/Users/AuthenticateByName";
             string host = hostbase + path;
-            string clientname = "Yatse3";
-            string devicename = "Windows";
-            string deviceID = "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
-            string applicationVersion = "1.0.0";
+         //   string clientname = "Yatse3";
+         //   string devicename = "Windows";
+         //   string deviceID = "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
+         //   string applicationVersion = "1.0.0";
             
-            if (CurrentUserID =="")
-            {
-                CurrentUserID = GetCurrentUserID();
-            }
-            
-            string currentUserId = ""; ;
+          //  if (CurrentUserID =="")
+         //   {
+         //       CurrentUserID = GetCurrentUserID();
+        //    }
+         //  /
+            //string currentUserId = ""; ;
+
+            var authString = GetAuthString();
 
             var postData = new Dictionary<string, string>();
             
@@ -582,7 +551,7 @@ namespace Remote.Emby.Api
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(UserName + ":" + Password);
             string auth = System.Convert.ToBase64String(plainTextBytes);
 
-            var authString = @"MediaBrowser Client=""" + clientname + "\", Device=\"" + devicename + "\", DeviceId=\"" + deviceID + "\", Version=\"" + applicationVersion + "\", UserId=\"" + CurrentUserID + "\"";
+         //   var authString = @"MediaBrowser Client=""" + clientname + "\", Device=\"" + devicename + "\", DeviceId=\"" + deviceID + "\", Version=\"" + applicationVersion + "\", UserId=\"" + CurrentUserID + "\"";
 
             Log(authString);
 
@@ -632,12 +601,12 @@ namespace Remote.Emby.Api
 
                     AuthenicateByUser.Root.AuthenticationResult deserialized = (AuthenicateByUser.Root.AuthenticationResult)serializer.Deserialize(reader);
 
-                    Log("EMBY Access Token:" + deserialized.AccessToken);
-                    Log("EMBY User ID: " + deserialized.User.ConnectUserId);
+                    Log("-------------- EMBY Access Token:" + deserialized.AccessToken);
+                    Log("-------------- EMBY User ID: " + CurrentUserID);
 
                     if (deserialized.AccessToken != "")
                     {
-                        Log("ACCESS TOKEN FOUND");
+                        Log("------------------ EMBY ACCESS TOKEN FOUND");
                         return deserialized.AccessToken ;
                     }
                 }
