@@ -27,7 +27,7 @@ using System.Xml.Serialization;
 using System.Net;
 using Setup;
 
-namespace Remote.Plex.Api
+namespace Remote.Emby.Api
 {
     class XbmcPlayer : IApiPlayer
     {
@@ -103,121 +103,121 @@ namespace Remote.Plex.Api
                     }
                     //_parent.Log("XBMC PLAYER REMOTE:   Check with MPC Doesnt make it here");
                     /*
-                */
-                /*   
-                   var GUIproperties = new JsonObject();
-                   GUIproperties["properties"] = new[]
-                                                     {
-                                                         "currentwindow"
+                */    
+                 /*   
+                    var GUIproperties = new JsonObject();
+                    GUIproperties["properties"] = new[]
+                                                      {
+                                                          "currentwindow"
                                                              
                                                       
-                                                       };
+                                                        };
 
-                   var menuresult = (JsonObject)_parent.JsonCommand("GUI.GetProperties", GUIproperties);
-                   var GUIdeeper = (JsonObject)menuresult["currentwindow"];
-                   _nowPlaying.CurrentMenuLabel = GUIdeeper["label"].ToString();
-                   _nowPlaying.CurrentMenuID = GUIdeeper["id"].ToString();
+                    var menuresult = (JsonObject)_parent.JsonCommand("GUI.GetProperties", GUIproperties);
+                    var GUIdeeper = (JsonObject)menuresult["currentwindow"];
+                    _nowPlaying.CurrentMenuLabel = GUIdeeper["label"].ToString();
+                    _nowPlaying.CurrentMenuID = GUIdeeper["id"].ToString();
                     
                                      
-                   var current = -1;
-                   var players = (JsonArray)_parent.JsonCommand("Player.GetActivePlayers", null);
+                    var current = -1;
+                    var players = (JsonArray)_parent.JsonCommand("Player.GetActivePlayers", null);
 
 
-                   if (players.Count > 0)
-                   {
-                       foreach (JsonObject player in players)
-                       {
-                           if (player["type"].ToString() == "picture")
-                               continue;
-                           current = Int32.Parse(player["playerid"].ToString());
-                           _nowPlaying.MediaType = (string)player["type"];
-                       }
-                   }
+                    if (players.Count > 0)
+                    {
+                        foreach (JsonObject player in players)
+                        {
+                            if (player["type"].ToString() == "picture")
+                                continue;
+                            current = Int32.Parse(player["playerid"].ToString());
+                            _nowPlaying.MediaType = (string)player["type"];
+                        }
+                    }
 
-                   if (current == -1)
-                   {
-                       _nowPlaying.FileName = "";
-                       _nowPlaying.Title = "";
-                       _nowPlaying.IsPlaying = false;
-                       _nowPlaying.IsPaused = false;
-                       return;
-                   }
+                    if (current == -1)
+                    {
+                        _nowPlaying.FileName = "";
+                        _nowPlaying.Title = "";
+                        _nowPlaying.IsPlaying = false;
+                        _nowPlaying.IsPaused = false;
+                        return;
+                    }
 
-                   var items = new JsonObject();
-                   items["playerid"] = current;
-                   items["properties"] = new[]{
-                                           "file",
-                                           "comment",
-                                           "tvshowid",
-                                           "albumartist",
-                                           "duration",
-                                           //"id",
-                                           "album",
-                                           //"votes",
-                                          // "mpaa",
-                                          // "writer",
-                                          //"albumid",
-                                           //"type",
-                                           "genre",
-                                           "year",
-                                           //"plotoutline",
-                                           "track",
-                                           "artist",
-                                           //"season",
-                                           //"imdbnumber",
-                                          // "studio",
-                                           //"showlink",
-                                           "showtitle",
-                                           "episode",
-                                           "season",
-                                           "plot",
-                                           "director",
-                                           "studio",
-                                           "rating",
-                                           //"productioncode",
-                                           //"country",
-                                           //"premiered",
-                                           //"originaltitle",
-                                           //"artistid",
-                                           //"firstaired",
-                                           "tagline",
-                                           "thumbnail",
-                                           "fanart"
-                                           //"top250",
-                                           //"trailer"
-                                       };
+                    var items = new JsonObject();
+                    items["playerid"] = current;
+                    items["properties"] = new[]{
+                                            "file",
+                                            "comment",
+                                            "tvshowid",
+                                            "albumartist",
+                                            "duration",
+                                            //"id",
+                                            "album",
+                                            //"votes",
+                                           // "mpaa",
+                                           // "writer",
+                                           //"albumid",
+                                            //"type",
+                                            "genre",
+                                            "year",
+                                            //"plotoutline",
+                                            "track",
+                                            "artist",
+                                            //"season",
+                                            //"imdbnumber",
+                                           // "studio",
+                                            //"showlink",
+                                            "showtitle",
+                                            "episode",
+                                            "season",
+                                            "plot",
+                                            "director",
+                                            "studio",
+                                            "rating",
+                                            //"productioncode",
+                                            //"country",
+                                            //"premiered",
+                                            //"originaltitle",
+                                            //"artistid",
+                                            //"firstaired",
+                                            "tagline",
+                                            "thumbnail",
+                                            "fanart"
+                                            //"top250",
+                                            //"trailer"
+                                        };
 
-                   var properties = new JsonObject();
-                   properties["playerid"] = current;
-                   properties["properties"] = new[]{
-                                           "totaltime",
-                                           "percentage",
-                                           "time",
-                                           "speed"
-                                       };
+                    var properties = new JsonObject();
+                    properties["playerid"] = current;
+                    properties["properties"] = new[]{
+                                            "totaltime",
+                                            "percentage",
+                                            "time",
+                                            "speed"
+                                        };
 
-                   var appproperties = new JsonObject();
-                   appproperties["properties"] = new[]
-                                                     {
-                                                         "muted",
-                                                         "volume"
-                                                     };
+                    var appproperties = new JsonObject();
+                    appproperties["properties"] = new[]
+                                                      {
+                                                          "muted",
+                                                          "volume"
+                                                      };
 
-                   var result1 = (JsonObject)_parent.JsonCommand("Player.GetProperties", properties);
-                   var result2 = (JsonObject)_parent.JsonCommand("Player.GetItem", items);
-                   var result3 = (JsonObject)_parent.JsonCommand("Application.GetProperties", appproperties);
+                    var result1 = (JsonObject)_parent.JsonCommand("Player.GetProperties", properties);
+                    var result2 = (JsonObject)_parent.JsonCommand("Player.GetItem", items);
+                    var result3 = (JsonObject)_parent.JsonCommand("Application.GetProperties", appproperties);
 
 
-                   if (result1 == null || result2 == null || result3 == null)
-                   {
-                       _nowPlaying.FileName = "";
-                       _nowPlaying.Title = "";
-                       _nowPlaying.IsPlaying = false;
-                       _nowPlaying.IsPaused = false;
-                       return;
-                   }
+                    if (result1 == null || result2 == null || result3 == null)
+                    {
+                        _nowPlaying.FileName = "";
+                        _nowPlaying.Title = "";
+                        _nowPlaying.IsPlaying = false;
+                        _nowPlaying.IsPaused = false;
+                        return;
+                    }
 
-                   result2 = (JsonObject)(result2)["item"];
+                    result2 = (JsonObject)(result2)["item"];
 
                   
                      
@@ -225,87 +225,86 @@ namespace Remote.Plex.Api
                      
                      
                     
-                   if (_nowPlaying.MediaType == "video")
-                   {
-                       if (result2["type"].ToString() == "channel")  //if PVR Needs to go high otherwise exception
-                       {
-                           _nowPlaying.MediaType = "Pvr";
-                           _nowPlaying.IsNewMedia = true;
-                           _nowPlaying.FileName = result2["label"].ToString();
-                           _nowPlaying.ThumbURL = result2["thumbnail"].ToString();
-                           _nowPlaying.FanartURL = result2["fanart"].ToString();
-                           _nowPlaying.Title = result2["label"].ToString();
-                           _nowPlaying.IsPaused = Convert.ToInt32("0" + result1["speed"].ToString().Replace("-", "")) == 0;
-                           _nowPlaying.IsPlaying = !_nowPlaying.IsPaused;
-                           var pvrtime = (JsonObject)result1["time"];
-                           var pvrtotal = (JsonObject)result1["totaltime"];
-                           _nowPlaying.Time = new TimeSpan(0, Convert.ToInt32("0" + pvrtime["hours"]), Convert.ToInt32("0" + pvrtime["minutes"]), Convert.ToInt32("0" + pvrtime["seconds"]));
-                           _nowPlaying.Duration = new TimeSpan(0, Convert.ToInt32("0" + pvrtotal["hours"]), Convert.ToInt32("0" + pvrtotal["minutes"]), Convert.ToInt32("0" + pvrtotal["seconds"]));
-                           _nowPlaying.Progress = Convert.ToInt32("0" + result1["percentage"].ToString().Split('.')[0]);
-                           _nowPlaying.Volume = Convert.ToInt32("0" + result3["volume"]);
-                           _nowPlaying.IsMuted = (bool)result3["muted"];
-                           return;
-                       }
-                   }
+                    if (_nowPlaying.MediaType == "video")
+                    {
+                        if (result2["type"].ToString() == "channel")  //if PVR Needs to go high otherwise exception
+                        {
+                            _nowPlaying.MediaType = "Pvr";
+                            _nowPlaying.IsNewMedia = true;
+                            _nowPlaying.FileName = result2["label"].ToString();
+                            _nowPlaying.ThumbURL = result2["thumbnail"].ToString();
+                            _nowPlaying.FanartURL = result2["fanart"].ToString();
+                            _nowPlaying.Title = result2["label"].ToString();
+                            _nowPlaying.IsPaused = Convert.ToInt32("0" + result1["speed"].ToString().Replace("-", "")) == 0;
+                            _nowPlaying.IsPlaying = !_nowPlaying.IsPaused;
+                            var pvrtime = (JsonObject)result1["time"];
+                            var pvrtotal = (JsonObject)result1["totaltime"];
+                            _nowPlaying.Time = new TimeSpan(0, Convert.ToInt32("0" + pvrtime["hours"]), Convert.ToInt32("0" + pvrtime["minutes"]), Convert.ToInt32("0" + pvrtime["seconds"]));
+                            _nowPlaying.Duration = new TimeSpan(0, Convert.ToInt32("0" + pvrtotal["hours"]), Convert.ToInt32("0" + pvrtotal["minutes"]), Convert.ToInt32("0" + pvrtotal["seconds"]));
+                            _nowPlaying.Progress = Convert.ToInt32("0" + result1["percentage"].ToString().Split('.')[0]);
+                            _nowPlaying.Volume = Convert.ToInt32("0" + result3["volume"]);
+                            _nowPlaying.IsMuted = (bool)result3["muted"];
+                            return;
+                        }
+                    }
 
-                   _nowPlaying.IsPaused = Convert.ToInt32("0" + result1["speed"].ToString().Replace("-", "")) == 0;
-                   _nowPlaying.IsPlaying = !_nowPlaying.IsPaused;
-                   var time = (JsonObject)result1["time"];
-                   var total = (JsonObject)result1["totaltime"];
-                   _nowPlaying.Time = new TimeSpan(0, Convert.ToInt32("0" + time["hours"]), Convert.ToInt32("0" + time["minutes"]), Convert.ToInt32("0" + time["seconds"]));
-                   _nowPlaying.Duration = new TimeSpan(0, Convert.ToInt32("0" + total["hours"]), Convert.ToInt32("0" + total["minutes"]), Convert.ToInt32("0" + total["seconds"]));
-                   _nowPlaying.Progress = Convert.ToInt32("0" + result1["percentage"].ToString().Split('.')[0]);
-                   _nowPlaying.Volume = Convert.ToInt32("0" + result3["volume"]);
-                   _nowPlaying.IsMuted = (bool)result3["muted"];
+                    _nowPlaying.IsPaused = Convert.ToInt32("0" + result1["speed"].ToString().Replace("-", "")) == 0;
+                    _nowPlaying.IsPlaying = !_nowPlaying.IsPaused;
+                    var time = (JsonObject)result1["time"];
+                    var total = (JsonObject)result1["totaltime"];
+                    _nowPlaying.Time = new TimeSpan(0, Convert.ToInt32("0" + time["hours"]), Convert.ToInt32("0" + time["minutes"]), Convert.ToInt32("0" + time["seconds"]));
+                    _nowPlaying.Duration = new TimeSpan(0, Convert.ToInt32("0" + total["hours"]), Convert.ToInt32("0" + total["minutes"]), Convert.ToInt32("0" + total["seconds"]));
+                    _nowPlaying.Progress = Convert.ToInt32("0" + result1["percentage"].ToString().Split('.')[0]);
+                    _nowPlaying.Volume = Convert.ToInt32("0" + result3["volume"]);
+                    _nowPlaying.IsMuted = (bool)result3["muted"];
 
-                   _parent.MpcLoaded = _nowPlaying.Duration == new TimeSpan(0, 0, 0, 1);
+                    _parent.MpcLoaded = _nowPlaying.Duration == new TimeSpan(0, 0, 0, 1);
 
-                   _nowPlaying.FileName = result2["file"].ToString();
+                    _nowPlaying.FileName = result2["file"].ToString();
 
-                   if (_nowPlaying.MediaType == "audio")
-                   {
-                       _nowPlaying.MediaType = "Audio";
-                       _nowPlaying.Genre = _parent.JsonArrayToString((JsonArray)result2["genre"]);
-                       _nowPlaying.Title = result2["label"].ToString();
-                       _nowPlaying.Year = Convert.ToInt32("0" + result2["year"]);
-                       _nowPlaying.Track = Convert.ToInt32("0" + result2["track"]);
-                       _nowPlaying.Artist = _parent.JsonArrayToString((JsonArray)result2["artist"]);
-                       _nowPlaying.Album = result2["album"].ToString();
-                       _nowPlaying.ThumbURL = result2["thumbnail"].ToString();
-                       _nowPlaying.FanartURL = result2["fanart"].ToString();
-                   }
+                    if (_nowPlaying.MediaType == "audio")
+                    {
+                        _nowPlaying.MediaType = "Audio";
+                        _nowPlaying.Genre = _parent.JsonArrayToString((JsonArray)result2["genre"]);
+                        _nowPlaying.Title = result2["label"].ToString();
+                        _nowPlaying.Year = Convert.ToInt32("0" + result2["year"]);
+                        _nowPlaying.Track = Convert.ToInt32("0" + result2["track"]);
+                        _nowPlaying.Artist = _parent.JsonArrayToString((JsonArray)result2["artist"]);
+                        _nowPlaying.Album = result2["album"].ToString();
+                        _nowPlaying.ThumbURL = result2["thumbnail"].ToString();
+                        _nowPlaying.FanartURL = result2["fanart"].ToString();
+                    }
                     
-                   if (_nowPlaying.MediaType == "video")
-                   {
-                       _nowPlaying.MediaType = result2["type"].ToString() == "episode" ? "TvShow" : "Movie";
+                    if (_nowPlaying.MediaType == "video")
+                    {
+                        _nowPlaying.MediaType = result2["type"].ToString() == "episode" ? "TvShow" : "Movie";
                         
 
                         
-                       _nowPlaying.Genre = _parent.JsonArrayToString((JsonArray)result2["genre"]);
-                       _nowPlaying.Title = result2["label"].ToString();
-                       _nowPlaying.Year = Convert.ToInt32("0" + result2["year"]);
-                       _nowPlaying.SeasonNumber = Convert.ToInt32("0" + result2["season"].ToString().Replace("-", ""));
-                       _nowPlaying.EpisodeNumber = Convert.ToInt32("0" + result2["episode"].ToString().Replace("-", ""));
-                       _nowPlaying.ShowTitle = result2["showtitle"].ToString();
-                       _nowPlaying.Plot = result2["plot"].ToString();
-                       _nowPlaying.Director = _parent.JsonArrayToString((JsonArray)result2["director"]);
-                       _nowPlaying.Studio = _parent.JsonArrayToString((JsonArray)result2["studio"]);
-                       _nowPlaying.Tagline = result2["tagline"].ToString();
-                       _nowPlaying.Rating = result2["rating"].ToString();
-                       _nowPlaying.ThumbURL = result2["thumbnail"].ToString();
-                       _nowPlaying.FanartURL = result2["fanart"].ToString();
-                   }
-               */
-                if (_parent.IsConnected())
-                {
+                        _nowPlaying.Genre = _parent.JsonArrayToString((JsonArray)result2["genre"]);
+                        _nowPlaying.Title = result2["label"].ToString();
+                        _nowPlaying.Year = Convert.ToInt32("0" + result2["year"]);
+                        _nowPlaying.SeasonNumber = Convert.ToInt32("0" + result2["season"].ToString().Replace("-", ""));
+                        _nowPlaying.EpisodeNumber = Convert.ToInt32("0" + result2["episode"].ToString().Replace("-", ""));
+                        _nowPlaying.ShowTitle = result2["showtitle"].ToString();
+                        _nowPlaying.Plot = result2["plot"].ToString();
+                        _nowPlaying.Director = _parent.JsonArrayToString((JsonArray)result2["director"]);
+                        _nowPlaying.Studio = _parent.JsonArrayToString((JsonArray)result2["studio"]);
+                        _nowPlaying.Tagline = result2["tagline"].ToString();
+                        _nowPlaying.Rating = result2["rating"].ToString();
+                        _nowPlaying.ThumbURL = result2["thumbnail"].ToString();
+                        _nowPlaying.FanartURL = result2["fanart"].ToString();
+                    }
+                */
+
                     try
                     {
 
-                        _parent.Log("Plex: Using Parent IP equals: " + _parent.IP);
-                        string NPurl = "http://" + _parent.IP + ":32400/status/sessions";
+                        _parent.Log("Plex: Using Parent IP equals: " +_parent.IP);
+                        string NPurl = "http://"+ _parent.IP +":32400/status/sessions";
                         var request = WebRequest.Create(NPurl);
 
-
+                        
                         request.Headers.Add("X-Plex-Token", _parent.PlexAuthToken);
                         var response = request.GetResponse();
 
@@ -343,18 +342,18 @@ namespace Remote.Plex.Api
 
                             //_nowPlaying.IsPlaying = true;
                             //_nowPlaying.IsPaused = false;
-
+                           
                             _nowPlaying.IsNewMedia = true;
                             _nowPlaying.MediaType = "Movie";
                             //_nowPlaying.Title = "Plex Playing";
-
+                            
                             foreach (var server in deserialized.Video)
                             {
                                 _parent.Log("Checking against Local Playback only Client IP: " + _parent.ClientIPAddress);
                                 if (server.Player.address == _parent.ClientIPAddress)
                                 {
                                     _parent.Log("Plex: Found Local Playback");
-                                    _nowPlaying.FanartURL = @"http://" + _parent.IP + ":" + _parent.ServerPort + server.art;
+                                    _nowPlaying.FanartURL = @"http://" + _parent.IP+":"+_parent.ServerPort+server.art;
                                     _parent.Log("Plex: Fanart URL sorting Out:  " + _parent.IP + ":" + _parent.ServerPort + server.art);
                                     //Console.WriteLine("Grandparent art is {0} and Players is {1}", server.grandparentArt, server.Player);
                                     _nowPlaying.Title = server.title;
@@ -375,13 +374,13 @@ namespace Remote.Plex.Api
                                    // */
                                     //     Console.WriteLine("Player Product: " + server.Player.product);
                                     _nowPlaying.Plot = server.summary;
-                                    _nowPlaying.ThumbURL = @"http://" + _parent.IP + ":" + _parent.ServerPort + server.thumb;
+                                    _nowPlaying.ThumbURL = @"http://"+ _parent.IP + ":" + _parent.ServerPort+server.thumb;
                                     _nowPlaying.FileName = server.Media.Part.file;
                                     _nowPlaying.Title = server.Player.product;
-
+                                    
                                     _nowPlaying.MediaType = server.type == "episode" ? "TvShow" : "Movie";
                                     _nowPlaying.Duration = new TimeSpan(0, Convert.ToInt32("0"), Convert.ToInt32("0"), Convert.ToInt32("0"), Convert.ToInt32(server.Media.duration));
-                                    _nowPlaying.Time = new TimeSpan(0, 0, 0, Convert.ToInt32(server.viewOffset) / 1000, 0);
+                                    _nowPlaying.Time = new TimeSpan(0,0,0,Convert.ToInt32(server.viewOffset)/1000,0);
 
                                     var percent = Math.Floor(100.0 * Convert.ToInt32("0" + server.viewOffset, CultureInfo.InvariantCulture) / Convert.ToInt32("0" + server.Media.duration, CultureInfo.InvariantCulture));
                                     if (Double.IsNaN(percent))
@@ -419,7 +418,7 @@ namespace Remote.Plex.Api
 
                 }
             }
-        }
+        
 
         public ApiCurrently NowPlaying(bool checkNewMedia)
         {

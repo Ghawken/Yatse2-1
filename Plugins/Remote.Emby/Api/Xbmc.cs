@@ -50,7 +50,7 @@ using System.Web.Script.Serialization;
 using System.Collections.Specialized;
 
 
-namespace Remote.Plex.Api
+namespace Remote.Emby.Api
 {
     public class Xbmc : ApiConnection
     {
@@ -318,7 +318,7 @@ namespace Remote.Plex.Api
 
             PlexAuthToken = GetPlexAuthToken(ip, port, user, password);
 
-            if (String.IsNullOrEmpty(PlexAuthToken))
+            if (PlexAuthToken == "")
             {
                 Log("Not Plex Token - Not checking for clients.");
                 return 0;
