@@ -301,11 +301,11 @@ namespace Remote.Emby.Api
                     {
 
                         _parent.Log("Plex: Using Parent IP equals: " +_parent.IP);
-                        string NPurl = "http://"+ _parent.IP +":32400/status/sessions";
+                        string NPurl = "http://"+ _parent.IP +":"+_parent.IP;
                         var request = WebRequest.Create(NPurl);
 
                         
-                        request.Headers.Add("X-Plex-Token", _parent.PlexAuthToken);
+                        //request.Headers.Add("X-Plex-Token", _parent.PlexAuthToken);
                         var response = request.GetResponse();
 
                         /*

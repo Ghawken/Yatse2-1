@@ -59,6 +59,7 @@ namespace Remote.Emby.Api
         public string ClientIPAddress = "";
         public string ServerPort = "32400";
         public string PlexAuthToken = "";
+        public string CurrentUserID = "";
         private readonly XbmcEventClient _eventClient = new XbmcEventClient();
         //private const string ApiPath = "/xbmcCmds/xbmcHttp";
         private const string JsonPath = "/jsonrpc";
@@ -136,7 +137,7 @@ namespace Remote.Emby.Api
 
         public override string GetOS()
         {
-            return "Plex";
+            return "Emby";
         }
 
         public override string GetVersion()
@@ -308,7 +309,95 @@ namespace Remote.Emby.Api
 
             return true;
         }
+        public string GetCurrentUserId()
+        {
+            return "";
 
+
+        }
+
+
+        public string GetAuthString()
+        {
+            string clientname = "Yatse3";
+            string devicename = "Windows";
+            string deviceID = "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
+            string applicationVersion = "1.0.0";
+
+            if (String.IsNullOrEmpty(CurrentUserID))
+            {
+                CurrentUserID = GetCurrentUserID();
+            }
+
+            string AuthString = @"MediaBrowser Client=""" + clientname + "\", Device=\"" + devicename + "\", DeviceId=\"" + deviceID + "\", Version=\"" + applicationVersion + "\", UserId=\"" + CurrentUserID + "\"";
+            return AuthString;
+       }
+
+
+        public string GetCurrentUserID()
+        {
+           // string authString = GetAuthString();
+
+            string url = "http://" + IP + ":" + Port + "/Users/Public";
+            try
+            {
+
+                var request = WebRequest.CreateHttp(url);
+                request.Method = "get";
+                request.Timeout = 5000;
+              //  request.Headers.Add("X-MediaBrowser-Token", PlexAuthToken);
+              //  request.Headers.Add("Authorization", authString);
+                request.ContentType = "application/json; charset=utf-8";
+
+                request.Accept = "application/xml";
+
+                var response = request.GetResponse();
+
+                if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+                {
+
+                    // Get the stream containing content returned by the server.
+                    System.IO.Stream dataStream = response.GetResponseStream();
+                    // Open the stream using a StreamReader.
+                    System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+
+                    XmlSerializer serializer = new XmlSerializer(typeof(Public_Users_Folder.PublicUsers.ArrayOfUserDto));
+                    Public_Users_Folder.PublicUsers.ArrayOfUserDto deserialized = (Public_Users_Folder.PublicUsers.ArrayOfUserDto)serializer.Deserialize(reader);
+
+                    foreach (var server in deserialized.UserDto)
+                    {
+                        if (server.ConnectUserName == UserName)
+                        {
+                            Log ("Returning CurrentUserID based on Username from Public/Users: UserID:"+server.ConnectUserId+" Username "+server.ConnectUserName);
+                            return  server.ConnectUserId;
+                        }
+                        
+
+                   }
+
+
+                }
+                return "";
+
+
+
+
+
+
+
+
+
+            }
+            catch (Exception ex)
+            {
+                Log("Exception: " + ex);
+                return "";
+            }
+
+
+
+
+        }
         public override int TestConnection(string ip, string port, string user, string password)
         {
             if (String.IsNullOrEmpty(ip)) return 0;
@@ -327,7 +416,7 @@ namespace Remote.Emby.Api
                 //Still need to check local player there - rather than internet server which gives Auth
             }
             
-            
+            /*
             string clientname = "Yatse3";
             string devicename = "Windows";
             string deviceID = "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
@@ -338,10 +427,15 @@ namespace Remote.Emby.Api
             string url = "http://" + ip + ":" + port + "/Sessions";
             // Emby Sessions Server Clients Page - to connect to and see whether local player is in effect.
            
+             
+            */
+
+            string authString = GetAuthString();
+
             try
             {
 
-                var request = WebRequest.CreateHttp("http://"+IP+":"+Port+"/Sessions");
+                var request = WebRequest.CreateHttp("http://"+ip+":"+port+"/Sessions");
                 request.Method = "get";
                 request.Timeout = 5000;
                // ASCIIEncoding encoding = new ASCIIEncoding();
@@ -445,7 +539,7 @@ namespace Remote.Emby.Api
         public string GetEmbyAuthToken(string ip, string port, string user, string password)
 {
 
-             Log("Getting Emby TOKEN");
+            Log("Getting Emby TOKEN");
             
             IP = ip;
             Port = port;
@@ -460,7 +554,13 @@ namespace Remote.Emby.Api
             string devicename = "Windows";
             string deviceID = "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
             string applicationVersion = "1.0.0";
-            string currentUserId = "431307815ad246a3ba73e5547c3121a6"; ;
+            
+            if (CurrentUserID =="")
+            {
+                CurrentUserID = GetCurrentUserID();
+            }
+            
+            string currentUserId = ""; ;
 
             var postData = new Dictionary<string, string>();
             
@@ -482,7 +582,7 @@ namespace Remote.Emby.Api
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(UserName + ":" + Password);
             string auth = System.Convert.ToBase64String(plainTextBytes);
 
-            var authString = @"MediaBrowser Client=""" + clientname + "\", Device=\"" + devicename + "\", DeviceId=\"" + deviceID + "\", Version=\"" + applicationVersion + "\", UserId=\"" + currentUserId + "\"";
+            var authString = @"MediaBrowser Client=""" + clientname + "\", Device=\"" + devicename + "\", DeviceId=\"" + deviceID + "\", Version=\"" + applicationVersion + "\", UserId=\"" + CurrentUserID + "\"";
 
             Log(authString);
 
@@ -658,7 +758,7 @@ namespace Remote.Emby.Api
             if (!_configured) 
                 return null;
             return @"http://" + IP + ":" + Port ;
-            //Changed Path for Plex -
+            //Changed Path for Emby -
         }
 
         public NetworkCredential GetCredentials()
