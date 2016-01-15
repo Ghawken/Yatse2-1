@@ -316,7 +316,7 @@ namespace Remote.Emby.Api
             else
                 Log("Test connection : " + ip + ":" + port);
 
-            PlexAuthToken = GetPlexAuthToken(ip, port, user, password);
+            PlexAuthToken = GetEmbyAuthToken(ip, port, user, password);
 
             if (PlexAuthToken == "")
             {
@@ -411,45 +411,124 @@ namespace Remote.Emby.Api
                 return "NO IP Obtainable." + ex;
             }
         }
-       public string GetPlexAuthToken(string ip, string port, string user, string password)
+
+        public static string HashSha1(string stringToHash)
+        {
+            using (var sha1 = new SHA1Managed())
+            {
+                return BitConverter.ToString(sha1.ComputeHash(Encoding.Default.GetBytes(stringToHash)));
+            }
+        }
+        public static string HashMd5(string stringToHash)
+        {
+            using (var Md5 = new MD5CryptoServiceProvider())
+            {
+                return BitConverter.ToString(Md5.ComputeHash(Encoding.Default.GetBytes(stringToHash)));
+            }
+        }
+        
+        public string GetEmbyAuthToken(string ip, string port, string user, string password)
 {
 
+             Log("Getting Emby TOKEN");
+            
             IP = ip;
             Port = port;
             UserName = user;
-            Password = password;
+            Password = Uri.EscapeDataString(password);
             _configured = true;
+
+            string hostbase = @"http://" + ip + ":" + port;
+            string path = "/mediabrowser/Users/AuthenticateByName";
+            string host = hostbase + path;
+            string clientname = "Yatse3";
+            string devicename = "Windows";
+            string deviceID = "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
+            string applicationVersion = "1.0.0";
+            string currentUserId = "431307815ad246a3ba73e5547c3121a6"; ;
+
+            var postData = new Dictionary<string, string>();
+            
+            postData["username"] = Uri.EscapeDataString(UserName);
+
+            var bytes = Encoding.UTF8.GetBytes(password ?? string.Empty);
+
+           
+
+            postData["password"] = HashSha1(Password);
+            postData["passwordMD5"] = HashMd5(Password);
+
+            
+            //var postArg = SimpleJson.SerializeObject(postData);
+
+            var postArg = JsonConvert.ExportToString(postData);
+
 
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(UserName + ":" + Password);
             string auth = System.Convert.ToBase64String(plainTextBytes);
 
+            var authString = @"MediaBrowser Client=""" + clientname + "\", Device=\"" + devicename + "\", DeviceId=\"" + deviceID + "\", Version=\"" + applicationVersion + "\", UserId=\"" + currentUserId + "\"";
+
+            Log(authString);
+
             try
             {
-                using (var client = new WebClient())
+
+                // Connecting to AuthenicateUSerbyName to get AccessToken
+                // Key here was to get data returned as JSON - key to that was the Request.Accept setting
+                var request = WebRequest.CreateHttp(host);
+                request.Method = "post";
+                request.Timeout = 5000;
+                ASCIIEncoding encoding = new ASCIIEncoding();
+                byte[] data = encoding.GetBytes(postArg);
+
+                Log(postArg);
+
+                //request.Headers.Add("X-MediaBrowser-Token", accessToken);
+                request.Headers.Add("Authorization", authString);
+                request.ContentType = "application/json; charset=utf-8";
+                request.ContentLength = postArg.Length;
+                request.Accept = "application/json";
+
+                var response3 = request.GetRequestStream();
+                response3.Write(data, 0, data.Length);
+
+                var response2 = request.GetResponse();
+
+                // Console.WriteLine(response2.Headers);
+
+
+
+                var response = request.GetResponse();
+
+
+                Log(((HttpWebResponse)response).StatusDescription);
+
+
+
+                using (var sr = new StreamReader(response.GetResponseStream()))
                 {
-                    var values = new NameValueCollection();
-                    values["Authorization"] = "Basic " + auth;
-                    values["X-Plex-Client-Identifier"] = "Yatse3Socket";
-                    values["X-Plex-Product"] = "Yatse 3 Socket";
-                    values["X-Plex-Version"] = "0.1.0";
+                    string json = sr.ReadToEnd();
+                    //Console.WriteLine(json);
+                    // Gets the Whole JSON return if password etc good
+                    // dynamic object fantastic - does need Class defined to return single Object
 
-                    client.Headers.Add(values);
+                    
+                    dynamic obj = JsonConvert.Import(json);
+                    Log(obj);
+                    Log("Access Token EQUALS!   " + obj.AccessToken);
+                    return obj.AccessToken;
+                } 
 
-                    var response = client.UploadString("https://plex.tv/users/sign_in.json", "");
 
-                    var json = new JavaScriptSerializer();
 
-                    dynamic result = json.DeserializeObject(response);
 
-                    var token = result["user"]["authentication_token"];
-                    PlexAuthToken = token;
-                    Log("Plex connection AuthToken: " + token);
-                    return token;
-                }
+
             }
             catch (Exception ex)
             {
-                Log("Plex Connection Failed : " + ip + ":" + port);
+                Log("Emby Connection Failed : "+host );
+                Log("Exception" + ex);
                 _isConnected = false;
                 return "";
             }

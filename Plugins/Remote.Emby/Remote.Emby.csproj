@@ -118,6 +118,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Yatse2-NP.snk" />
     <None Include="Yatse2.pfx" />
   </ItemGroup>

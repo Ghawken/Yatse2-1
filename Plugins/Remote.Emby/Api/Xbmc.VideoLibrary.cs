@@ -36,7 +36,7 @@ namespace Remote.Emby.Api
     {
       var seasons = new Collection<ApiTvSeason>();
 
-      var properties = new JsonArray(new[] { "title" });
+      var properties = new Jayrock.Json.JsonArray(new[] { "title" });
       var param = new JsonObject();
       param["properties"] = properties;
       var result = (JsonObject)_parent.JsonCommand("VideoLibrary.GetTVShows", param);
