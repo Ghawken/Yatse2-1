@@ -46,6 +46,7 @@ namespace Remote.Emby.Api
 
         public void RefreshNowPlaying()
         {
+                       
             lock (Locker)
             {
                 /*if (_parent.MpcLoaded)
@@ -409,20 +410,51 @@ namespace Remote.Emby.Api
 
                                         if (server.NowPlayingItem.Type == "Episode")
                                         {
-                                            _nowPlaying.MediaType = "Movie";
+                                            _nowPlaying.MediaType = "TvShow";
                                             _nowPlaying.EpisodeNumber = server.NowPlayingItem.IndexNumber;
                                             _nowPlaying.SeasonNumber = server.NowPlayingItem.ParentIndexNumber;
                                             _nowPlaying.ShowTitle = server.NowPlayingItem.SeriesName;
                                             _nowPlaying.Title = server.NowPlayingItem.Name;
                                             _nowPlaying.FileName = server.NowPlayingItem.Id;  //No Filename as yet try ID
-
+                                            _parent.Log("------------- EMBY Trying to get Images");
+                                            _parent.Log("------------- EMBY IMAGES: FanartURL " + "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.NowPlayingItem.PrimaryImageItemId + "/Images/Backdrop");
+                                            _nowPlaying.FanartURL = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.NowPlayingItem.BackdropItemId + "/Images/Backdrop";
+                                            _nowPlaying.ThumbURL = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.NowPlayingItem.PrimaryImageItemId + "/Images/Primary";
                                         }
 
+                                        if (server.NowPlayingItem.Type == "ChannelVideoItem")
+                                        {
+                                            _nowPlaying.MediaType = "Movie";
+                                            //_nowPlaying.ShowTitle = server.NowPlayingItem.SeriesName;
+                                            _nowPlaying.Title = server.NowPlayingItem.Name;
+                                            _nowPlaying.FileName = server.NowPlayingItem.Id;  //No Filename as yet try ID
+                                            _parent.Log("------------- EMBY Trying to get Images");
+                                            _parent.Log("------------- EMBY IMAGES: FanartURL " + "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.NowPlayingItem.PrimaryImageItemId + "/Images/Backdrop");
+                                            _nowPlaying.FanartURL = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.NowPlayingItem.PrimaryImageItemId + "/Images/Backdrop";
+                                            _nowPlaying.ThumbURL = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.NowPlayingItem.PrimaryImageItemId + "/Images/Primary";
+                                        }
+
+                                        if (server.NowPlayingItem.Type == "Movie")
+                                        {
+                                            _nowPlaying.MediaType = "Movie";
+                                            //_nowPlaying.EpisodeNumber = server.NowPlayingItem.IndexNumber;
+                                           // _nowPlaying.SeasonNumber = server.NowPlayingItem.ParentIndexNumber;
+                                           // _nowPlaying.ShowTitle = server.NowPlayingItem.SeriesName;
+                                            _nowPlaying.Title = server.NowPlayingItem.Name;
+                                            _nowPlaying.FileName = server.NowPlayingItem.Id;  //No Filename as yet try ID
                                         _parent.Log("------------- EMBY Trying to get Images");
-                                        _parent.Log("------------- EMBY IMAGES: FanartURL " + "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.NowPlayingItem.LogoItemId + "/Images/Backdrop");
-                                        _nowPlaying.FanartURL = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.NowPlayingItem.LogoItemId + "/Images/Backdrop";
-                                        _nowPlaying.ThumbURL = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.NowPlayingItem.LogoItemId + "/Images/Thumb";
-                                    
+                                        _parent.Log("------------- EMBY IMAGES: FanartURL " + "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.NowPlayingItem.PrimaryImageItemId + "/Images/Backdrop");
+                                        _nowPlaying.FanartURL = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.NowPlayingItem.PrimaryImageItemId + "/Images/Backdrop";
+                                        _nowPlaying.ThumbURL = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.NowPlayingItem.PrimaryImageItemId + "/Images/Primary";
+                                        }
+
+                                        _nowPlaying.Duration = new TimeSpan(server.NowPlayingItem.RunTimeTicks);
+                                        _nowPlaying.Time = new TimeSpan(server.PlayState.PositionTicks);
+                                        var percent = Math.Floor(100.0 * Convert.ToInt32("0" + server.PlayState.PositionTicks, CultureInfo.InvariantCulture) / Convert.ToInt32("0" + server.NowPlayingItem.RunTimeTicks, CultureInfo.InvariantCulture));
+                                        //Change to Primary Image - seems to be better format.
+                                        if (Double.IsNaN(percent))
+                                            percent = 0;
+                                        _nowPlaying.Progress = (int)percent;
                                     }
                                     return;
                                 }

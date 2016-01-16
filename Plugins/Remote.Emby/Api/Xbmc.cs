@@ -54,7 +54,7 @@ namespace Remote.Emby.Api
 {
     public static class Globals
     {
-        public static String EmbyAuthToken = "Testing"; // Modifiable in Code
+        public static String EmbyAuthToken = ""; // Modifiable in Code
         public static String DeviceID = "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
     }
     
@@ -723,6 +723,11 @@ namespace Remote.Emby.Api
             UserName = user;
             Password = password;
             _configured = true;
+
+            if (String.IsNullOrEmpty(Globals.EmbyAuthToken))
+            {
+                Globals.EmbyAuthToken = GetEmbyAuthToken(ip, port, user, password);
+            }
 
             if (_checkTimer == null)
             {

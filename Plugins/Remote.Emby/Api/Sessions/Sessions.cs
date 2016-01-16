@@ -38,7 +38,7 @@ namespace Remote.Emby.Api.Sessions
         public bool IsPaused { get; set; }
         public bool IsMuted { get; set; }
         public string RepeatMode { get; set; }
-        public int PositionTicks { get; set; }
+        public long PositionTicks { get; set; }
         public int VolumeLevel { get; set; }
         public int AudioStreamIndex { get; set; }
         public string MediaSourceId { get; set; }
