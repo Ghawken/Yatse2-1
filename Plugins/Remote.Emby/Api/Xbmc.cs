@@ -52,13 +52,20 @@ using System.Collections.Specialized;
 
 namespace Remote.Emby.Api
 {
+    public static class Globals
+    {
+        public static String EmbyAuthToken = "Testing"; // Modifiable in Code
+    }
+    
+    
+    
     public class Xbmc : ApiConnection
     {
         private const string XbmcEventServerPort = "9777";
         public string MpcHcPort = "13579";
         public string ClientIPAddress = "";
         public string ServerPort = "32400";
-        public string PlexAuthToken = "";
+       // public string EmbyAuthToken ="Testing";
         public string CurrentUserID = "";
         private readonly XbmcEventClient _eventClient = new XbmcEventClient();
         //private const string ApiPath = "/xbmcCmds/xbmcHttp";
@@ -71,6 +78,7 @@ namespace Remote.Emby.Api
         private bool _isConnected;
 
         static readonly object Locker = new object();
+        private string EmbyAuthToken;
 
         public MpcHcRemote MpcHcRemote { get; set; }
 
@@ -114,7 +122,7 @@ namespace Remote.Emby.Api
             Remote = new XbmcRemote(this);
             MpcHcRemote = new MpcHcRemote(this);
             ApiName = "XXX";
-        }
+       }
 
         private JsonObject GetApplicationProperties(string label)
         {
@@ -230,7 +238,7 @@ namespace Remote.Emby.Api
                 {
 
                     var request = WebRequest.Create(url);
-                    request.Headers.Add("X-Plex-Token", PlexAuthToken);
+                    request.Headers.Add("X-Plex-Token", EmbyAuthToken);
                     var response = request.GetResponse();
 
                     if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
@@ -309,13 +317,6 @@ namespace Remote.Emby.Api
 
             return true;
         }
-        public string GetCurrentUserId()
-        {
-            return "";
-
-
-        }
-
 
         public string GetAuthString()
         {
@@ -347,12 +348,12 @@ namespace Remote.Emby.Api
 
                 var request = WebRequest.CreateHttp(url);
                 request.Method = "get";
-                request.Timeout = 5000;
-              //  request.Headers.Add("X-MediaBrowser-Token", PlexAuthToken);
+               // request.Timeout = 5000;
+              //  request.Headers.Add("X-MediaBrowser-Token", EmbyAuthToken);
               //  request.Headers.Add("Authorization", authString);
                 request.ContentType = "application/json; charset=utf-8";
 
-                request.Accept = "application/xml";
+                request.Accept = "application/json";
 
                 var response = request.GetResponse();
 
@@ -364,19 +365,44 @@ namespace Remote.Emby.Api
                     // Open the stream using a StreamReader.
                     System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
-                    XmlSerializer serializer = new XmlSerializer(typeof(Public_Users_Folder.PublicUsers.ArrayOfUserDto));
-                    Public_Users_Folder.PublicUsers.ArrayOfUserDto deserialized = (Public_Users_Folder.PublicUsers.ArrayOfUserDto)serializer.Deserialize(reader);
+                    //XmlSerializer serializer = new XmlSerializer(typeof(Public_Users_Folder.Class1));
+                   // Public_Users_Folder.Class1 deserialized = (Public_Users_Folder.Class1)serializer.Deserialize(reader);
+//
+                   
 
-                    foreach (var server in deserialized.UserDto)
+                    using (var sr = new StreamReader(response.GetResponseStream()))
                     {
-                        Log("------ CurrentUSERID --  " + server.Name + " : " + server.Id);
-                        if (server.Name == UserName)
+                        string json = sr.ReadToEnd();
+                        Log(json);
+                        var deserializer = new JavaScriptSerializer();
+                       // var List = serializer2.Deserialize(json, Public_Users_Folder.Configuration);
+                        var results = deserializer.Deserialize<List<Public_Users_Folder.Class1>>(json);
+                        Log("-----------------  " +results[1].ConnectUserId);
+                        
+                        
+                        foreach (var server in results)
                         {
-                            Log ("----------------- Returning CurrentUserID based on Username from Public/Users: UserID:"+server.Id+" Username "+server.Name);
-                            return  server.Id;
-                        }
+                        Log("------ CurrentUSERID --  " + server.Name + " Server.ID: " + server.Id + " Current Username:"+UserName);
+                            if (server.Name == UserName)
+                            {
+                                  Log ("----------------- Returning CurrentUserID based on Username from Public/Users: UserID:"+server.Name +" Username "+server.Id);
+                                  return  server.Id;
+                            }
+                            
+                            
 
-                   }
+                        }
+                        Log("  ----------------------- No CurrentUSER MATCHING FOUND ------------: Current Username:" + UserName);
+
+                    }
+
+
+                    
+                    
+                    
+                    /*
+
+                    */
 
                 }
                 return "";
@@ -399,9 +425,9 @@ namespace Remote.Emby.Api
             else
                 Log("Test connection : " + ip + ":" + port);
 
-            PlexAuthToken = GetEmbyAuthToken(ip, port, user, password);
+            Globals.EmbyAuthToken = GetEmbyAuthToken(ip, port, user, password);
 
-            if (String.IsNullOrEmpty(PlexAuthToken))
+            if (String.IsNullOrEmpty(Globals.EmbyAuthToken))
             {
                 Log("No Emby Token - Not checking for clients.");
                 return 0;
@@ -419,7 +445,10 @@ namespace Remote.Emby.Api
                 request.Timeout = 5000;
                 Log("--------------- TEST CONNECTION: IP " + ip + ":" + port);
 
-                request.Headers.Add("X-MediaBrowser-Token", PlexAuthToken);
+                request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+
+                Log("------------------- Emby Token:" + Globals.EmbyAuthToken);
+
                 request.Headers.Add("Authorization", authString);
                 request.ContentType = "application/json; charset=utf-8";
                 //  request.ContentLength = postArg.Length;
@@ -488,6 +517,7 @@ namespace Remote.Emby.Api
             }
         }
 
+
         public static string HashSha1(string stringToHash)
         {
             using (var sha1 = new SHA1Managed())
@@ -511,8 +541,15 @@ namespace Remote.Emby.Api
             IP = ip;
             Port = port;
             UserName = user;
-            Password = Uri.EscapeDataString(password);
+            Password = password;
+
+            if (String.IsNullOrEmpty(Password))
+            {
+                Password = string.Empty;
+            }
             _configured = true;
+
+
 
             string hostbase = @"http://" + ip + ":" + port;
             string path = "/mediabrowser/Users/AuthenticateByName";
@@ -537,9 +574,10 @@ namespace Remote.Emby.Api
 
             var bytes = Encoding.UTF8.GetBytes(password ?? string.Empty);
 
-           
+            //Log("---------------" + HashSha1(Password));
 
             postData["password"] = HashSha1(Password);
+
             postData["passwordMD5"] = HashMd5(Password);
 
             
@@ -604,9 +642,11 @@ namespace Remote.Emby.Api
                     Log("-------------- EMBY Access Token:" + deserialized.AccessToken);
                     Log("-------------- EMBY User ID: " + CurrentUserID);
 
-                    if (deserialized.AccessToken != "")
+                    if (!String.IsNullOrEmpty(deserialized.AccessToken))
                     {
-                        Log("------------------ EMBY ACCESS TOKEN FOUND");
+                        Log("------------------ EMBY ACCESS TOKEN FOUND" + deserialized.AccessToken);
+                        Globals.EmbyAuthToken = deserialized.AccessToken;
+
                         return deserialized.AccessToken ;
                     }
                 }
@@ -786,7 +826,7 @@ namespace Remote.Emby.Api
                 return null;
 
 
-            if (String.IsNullOrEmpty(PlexAuthToken))
+            if (String.IsNullOrEmpty(Globals.EmbyAuthToken))
             {
                 Log("Not Plex Token - Not checking for clients.");
                 return 0;
@@ -803,7 +843,7 @@ namespace Remote.Emby.Api
             {
 
                 var request = WebRequest.Create(url);
-                request.Headers.Add("X-Plex-Token", PlexAuthToken);
+                request.Headers.Add("X-Plex-Token", Globals.EmbyAuthToken);
                 request.Headers.Add("X-Plex-Client-Identifier", "Yatse3Socket");
                 request.Headers.Add("X-Plex-Product","Yatse 3 Socket");
                 request.Headers.Add("X-Plex-Version","0.1.0");

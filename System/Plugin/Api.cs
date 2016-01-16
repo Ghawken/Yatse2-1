@@ -168,9 +168,9 @@ namespace Plugin
 
         private int _connectionTimeout = 2500;
         public string IP { get; set; }
-        protected string Port { get; set; }
-        protected string UserName { get; set; }
-        protected string Password { get; set; }
+        public string Port { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
         protected string ApiName { get; set; }
 
         public abstract void GiveFocus();

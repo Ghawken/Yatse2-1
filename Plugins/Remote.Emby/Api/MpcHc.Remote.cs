@@ -61,7 +61,7 @@ namespace Remote.Emby.Api
             try
             {
                 request = (HttpWebRequest)WebRequest.Create(new Uri(uri));
-                request.Headers.Add("X-Plex-Token", _parent.PlexAuthToken);
+                request.Headers.Add("X-Plex-Token", Globals.EmbyAuthToken);
                 request.Headers.Add("X-Plex-Client-Identifier", "Plex Media Player");
                // request.Headers.Add("X-Plex-Product","Yatse 3 Socket");
               //  request.Headers.Add("X-Plex-Version", "0.1.0");

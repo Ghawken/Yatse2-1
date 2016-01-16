@@ -108,7 +108,7 @@ namespace Remote.Emby.Api
                     var credentials = _parent.GetCredentials();
                     if (credentials != null)
                         client.Credentials = credentials;
-                    client.Headers.Add("X-Plex-Token", _parent.PlexAuthToken);
+                    client.Headers.Add("X-Plex-Token", Globals.EmbyAuthToken);
                     
                     client.DownloadFile(_parent.GetDownloadPath(fileName), destination);
                 }
@@ -130,7 +130,7 @@ namespace Remote.Emby.Api
 
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
-                request.Headers.Add("X-Plex-Token", _parent.PlexAuthToken);
+                request.Headers.Add("X-Plex-Token", Globals.EmbyAuthToken);
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
                 // Check that the remote file was found. The ContentType
