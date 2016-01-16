@@ -448,12 +448,19 @@ namespace Remote.Emby.Api
                                         _nowPlaying.ThumbURL = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.NowPlayingItem.PrimaryImageItemId + "/Images/Primary";
                                         }
 
-                                        _nowPlaying.Duration = new TimeSpan(server.NowPlayingItem.RunTimeTicks);
+
+                                        
+                                        _nowPlaying.Duration = new TimeSpan( server.NowPlayingItem.RunTimeTicks);
                                         _nowPlaying.Time = new TimeSpan(server.PlayState.PositionTicks);
-                                        var percent = Math.Floor(100.0 * Convert.ToInt32("0" + server.PlayState.PositionTicks, CultureInfo.InvariantCulture) / Convert.ToInt32("0" + server.NowPlayingItem.RunTimeTicks, CultureInfo.InvariantCulture));
+                                        double percent = (100.0 * server.PlayState.PositionTicks) / server.NowPlayingItem.RunTimeTicks;
+                                        percent = Math.Round(percent, 0);
+
                                         //Change to Primary Image - seems to be better format.
+                                        _parent.Log("Percent of Time equals:" + percent);
                                         if (Double.IsNaN(percent))
                                             percent = 0;
+                                        
+                                        
                                         _nowPlaying.Progress = (int)percent;
                                     }
                                     return;
