@@ -55,6 +55,7 @@ namespace Remote.Emby.Api
     public static class Globals
     {
         public static String EmbyAuthToken = "Testing"; // Modifiable in Code
+        public static String DeviceID = "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
     }
     
     
@@ -322,7 +323,7 @@ namespace Remote.Emby.Api
         {
             string clientname = "Yatse3";
             string devicename = "Windows";
-            string deviceID = "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
+            string deviceID = Globals.DeviceID; // "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
             string applicationVersion = "1.0.0";
 
             if (String.IsNullOrEmpty(CurrentUserID))

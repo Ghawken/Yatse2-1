@@ -318,7 +318,7 @@ namespace Remote.Emby.Api
                     _parent.Log("------------------- CurrentUserID Parent :" + _parent.CurrentUserID);
                     _parent.Log("------------------- EMBY TOKEN EQUALS :" + Globals.EmbyAuthToken );
 
-                    _parent.Log("AuthString " + authString);
+                    //_parent.Log("AuthString " + authString);
 
 
                     request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
@@ -350,12 +350,7 @@ namespace Remote.Emby.Api
                         XmlSerializer serializer = new XmlSerializer(typeof(Sessions.Sessions.ArrayOfSessionInfoDto));
                         Sessions.Sessions.ArrayOfSessionInfoDto deserialized = (Sessions.Sessions.ArrayOfSessionInfoDto)serializer.Deserialize(reader);
 
-
-
-
-
-
-
+                        
                         //_nowPlaying.IsPlaying = true;
                         //_nowPlaying.IsPaused = false;
 
@@ -369,12 +364,37 @@ namespace Remote.Emby.Api
 
                             _parent.Log("------------ EMBY SESIONS: Number of playing Videos: Play State " + server.PlayState.PositionTicks);
                             _parent.Log("Checking against Local Playback only Client IP: " + _parent.ClientIPAddress);
-                            if (server.UserId == _parent.CurrentUserID)
+                            
+
+                            //Below:
+                            //Checks for Same User ID/Username within Client that does not have same deviceID as Yatse
+                            //i.e Check for same user within Client but not Yatse
+                            //No need to select Client screens and that complication - just same username for Yatse and the Client you wish to monitor/use regardless of where it is.
+
+                            if (server.UserId == _parent.CurrentUserID && server.DeviceId != Globals.DeviceID)
                             {
-                                _parent.Log("Plex: Found Local Playback");
-                                _nowPlaying.FanartURL = @"http://" + _parent.IP + ":" + _parent.ServerPort + server.UserPrimaryImageTag;
-                                _parent.Log("Plex: Fanart URL sorting Out:  " + _parent.IP + ":" + _parent.ServerPort + server.UserPrimaryImageTag);
+
+                               
+                                _parent.Log("++++++++++++++++++++ EMBY: Found Local Playback: CurrentUserID:  "+_parent.CurrentUserID+" : Current Server.UserID:  " + server.UserId);
+                                //_nowPlaying.FanartURL = @"http://" + _parent.IP + ":" + _parent.ServerPort + server.UserPrimaryImageTag;
+                                //_parent.Log("EMBY: Fanart URL sorting Out:  " + _parent.IP + ":" + _parent.ServerPort + server.UserPrimaryImageTag);
                                 //Console.WriteLine("Grandparent art is {0} and Players is {1}", server.grandparentArt, server.Player);
+
+                                _parent.Log("+++++++++++++++++++ EMBY: NowPlaying Client: " + server.Client);
+                                _parent.Log("+++++++++++++++++++ EMBY: NowPlaying DeviceID: " + server.DeviceId);
+                                _parent.Log("+++++++++++++++++++ EMBY: NowPlaying DeviceNAME: " + server.DeviceName);
+                                _parent.Log("+++++++++++++++++++ EMBY: NowPlaying Last Activity: " + server.LastActivityDate);
+                                _parent.Log("+++++++++++++++++++ EMBY: NowPlaying NowPlayingItem: " + server.NowPlayingItem);
+                                _parent.Log("+++++++++++++++++++ EMBY: NowViewing Client: " + server.NowViewingItem);
+                                _parent.Log("+++++++++++++++++++ EMBY: NowPlaying PlayableMediaTypes: " + server.PlayableMediaTypes);
+                                _parent.Log("+++++++++++++++++++ EMBY: NowPlaying PlayState:MediaSourceID " + server.PlayState.MediaSourceId);
+                                _parent.Log("+++++++++++++++++++ EMBY: NowPlaying SupportCommands: " + server.SupportedCommands);
+                                _parent.Log("+++++++++++++++++++ EMBY: NowPlaying UserPrimaryImageTag: " + server.UserPrimaryImageTag);
+
+
+
+
+
                                 _nowPlaying.Title = server.NowPlayingItem.ToString();
                                 //    Console.WriteLine("" + server.art);
                                 //    Console.WriteLine("" + server.chapterSource);
