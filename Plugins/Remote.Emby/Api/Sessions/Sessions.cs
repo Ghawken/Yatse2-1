@@ -6,495 +6,119 @@ using System.Threading.Tasks;
 
 namespace Remote.Emby.Api.Sessions
 {
-    public class Sessions
+
+    public class Rootobject
     {
-
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/MediaBrowser.Model.Session")]
-        [System.Xml.Serialization.XmlRootAttribute(Namespace = "http://schemas.datacontract.org/2004/07/MediaBrowser.Model.Session", IsNullable = false)]
-        public partial class ArrayOfSessionInfoDto
-        {
-
-            private ArrayOfSessionInfoDtoSessionInfoDto[] sessionInfoDtoField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlElementAttribute("SessionInfoDto")]
-            public ArrayOfSessionInfoDtoSessionInfoDto[] SessionInfoDto
-            {
-                get
-                {
-                    return this.sessionInfoDtoField;
-                }
-                set
-                {
-                    this.sessionInfoDtoField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/MediaBrowser.Model.Session")]
-        public partial class ArrayOfSessionInfoDtoSessionInfoDto
-        {
-
-            private object additionalUsersField;
-
-            private object appIconUrlField;
-
-            private string applicationVersionField;
-
-            private string clientField;
-
-            private string deviceIdField;
-
-            private string deviceNameField;
-
-            private string idField;
-
-            private System.DateTime lastActivityDateField;
-
-            private object nowPlayingItemField;
-
-            private object nowViewingItemField;
-
-            private ArrayOfSessionInfoDtoSessionInfoDtoPlayState playStateField;
-
-            private string[] playableMediaTypesField;
-
-            private object queueableMediaTypesField;
-
-            private string[] supportedCommandsField;
-
-            private bool supportsRemoteControlField;
-
-            private object transcodingInfoField;
-
-            private string userIdField;
-
-            private string userNameField;
-
-            private string userPrimaryImageTagField;
-
-            /// <remarks/>
-            public object AdditionalUsers
-            {
-                get
-                {
-                    return this.additionalUsersField;
-                }
-                set
-                {
-                    this.additionalUsersField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-            public object AppIconUrl
-            {
-                get
-                {
-                    return this.appIconUrlField;
-                }
-                set
-                {
-                    this.appIconUrlField = value;
-                }
-            }
-
-            /// <remarks/>
-            public string ApplicationVersion
-            {
-                get
-                {
-                    return this.applicationVersionField;
-                }
-                set
-                {
-                    this.applicationVersionField = value;
-                }
-            }
-
-            /// <remarks/>
-            public string Client
-            {
-                get
-                {
-                    return this.clientField;
-                }
-                set
-                {
-                    this.clientField = value;
-                }
-            }
-
-            /// <remarks/>
-            public string DeviceId
-            {
-                get
-                {
-                    return this.deviceIdField;
-                }
-                set
-                {
-                    this.deviceIdField = value;
-                }
-            }
-
-            /// <remarks/>
-            public string DeviceName
-            {
-                get
-                {
-                    return this.deviceNameField;
-                }
-                set
-                {
-                    this.deviceNameField = value;
-                }
-            }
-
-            /// <remarks/>
-            public string Id
-            {
-                get
-                {
-                    return this.idField;
-                }
-                set
-                {
-                    this.idField = value;
-                }
-            }
-
-            /// <remarks/>
-            public System.DateTime LastActivityDate
-            {
-                get
-                {
-                    return this.lastActivityDateField;
-                }
-                set
-                {
-                    this.lastActivityDateField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-            public object NowPlayingItem
-            {
-                get
-                {
-                    return this.nowPlayingItemField;
-                }
-                set
-                {
-                    this.nowPlayingItemField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-            public object NowViewingItem
-            {
-                get
-                {
-                    return this.nowViewingItemField;
-                }
-                set
-                {
-                    this.nowViewingItemField = value;
-                }
-            }
-
-            /// <remarks/>
-            public ArrayOfSessionInfoDtoSessionInfoDtoPlayState PlayState
-            {
-                get
-                {
-                    return this.playStateField;
-                }
-                set
-                {
-                    this.playStateField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays", IsNullable = false)]
-            public string[] PlayableMediaTypes
-            {
-                get
-                {
-                    return this.playableMediaTypesField;
-                }
-                set
-                {
-                    this.playableMediaTypesField = value;
-                }
-            }
-
-            /// <remarks/>
-            public object QueueableMediaTypes
-            {
-                get
-                {
-                    return this.queueableMediaTypesField;
-                }
-                set
-                {
-                    this.queueableMediaTypesField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays", IsNullable = false)]
-            public string[] SupportedCommands
-            {
-                get
-                {
-                    return this.supportedCommandsField;
-                }
-                set
-                {
-                    this.supportedCommandsField = value;
-                }
-            }
-
-            /// <remarks/>
-            public bool SupportsRemoteControl
-            {
-                get
-                {
-                    return this.supportsRemoteControlField;
-                }
-                set
-                {
-                    this.supportsRemoteControlField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-            public object TranscodingInfo
-            {
-                get
-                {
-                    return this.transcodingInfoField;
-                }
-                set
-                {
-                    this.transcodingInfoField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-            public string UserId
-            {
-                get
-                {
-                    return this.userIdField;
-                }
-                set
-                {
-                    this.userIdField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-            public string UserName
-            {
-                get
-                {
-                    return this.userNameField;
-                }
-                set
-                {
-                    this.userNameField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-            public string UserPrimaryImageTag
-            {
-                get
-                {
-                    return this.userPrimaryImageTagField;
-                }
-                set
-                {
-                    this.userPrimaryImageTagField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.datacontract.org/2004/07/MediaBrowser.Model.Session")]
-        public partial class ArrayOfSessionInfoDtoSessionInfoDtoPlayState
-        {
-
-            private object audioStreamIndexField;
-
-            private bool canSeekField;
-
-            private bool isMutedField;
-
-            private bool isPausedField;
-
-            private object mediaSourceIdField;
-
-            private object playMethodField;
-
-            private object positionTicksField;
-
-            private string repeatModeField;
-
-            private object subtitleStreamIndexField;
-
-            private object volumeLevelField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-            public object AudioStreamIndex
-            {
-                get
-                {
-                    return this.audioStreamIndexField;
-                }
-                set
-                {
-                    this.audioStreamIndexField = value;
-                }
-            }
-
-            /// <remarks/>
-            public bool CanSeek
-            {
-                get
-                {
-                    return this.canSeekField;
-                }
-                set
-                {
-                    this.canSeekField = value;
-                }
-            }
-
-            /// <remarks/>
-            public bool IsMuted
-            {
-                get
-                {
-                    return this.isMutedField;
-                }
-                set
-                {
-                    this.isMutedField = value;
-                }
-            }
-
-            /// <remarks/>
-            public bool IsPaused
-            {
-                get
-                {
-                    return this.isPausedField;
-                }
-                set
-                {
-                    this.isPausedField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-            public object MediaSourceId
-            {
-                get
-                {
-                    return this.mediaSourceIdField;
-                }
-                set
-                {
-                    this.mediaSourceIdField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-            public object PlayMethod
-            {
-                get
-                {
-                    return this.playMethodField;
-                }
-                set
-                {
-                    this.playMethodField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-            public object PositionTicks
-            {
-                get
-                {
-                    return this.positionTicksField;
-                }
-                set
-                {
-                    this.positionTicksField = value;
-                }
-            }
-
-            /// <remarks/>
-            public string RepeatMode
-            {
-                get
-                {
-                    return this.repeatModeField;
-                }
-                set
-                {
-                    this.repeatModeField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-            public object SubtitleStreamIndex
-            {
-                get
-                {
-                    return this.subtitleStreamIndexField;
-                }
-                set
-                {
-                    this.subtitleStreamIndexField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-            public object VolumeLevel
-            {
-                get
-                {
-                    return this.volumeLevelField;
-                }
-                set
-                {
-                    this.volumeLevelField = value;
-                }
-            }
-        }
-
-
+        public Class1[] Property1 { get; set; }
     }
+
+    public class Class1
+    {
+        public string[] SupportedCommands { get; set; }
+        public string[] QueueableMediaTypes { get; set; }
+        public string[] PlayableMediaTypes { get; set; }
+        public string Id { get; set; }
+        public string UserId { get; set; }
+        public string UserName { get; set; }
+        public object[] AdditionalUsers { get; set; }
+        public string ApplicationVersion { get; set; }
+        public string Client { get; set; }
+        public DateTime LastActivityDate { get; set; }
+        public string DeviceName { get; set; }
+        public string DeviceId { get; set; }
+        public bool SupportsRemoteControl { get; set; }
+        public Playstate PlayState { get; set; }
+        public Nowplayingitem NowPlayingItem { get; set; }
+        public Transcodinginfo TranscodingInfo { get; set; }
+    }
+
+    public class Playstate
+    {
+        public bool CanSeek { get; set; }
+        public bool IsPaused { get; set; }
+        public bool IsMuted { get; set; }
+        public string RepeatMode { get; set; }
+        public int PositionTicks { get; set; }
+        public int VolumeLevel { get; set; }
+        public int AudioStreamIndex { get; set; }
+        public string MediaSourceId { get; set; }
+        public string PlayMethod { get; set; }
+        public int SubtitleStreamIndex { get; set; }
+    }
+
+    public class Nowplayingitem
+    {
+        public string Name { get; set; }
+        public string Id { get; set; }
+        public string Type { get; set; }
+        public string MediaType { get; set; }
+        public long RunTimeTicks { get; set; }
+        public string PrimaryImageTag { get; set; }
+        public string PrimaryImageItemId { get; set; }
+        public string LogoImageTag { get; set; }
+        public string LogoItemId { get; set; }
+        public string ThumbImageTag { get; set; }
+        public string ThumbItemId { get; set; }
+        public string BackdropImageTag { get; set; }
+        public string BackdropItemId { get; set; }
+        public DateTime PremiereDate { get; set; }
+        public int ProductionYear { get; set; }
+        public int IndexNumber { get; set; }
+        public int ParentIndexNumber { get; set; }
+        public string SeriesName { get; set; }
+        public object[] Artists { get; set; }
+        public Mediastream[] MediaStreams { get; set; }
+        public string ChapterImagesItemId { get; set; }
+        public Chapter[] Chapters { get; set; }
+    }
+
+    public class Mediastream
+    {
+        public string Codec { get; set; }
+        public bool IsInterlaced { get; set; }
+        public int BitRate { get; set; }
+        public int RefFrames { get; set; }
+        public bool IsDefault { get; set; }
+        public bool IsForced { get; set; }
+        public int Height { get; set; }
+        public int Width { get; set; }
+        public float AverageFrameRate { get; set; }
+        public float RealFrameRate { get; set; }
+        public string Profile { get; set; }
+        public string Type { get; set; }
+        public string AspectRatio { get; set; }
+        public int Index { get; set; }
+        public bool IsExternal { get; set; }
+        public bool IsTextSubtitleStream { get; set; }
+        public bool SupportsExternalStream { get; set; }
+        public string PixelFormat { get; set; }
+        public int Level { get; set; }
+        public bool IsAnamorphic { get; set; }
+        public string ChannelLayout { get; set; }
+        public int Channels { get; set; }
+        public int SampleRate { get; set; }
+        public string Language { get; set; }
+        public int BitDepth { get; set; }
+    }
+
+    public class Chapter
+    {
+        public long StartPositionTicks { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class Transcodinginfo
+    {
+        public string AudioCodec { get; set; }
+        public string VideoCodec { get; set; }
+        public string Container { get; set; }
+        public bool IsVideoDirect { get; set; }
+        public bool IsAudioDirect { get; set; }
+        public int Bitrate { get; set; }
+        public float CompletionPercentage { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public int AudioChannels { get; set; }
+    }
+
 }

@@ -376,7 +376,7 @@ namespace Remote.Emby.Api
                         string json = sr.ReadToEnd();
                         Log(json);
                         var deserializer = new JavaScriptSerializer();
-                       // var List = serializer2.Deserialize(json, Public_Users_Folder.Configuration);
+                      
                         var results = deserializer.Deserialize<List<Public_Users_Folder.Class1>>(json);
                         Log("-----------------  " +results[1].ConnectUserId);
                         

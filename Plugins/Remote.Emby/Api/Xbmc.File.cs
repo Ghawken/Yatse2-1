@@ -106,9 +106,9 @@ namespace Remote.Emby.Api
                 using (var client = new WebClient())
                 {
                     var credentials = _parent.GetCredentials();
-                    if (credentials != null)
-                        client.Credentials = credentials;
-                    client.Headers.Add("X-Plex-Token", Globals.EmbyAuthToken);
+                   // if (credentials != null)
+                   //     client.Credentials = credentials;
+                    client.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
                     
                     client.DownloadFile(_parent.GetDownloadPath(fileName), destination);
                 }
@@ -117,7 +117,7 @@ namespace Remote.Emby.Api
             }
             catch (WebException e)
             {
-                _parent.Log("ERROR - DOWNLOAD : " + _parent.GetDownloadPath(fileName) + " " + e.Message);
+                _parent.Log("EMBY DOWNLOAD ERROR - DOWNLOAD : " + _parent.GetDownloadPath(fileName) + " " + e.Message);
             }
             return false;
         }
@@ -130,7 +130,7 @@ namespace Remote.Emby.Api
 
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
-                request.Headers.Add("X-Plex-Token", Globals.EmbyAuthToken);
+                request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
                 // Check that the remote file was found. The ContentType
@@ -164,7 +164,7 @@ namespace Remote.Emby.Api
             }
             catch (WebException ex)
             {
-                _parent.Log("Plex:   Something wrong with new one" + ex);
+                _parent.Log("Emby:   Something wrong with new one" + ex + "------------------------------- URL TRIED"+uri);
                 return false;
             }
         }
