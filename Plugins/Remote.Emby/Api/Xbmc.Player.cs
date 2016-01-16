@@ -449,9 +449,19 @@ namespace Remote.Emby.Api
                                         }
 
 
+
+
+
+
+
+                                        var RoundSeconds = Math.Round(server.NowPlayingItem.RunTimeTicks / 10000000.00, 1);
+                                        var RoundTime = Math.Round(server.PlayState.PositionTicks / 10000000.00, 2);
+                                        //_parent.Log("--------------TIME CONVERSION BUGGER: RoundSeconds:" + RoundSeconds + " Orginal Time RunTimeTicks:"+server.NowPlayingItem.RunTimeTicks);
+                                        _nowPlaying.Duration = new TimeSpan(0, 0 ,0, Convert.ToInt32(RoundSeconds));
+
+                                        _nowPlaying.Time = new TimeSpan(0,0,0, Convert.ToInt32(RoundTime));
                                         
-                                        _nowPlaying.Duration = new TimeSpan( server.NowPlayingItem.RunTimeTicks);
-                                        _nowPlaying.Time = new TimeSpan(server.PlayState.PositionTicks);
+
                                         double percent = (100.0 * server.PlayState.PositionTicks) / server.NowPlayingItem.RunTimeTicks;
                                         percent = Math.Round(percent, 0);
 
