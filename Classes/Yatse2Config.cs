@@ -177,7 +177,7 @@ namespace Yatse2.Classes
             LongKeyPress = 500;
             DiaporamaMode = 1;
             DisableResolutionDetection = true;
-            FanartDirectory = "";
+            FanartDirectory = @"addon_data\script.artworkorganizer\MovieFanart\";
             FanartDirectoryTV = @"addon_data\script.artworkorganizer\TVShowFanart\";
             FanartDirectoryWeather = @"addon_data\skin.aeonmq5.extrapack\backgrounds_weather\";
             FanartDirectoryMovie = @"addon_data\script.artworkorganizer\MovieFanart\";
@@ -254,7 +254,7 @@ namespace Yatse2.Classes
             Resolution = config.Resolution;
             ImageDirectory = config.ImageDirectory;
             FanartCurrentPath = config.FanartCurrentPath;
-            //FanartDirectory = config.FanartDirectory;
+            FanartDirectory = config.FanartDirectory;
             FanartDirectoryTV = config.FanartDirectoryTV;
             FanartDirectoryMovie = config.FanartDirectoryMovie;
             FanartDirectoryWeather = config.FanartDirectoryWeather;
