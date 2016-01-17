@@ -68,10 +68,12 @@ namespace Remote.Emby.Api
             _workerDownloads.RunWorkerAsync(apiImageDownloadInfos);
         }
 
-        public bool DownloadImages(ApiImageDownloadInfo apiImageDownloadInfo)
+        public bool DownloadImagesNEW(ApiImageDownloadInfo apiImageDownloadInfo)
         {
             if (apiImageDownloadInfo == null)
                 return false;
+            
+                        
             var res = DownloadRemoteImageFile(apiImageDownloadInfo.Source, apiImageDownloadInfo.Destination);
             if (res)
             {
@@ -80,6 +82,21 @@ namespace Remote.Emby.Api
             }
             return res;
         }
+
+        public bool DownloadImages(ApiImageDownloadInfo apiImageDownloadInfo)
+        {
+            if (apiImageDownloadInfo == null)
+                return false;
+
+            var res = Download(apiImageDownloadInfo.Source, apiImageDownloadInfo.Destination);
+            if (res)
+            {
+                if (apiImageDownloadInfo.ToThumb)
+                    _parent.GenerateThumb(apiImageDownloadInfo.Destination, apiImageDownloadInfo.Destination, apiImageDownloadInfo.MaxHeight);
+            }
+            return res;
+        }
+
 
         private void AsyncImagesDownloadsWorker(object sender, DoWorkEventArgs e)
         {
@@ -106,9 +123,9 @@ namespace Remote.Emby.Api
                 using (var client = new WebClient())
                 {
                     var credentials = _parent.GetCredentials();
-                   // if (credentials != null)
-                   //     client.Credentials = credentials;
-                    client.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+                    if (credentials != null)
+                         client.Credentials = credentials;
+                  //  client.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
                     
                     client.DownloadFile(_parent.GetDownloadPath(fileName), destination);
                 }
