@@ -64,6 +64,9 @@ namespace Remote.Emby.Api.Sessions
         public DateTime PremiereDate { get; set; }
         public int ProductionYear { get; set; }
         public int IndexNumber { get; set; }
+
+        // Glenn Changed Below - need tsting
+        public string Album { get; set; }
         public int ParentIndexNumber { get; set; }
         public string SeriesName { get; set; }
         public object[] Artists { get; set; }

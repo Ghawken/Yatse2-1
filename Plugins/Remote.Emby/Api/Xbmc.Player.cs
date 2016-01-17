@@ -301,7 +301,7 @@ namespace Remote.Emby.Api
                 try
                 {
 
-                    _parent.Log("Plex: Using Parent IP equals: " + _parent.IP);
+                    _parent.Trace("Emby: Using Parent IP equals: " + _parent.IP);
                     string NPurl = "http://" + _parent.IP + ":" + _parent.Port;
                     var request = WebRequest.CreateHttp(NPurl + "/Sessions");
 
@@ -407,6 +407,38 @@ namespace Remote.Emby.Api
                                             _nowPlaying.IsPaused = false;
                                         }
 
+                                        if (server.NowPlayingItem.Type == "Audio")
+                                        {
+                                            _nowPlaying.MediaType = "Audio";
+                                            
+                                            _nowPlaying.Album = server.NowPlayingItem.Album;
+                                            _nowPlaying.Year = Convert.ToInt32("0"+server.NowPlayingItem.ProductionYear);
+                                            _nowPlaying.Track = Convert.ToInt32("0" + server.NowPlayingItem.IndexNumber);
+
+                                            _nowPlaying.Title = server.NowPlayingItem.Name;
+                                            _nowPlaying.FileName = server.NowPlayingItem.Id;  //No Filename as yet try ID
+                                            _parent.Log("------------- EMBY Trying to get Audio Images");
+                                            _parent.Log("------------- EMBY IMAGES: FanartURL " + "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.NowPlayingItem.PrimaryImageItemId + "/Images/Backdrop");
+                                            
+                                            _nowPlaying.FanartURL = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.NowPlayingItem.BackdropItemId + "/Images/Primary";
+                                            
+                                            _nowPlaying.ThumbURL = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.NowPlayingItem.PrimaryImageItemId + "/Images/Primary";
+
+
+                                            foreach (var artist in server.NowPlayingItem.Artists)
+                                            {
+                                                _nowPlaying.Artist = artist.ToString();
+                                            }
+                                           
+                                            
+                                            
+                                            
+
+
+
+
+                                        }
+
 
                                         if (server.NowPlayingItem.Type == "Episode")
                                         {
@@ -469,9 +501,13 @@ namespace Remote.Emby.Api
                                         _parent.Log("Percent of Time equals:" + percent);
                                         if (Double.IsNaN(percent))
                                             percent = 0;
-                                        
-                                        
+                                                                           
                                         _nowPlaying.Progress = (int)percent;
+
+                                        _nowPlaying.IsMuted = server.PlayState.IsMuted;
+                                        _nowPlaying.Volume = server.PlayState.VolumeLevel;
+                                        
+
                                     }
                                     return;
                                 }
