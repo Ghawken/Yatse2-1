@@ -704,10 +704,12 @@ namespace Yatse2
         //working
         private void LoadKodiSource()
         {
+
+              
             try
             {
 
-                Logger.Instance().Log("Kodi Source", "Loading Kodi Source xml file", true);
+                Logger.Instance().Log("Kodi Source", "Checking for Kodi Source xml file", true);
                 var appdatadirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 XmlDocument kodisource = new XmlDocument();
                 kodisource.Load(@appdatadirectory + @"\Kodi\userdata\sources.xml");
@@ -751,10 +753,14 @@ namespace Yatse2
             {
                 if (e is FileNotFoundException )
                 {
-                    Logger.Instance().LogException("Kodi Source File Exception/Somethingnot FOUND : ", e);
+                    Logger.Instance().Trace(" Kodi Sources Not Found. "," Continue.");
+                }
+                if (e is DirectoryNotFoundException)
+                {
+                    Logger.Instance().Trace(" Kodi Directory Sources Not Found. ", " Continue.");
                 }
                 
-                Logger.Instance().LogException("Kodi Source Error", e);
+                Logger.Instance().Trace("Kodi Source Error:","Not important unless using Kodi :"+ e);
             }
 
         }

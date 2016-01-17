@@ -70,15 +70,37 @@ namespace Remote.Plex.Api
 
         public bool DownloadImages(ApiImageDownloadInfo apiImageDownloadInfo)
         {
-            if (apiImageDownloadInfo == null)
-                return false;
-            var res = DownloadRemoteImageFile(apiImageDownloadInfo.Source, apiImageDownloadInfo.Destination);
-            if (res)
+            try
             {
-                if (apiImageDownloadInfo.ToThumb)
-                    _parent.GenerateThumb(apiImageDownloadInfo.Destination, apiImageDownloadInfo.Destination, apiImageDownloadInfo.MaxHeight);
+                if (apiImageDownloadInfo == null)
+                    return false;
+
+                bool res = false;
+
+                if (apiImageDownloadInfo.Source.Contains(_parent.IP))
+                {
+                    _parent.Trace("----------DOWNLOAD IMAGES OKAY checking for presence of Server IP Address in source to select DOwnload Method - Server IP Found");
+                    res = DownloadRemoteImageFile(apiImageDownloadInfo.Source, apiImageDownloadInfo.Destination);
+                }
+                else
+                {
+                    res = Download(apiImageDownloadInfo.Source, apiImageDownloadInfo.Destination);
+                }
+
+
+                if (res)
+                {
+                    if (apiImageDownloadInfo.ToThumb)
+                        _parent.GenerateThumb(apiImageDownloadInfo.Destination, apiImageDownloadInfo.Destination, apiImageDownloadInfo.MaxHeight);
+                }
+                return res;
             }
-            return res;
+            catch (System.Exception ex)
+            {
+                _parent.Log("Exception in Download Images Caught Should continue " + ex);
+                return false;
+                ;
+            }
         }
 
         private void AsyncImagesDownloadsWorker(object sender, DoWorkEventArgs e)
