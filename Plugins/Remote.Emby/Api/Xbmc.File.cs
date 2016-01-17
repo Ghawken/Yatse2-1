@@ -87,8 +87,19 @@ namespace Remote.Emby.Api
         {
             if (apiImageDownloadInfo == null)
                 return false;
-
-            var res = Download(apiImageDownloadInfo.Source, apiImageDownloadInfo.Destination);
+            bool res = false;
+            
+            if (apiImageDownloadInfo.Source.Contains(_parent.IP))
+            {
+                _parent.Trace("----------DOWNLOAD IMAGES OKAY checking for presence of Server IP Address in source to select DOwnload Method - Server IP Found");
+                res = DownloadRemoteImageFile(apiImageDownloadInfo.Source, apiImageDownloadInfo.Destination);
+            }
+            else
+            { 
+                res = Download(apiImageDownloadInfo.Source, apiImageDownloadInfo.Destination);     
+            }
+                   
+                 
             if (res)
             {
                 if (apiImageDownloadInfo.ToThumb)
@@ -116,30 +127,44 @@ namespace Remote.Emby.Api
 
         public bool Download(string fileName, string destination)
         {
+            _parent.Trace("----------DOWNLOAD IMAGES ISSUE:  fileNAME is"+fileName+"  : Destination is: "+destination);
+
             if (!_parent.IsConnected())
+                _parent.Trace(" ---------------DOWNLOAD ISSUES ISSUE:  PARENT NOT CONNECTING RETURNING FALSE");
                 return false;
+
+
             try
             {
                 using (var client = new WebClient())
                 {
                     var credentials = _parent.GetCredentials();
+                    
+                    
                     if (credentials != null)
                          client.Credentials = credentials;
-                  //  client.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
-                    
+
+                    client.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+                    //Add Header Client - ? helps
+                    client.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
+
                     client.DownloadFile(_parent.GetDownloadPath(fileName), destination);
                 }
-                _parent.Log("DOWNLOAD : " + fileName);
+                _parent.Trace("DOWNLOAD : " + fileName);
                 return true;
             }
-            catch (WebException e)
+            catch (WebException ex)
             {
-                _parent.Log("EMBY DOWNLOAD ERROR - DOWNLOAD : " + _parent.GetDownloadPath(fileName) + " " + e.Message);
+                _parent.Trace("EMBY DOWNLOAD ERROR - DOWNLOAD : " + _parent.GetDownloadPath(fileName) + " " + ex.Message);
+            }
+            catch (System.Exception ex)
+            {
+                _parent.Trace("EMBY DOWNLOAD ISSUE: EXCEPTION CAUGHT:" + ex);
             }
             return false;
         }
 
-        //New File DOwnloaded for Plex Media Server.
+        //New File DOwnloaded for emby Media Server.
         private bool DownloadRemoteImageFile(string uri, string fileName)
         {
             try
@@ -181,7 +206,7 @@ namespace Remote.Emby.Api
             }
             catch (WebException ex)
             {
-                _parent.Log("Emby:   Something wrong with new one" + ex + "------------------------------- URL TRIED"+uri);
+                _parent.Trace("Emby:   Something wrong with new one" + ex + "------------------------------- URL TRIED"+uri);
                 return false;
             }
         }

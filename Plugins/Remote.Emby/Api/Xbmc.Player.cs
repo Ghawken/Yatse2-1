@@ -350,7 +350,7 @@ namespace Remote.Emby.Api
                         using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                         {
                             string json = sr.ReadToEnd();
-                            _parent.Log("--------------NOWPLAYING JSON------" + json);
+                            _parent.Trace("--------------NOWPLAYING JSON------" + json);
                             var deserializer = new JavaScriptSerializer();
 
                             var results = deserializer.Deserialize<System.Collections.Generic.List<Sessions.Class1>>(json);
@@ -359,7 +359,7 @@ namespace Remote.Emby.Api
                             {
                                 
            
-                                _parent.Log("++++++++++++++++++++ EMBY: Found Local Playback: CurrentUserID:  " + _parent.CurrentUserID + " : Current Server.UserID:  " + server.UserId);                     
+                                _parent.Trace("++++++++++++++++++++ EMBY: Found Local Playback: CurrentUserID:  " + _parent.CurrentUserID + " : Current Server.UserID:  " + server.UserId);                     
                                 
                                 if (server.UserId == _parent.CurrentUserID && server.DeviceId != Globals.DeviceID)
                                 {
@@ -375,7 +375,7 @@ namespace Remote.Emby.Api
                                         _nowPlaying.IsPlaying = false;
                                         _nowPlaying.IsPaused = false;
                                         _nowPlaying.IsPlaying = false;
-                                        _parent.Log("--------------EMBY NOW PLAYING Log: Nothing is Playing");
+                                        _parent.Trace("--------------EMBY NOW PLAYING Log: Nothing is Playing");
                                         return;
                                     }
 
@@ -383,16 +383,16 @@ namespace Remote.Emby.Api
 
                                     if (server.NowPlayingItem != null)
                                     {
-                                        _parent.Log("+++++++++++++++++++ EMBY: NowPlaying Nowplaying: Backdrop Image Item" + server.NowPlayingItem.BackdropItemId);
-                                        _parent.Log("+++++++++++++++++++ EMBY: NowPlaying Nowplaying ID " + server.NowPlayingItem.Id);
-                                        _parent.Log("+++++++++++++++++++ EMBY: NowPlaying LogoImageTag: " + server.NowPlayingItem.LogoImageTag);
-                                        _parent.Log("+++++++++++++++++++ EMBY: NowPlaying Name : " + server.NowPlayingItem.Name);
-                                        _parent.Log("+++++++++++++++++++ EMBY: NowPlaying NowPlayingItem: " + server.NowPlayingItem);
-                                        _parent.Log("+++++++++++++++++++ EMBY: NowPlaying ThumbItem Client: " + server.NowPlayingItem.ThumbItemId);
-                                        _parent.Log("+++++++++++++++++++ EMBY: NowPlaying PlayableMediaTypes: " + server.PlayableMediaTypes);
-                                        _parent.Log("+++++++++++++++++++ EMBY: NowPlaying PlayState:MediaSourceID " + server.PlayState.MediaSourceId);
-                                        _parent.Log("+++++++++++++++++++ EMBY: NowPlaying SupportCommands: " + server.SupportedCommands);
-                                        _parent.Log("+++++++++++++++++++ EMBY: NowPlaying PlayState IsPaused: " + server.PlayState.IsPaused);
+                                        _parent.Trace("+++++++++++++++++++ EMBY: NowPlaying Nowplaying: Backdrop Image Item" + server.NowPlayingItem.BackdropItemId);
+                                        _parent.Trace("+++++++++++++++++++ EMBY: NowPlaying Nowplaying ID " + server.NowPlayingItem.Id);
+                                        _parent.Trace("+++++++++++++++++++ EMBY: NowPlaying LogoImageTag: " + server.NowPlayingItem.LogoImageTag);
+                                        _parent.Trace("+++++++++++++++++++ EMBY: NowPlaying Name : " + server.NowPlayingItem.Name);
+                                        _parent.Trace("+++++++++++++++++++ EMBY: NowPlaying NowPlayingItem: " + server.NowPlayingItem);
+                                        _parent.Trace("+++++++++++++++++++ EMBY: NowPlaying ThumbItem Client: " + server.NowPlayingItem.ThumbItemId);
+                                        _parent.Trace("+++++++++++++++++++ EMBY: NowPlaying PlayableMediaTypes: " + server.PlayableMediaTypes);
+                                        _parent.Trace("+++++++++++++++++++ EMBY: NowPlaying PlayState:MediaSourceID " + server.PlayState.MediaSourceId);
+                                        _parent.Trace("+++++++++++++++++++ EMBY: NowPlaying SupportCommands: " + server.SupportedCommands);
+                                        _parent.Trace("+++++++++++++++++++ EMBY: NowPlaying PlayState IsPaused: " + server.PlayState.IsPaused);
 
 
 
@@ -492,8 +492,7 @@ namespace Remote.Emby.Api
                     //_nowPlaying.IsPlaying = true;
                     //_nowPlaying.IsPaused = false;
 
-                    _nowPlaying.IsNewMedia = true;
-                    _nowPlaying.MediaType = "Movie";
+                    
 
 
 

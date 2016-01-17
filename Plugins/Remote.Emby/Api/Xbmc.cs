@@ -172,10 +172,21 @@ namespace Remote.Emby.Api
 
         public string GetDownloadPath(string fileName)
         {
-            if (!_configured) return null;
-           // return @"http://" + HttpUtility.UrlEncode(fileName);
-            Log("Emby API - Trying to sortout fanart URL: " +  HttpUtility.UrlEncode(fileName));
-            return HttpUtility.UrlEncode(fileName);
+            try
+            {
+
+                if (!_configured) return null;
+                // return @"http://" + HttpUtility.UrlEncode(fileName);
+                if (String.IsNullOrEmpty(fileName)) return null;
+
+                Log("Emby API - Trying to sortout fanart URL: " + HttpUtility.UrlEncode(fileName));
+                return HttpUtility.UrlEncode(fileName);
+            }
+            catch (Exception ex)
+            {
+                Log("-!-!-!-!-!-!-!-!-!---------- EMBY API: Getdownloadpath exception xbmc.cs " + ex);
+                return null;
+            }
         }
 
         public static long StringToNumber (string input)
@@ -332,7 +343,7 @@ namespace Remote.Emby.Api
             }
 
             string AuthString = @"MediaBrowser Client=""" + clientname + "\", Device=\"" + devicename + "\", DeviceId=\"" + deviceID + "\", Version=\"" + applicationVersion + "\", UserId=\"" + CurrentUserID + "\"";
-            Log("--------- GetAuthString Returns:" + AuthString);
+            Trace("--------- GetAuthString Returns:" + AuthString);
             return AuthString;
        }
 
@@ -342,8 +353,8 @@ namespace Remote.Emby.Api
            // string authString = GetAuthString();
 
             string url = "http://" + IP + ":" + Port + "/Users/Public";
-            Log("---------------- Getting Current User ID -------------------------");
-            Log("URL is " + url);
+            Trace("---------------- Getting Current User ID -------------------------");
+            Trace("URL is " + url);
             try
             {
 
@@ -374,26 +385,26 @@ namespace Remote.Emby.Api
                     using (var sr = new StreamReader(response.GetResponseStream()))
                     {
                         string json = sr.ReadToEnd();
-                        Log(json);
+                        Trace(json);
                         var deserializer = new JavaScriptSerializer();
                       
                         var results = deserializer.Deserialize<List<Public_Users_Folder.Class1>>(json);
-                        Log("-----------------  " +results[1].ConnectUserId);
+                        Trace("-----------------  " +results[1].ConnectUserId);
                         
                         
                         foreach (var server in results)
                         {
-                        Log("------ CurrentUSERID --  " + server.Name + " Server.ID: " + server.Id + " Current Username:"+UserName);
+                        Trace("------ CurrentUSERID --  " + server.Name + " Server.ID: " + server.Id + " Current Username:"+UserName);
                             if (server.Name == UserName)
                             {
-                                  Log ("----------------- Returning CurrentUserID based on Username from Public/Users: UserID:"+server.Name +" Username "+server.Id);
+                                  Trace("----------------- Returning CurrentUserID based on Username from Public/Users: UserID:"+server.Name +" Username "+server.Id);
                                   return  server.Id;
                             }
                             
                             
 
                         }
-                        Log("  ----------------------- No CurrentUSER MATCHING FOUND ------------: Current Username:" + UserName);
+                        Trace("  ----------------------- No CurrentUSER MATCHING FOUND ------------: Current Username:" + UserName);
 
                     }
 
