@@ -394,6 +394,7 @@ namespace Remote.Emby.Api
                                         _parent.Trace("+++++++++++++++++++ EMBY: NowPlaying SupportCommands: " + server.SupportedCommands);
                                         _parent.Trace("+++++++++++++++++++ EMBY: NowPlaying PlayState IsPaused: " + server.PlayState.IsPaused);
 
+                                       
 
 
                                         if (server.PlayState.IsPaused == true)

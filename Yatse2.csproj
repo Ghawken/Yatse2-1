@@ -5014,6 +5014,11 @@
   <ItemGroup>
     <Resource Include="Skin\Default\Interface\Default_Music-ThumbGoogle.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Skin\Default\Interface\Icon_Emby.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

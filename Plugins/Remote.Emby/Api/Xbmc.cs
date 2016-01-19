@@ -56,6 +56,7 @@ namespace Remote.Emby.Api
     {
         public static String EmbyAuthToken = ""; // Modifiable in Code
         public static String DeviceID = "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
+        public static string SessionID = "";
     }
     
     
@@ -476,10 +477,19 @@ namespace Remote.Emby.Api
                 var response = request.GetResponse();
 
 
+                
+                Log("Test Connection : URI Requested = :" + response.ResponseUri);
                 Log(((HttpWebResponse)response).StatusDescription);
-                Log("URI Requested = :" + response.ResponseUri);
+             
+                
+                if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+                {
+                    return 1;
+                }
 
 
+                return 0;
+                /*
                 using (var sr = new StreamReader(response.GetResponseStream()))
                 {
                     string json = sr.ReadToEnd();
@@ -488,13 +498,13 @@ namespace Remote.Emby.Api
                     // dynamic object fantastic - does need Class defined to return single Object
 
                     return 1;
-                    Log(json);
+                    Trace(json);
 
                     //  dynamic obj = SimpleJson.DeserializeObject(json);
                     // Console.WriteLine("Access Token EQUALS!   " + obj.AccessToken);
                     // accessToken = obj.AccessToken;
                 }
-
+                */
 
             }
             catch (Exception ex)
@@ -658,7 +668,7 @@ namespace Remote.Emby.Api
                     {
                         Log("------------------ EMBY ACCESS TOKEN FOUND" + deserialized.AccessToken);
                         Globals.EmbyAuthToken = deserialized.AccessToken;
-
+                        Globals.SessionID = deserialized.SessionInfo.Id;
                         return deserialized.AccessToken ;
                     }
                 }
