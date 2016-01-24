@@ -57,6 +57,7 @@ namespace Remote.Emby.Api
         public static String EmbyAuthToken = ""; // Modifiable in Code
         public static String DeviceID = "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
         public static string SessionID = "";
+        public static string SessionIDClient = "";
     }
     
     
@@ -334,16 +335,16 @@ namespace Remote.Emby.Api
         public string GetAuthString()
         {
             string clientname = "Yatse3";
-            string devicename = "Windows";
+            string devicename = "Windows Application";
             string deviceID = Globals.DeviceID; // "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
-            string applicationVersion = "1.0.0";
+            string appVersion = "1.0.0.0";
 
             if (String.IsNullOrEmpty(CurrentUserID))
             {
                 CurrentUserID = GetCurrentUserID();
             }
 
-            string AuthString = @"MediaBrowser Client=""" + clientname + "\", Device=\"" + devicename + "\", DeviceId=\"" + deviceID + "\", Version=\"" + applicationVersion + "\", UserId=\"" + CurrentUserID + "\"";
+            string AuthString = @"MediaBrowser Client=""" + clientname + "\", Device=\"" + devicename + "\", DeviceId=\"" + deviceID + "\", Version=\"" + appVersion + "\", UserId=\"" + CurrentUserID + "\"";
             Trace("--------- GetAuthString Returns:" + AuthString);
             return AuthString;
        }
@@ -450,6 +451,10 @@ namespace Remote.Emby.Api
             
             string authString = GetAuthString();
 
+
+            Globals.SessionIDClient = GetClientID();
+            
+
             try
             {
 
@@ -462,7 +467,7 @@ namespace Remote.Emby.Api
 
                 Log("------------------- Emby Token:" + Globals.EmbyAuthToken);
 
-                request.Headers.Add("Authorization", authString);
+                request.Headers.Add("X-Emby-Authorization", authString);
                 request.ContentType = "application/json; charset=utf-8";
                 //  request.ContentLength = postArg.Length;
                 request.Accept = "application/json";
@@ -629,7 +634,7 @@ namespace Remote.Emby.Api
                 
 
                 //request.Headers.Add("X-MediaBrowser-Token", accessToken);
-                request.Headers.Add("Authorization", authString);
+                request.Headers.Add("X-Emby-Authorization", authString);
                 request.ContentType = "application/json; charset=utf-8";
                 request.ContentLength = postArg.Length;
                 request.Accept = "application/xml";
@@ -749,6 +754,11 @@ namespace Remote.Emby.Api
             {
                 Globals.EmbyAuthToken = GetEmbyAuthToken(ip, port, user, password);
             }
+            if (String.IsNullOrEmpty(Globals.SessionIDClient))
+            {
+                Globals.SessionIDClient = GetClientID();
+            }
+
 
             if (_checkTimer == null)
             {
@@ -769,6 +779,81 @@ namespace Remote.Emby.Api
         private void NowPlayingTimerTick(object sender, EventArgs e)
         {
             Player.RefreshNowPlaying();
+        }
+
+        private string GetClientID()
+        {
+            try
+            {
+
+                Log("Emby:  Get Client ID Using Parent IP equals: " + IP);
+                string NPurl = "http://" + IP + ":" + Port;
+                var request = WebRequest.CreateHttp(NPurl + "/Sessions");
+
+                request.Method = "get";
+                //request.Timeout = 5000;
+                Log("--------------- PLAYER CONNECTION: IP " + IP + ":" + Port);
+
+
+
+                var authString = GetAuthString();
+
+
+
+                Log("Client ID:------------------- Username Parent :" + UserName);
+                Log("Client Id:------------------- CurrentUserID Parent :" + CurrentUserID);
+                Log("Client ID:------------------- EMBY TOKEN EQUALS :" + Globals.EmbyAuthToken);
+
+                request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+                request.Headers.Add("X-Emby-Authorization", authString);
+                request.ContentType = "application/json; charset=utf-8";
+                request.Accept = "application/json";
+
+
+                var response = request.GetResponse();
+
+
+                if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+                {
+
+                    //  Use MPC Remote
+
+                    System.IO.Stream dataStream = response.GetResponseStream();
+
+                    System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+
+                    using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
+                    {
+                        string json = sr.ReadToEnd();
+                        Log("--------------GETTING CLIENT ID JSON------" + json);
+                        var deserializer = new JavaScriptSerializer();
+
+                        var results = deserializer.Deserialize<System.Collections.Generic.List<Sessions.Class1>>(json);
+
+                        foreach (var server in results)
+                        {
+
+
+                            Log("++++++++++++++++++++ EMBY: Found Local Playback Client: CurrentUserID:  " + CurrentUserID + " : Current Server.UserID:  " + server.UserId);
+
+                            if (server.UserId == CurrentUserID && server.DeviceId != Globals.DeviceID)
+                            {
+                                Log("Returning Client ID:" + server.Id);
+                                Globals.SessionIDClient = server.Id;
+                                return server.Id;
+                            }
+                        }
+                    }
+                }
+                return "";
+            }
+            
+            catch (Exception ex)
+            {
+                Log("ERROR in Client ID obtaining");
+                return "";
+
+            }
         }
 
         private void CheckTimerTick(object sender, EventArgs e)

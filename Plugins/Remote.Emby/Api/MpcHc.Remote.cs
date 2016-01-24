@@ -43,34 +43,64 @@ namespace Remote.Emby.Api
             bw.DoWork += AsyncCommandWorker;
             bw.RunWorkerAsync(commandInfo);
         }
+        public void AsyncGeneralCommand(string cmd, string parameter)
+        {
+            var commandInfo = new CommandInfo { Command = cmd, Parameter = parameter };
+
+            var bw = new BackgroundWorker();
+            bw.DoWork += AsyncCommandGeneralWorker;
+            bw.RunWorkerAsync(commandInfo);
+        }
+
+        private void AsyncCommandGeneralWorker(object sender, DoWorkEventArgs e)
+        {
+            var commandInfo = (CommandInfo)e.Argument;
+            CommandGeneral(commandInfo.Command,commandInfo.Parameter);
+        }
 
         private void AsyncCommandWorker(object sender, DoWorkEventArgs e)
         {
             var commandInfo = (CommandInfo)e.Argument;
-            Command(commandInfo.Command,commandInfo.Parameter);
+            Command(commandInfo.Command, commandInfo.Parameter);
         }
+
 
         public bool Command(string cmd,string parameter)
         {
             HttpWebRequest request;
             var returnContent = false;
+            var authString = _parent.GetAuthString();
 
-            var uri = @"http://" + _parent.ClientIPAddress + ":32433/playback/"+cmd+"?commandID=720276921&type=video";
-            if ( ! String.IsNullOrEmpty(parameter))
-                uri += "&" + parameter;
+            var uri = @"http://" + _parent.IP + ":" + _parent.Port+"/emby/Sessions/"+Globals.SessionIDClient+"/Playing/";
+            
+            if (!String.IsNullOrEmpty(cmd))
+            {
+                uri += cmd;
+            }
+
+
+            _parent.Log(" ---------EMBY PLAY COMMAND: TESTING URL:" + uri+":::::");
+
             try
             {
                 request = (HttpWebRequest)WebRequest.Create(new Uri(uri));
-                request.Headers.Add("X-Plex-Token", Globals.EmbyAuthToken);
-                request.Headers.Add("X-Plex-Client-Identifier", "Plex Media Player");
-               // request.Headers.Add("X-Plex-Product","Yatse 3 Socket");
-              //  request.Headers.Add("X-Plex-Version", "0.1.0");
-                request.Headers.Add("commandID", "1");
+                request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+                request.Headers.Add("X-Emby-Authorization", authString);
+                request.ContentType = "application/json";
 
-                request.Method = "GET";
+                ASCIIEncoding encoder = new ASCIIEncoding();
+                byte[] data = encoder.GetBytes("");
+
+
+                request.ContentLength = data.Length;
+                request.Expect = "application/json";
+
+                request.Method = "POST";
                 request.Timeout = 1000;
-                _parent.Log("Plex COMMAND via MPC : " + cmd);
+                _parent.Log("Emby COMMAND  : " + cmd);
                 _parent.Trace(uri);
+
+
                 using (var response = (HttpWebResponse)request.GetResponse())
                 {
                     using (var stream = response.GetResponseStream())
@@ -87,7 +117,7 @@ namespace Remote.Emby.Api
             }
             catch (WebException e)
             {
-                _parent.Log("ERROR - PLEX via MPC Command : " + cmd + " - " + e.Message);
+                _parent.Log("ERROR - EMBY  Command : " + cmd + " - " + e.Message);
                 if (e.Status == WebExceptionStatus.Timeout)
                 {
 
@@ -96,6 +126,69 @@ namespace Remote.Emby.Api
             }
             return returnContent;
         }
+
+        public bool CommandGeneral(string cmd, string parameter)
+        {
+            HttpWebRequest request;
+            var returnContent = false;
+            var authString = _parent.GetAuthString();
+
+            var uri = @"http://" + _parent.IP + ":" + _parent.Port + "/emby/Sessions/" + Globals.SessionIDClient + "/Command/";
+
+            if (!String.IsNullOrEmpty(cmd))
+            {
+                uri += cmd;
+            }
+
+
+            _parent.Log(" ---------EMBY GENERAL COMMAND COMMAND: TESTING URL:" + uri + ":::::");
+
+            try
+            {
+                request = (HttpWebRequest)WebRequest.Create(new Uri(uri));
+                request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+                request.Headers.Add("X-Emby-Authorization", authString);
+                request.ContentType = "application/json";
+
+                ASCIIEncoding encoder = new ASCIIEncoding();
+                byte[] data = encoder.GetBytes("");
+
+
+                request.ContentLength = data.Length;
+                request.Expect = "application/json";
+
+                request.Method = "POST";
+                request.Timeout = 1000;
+                _parent.Log("Emby COMMAND  : " + cmd);
+                _parent.Trace(uri);
+
+
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    using (var stream = response.GetResponseStream())
+                    {
+                        if (stream != null)
+                            using (var reader = new StreamReader(stream, Encoding.UTF8))
+                            {
+                                var reqContent = reader.ReadToEnd();
+                                _parent.Trace(reqContent);
+                                returnContent = true;
+                            }
+                    }
+                }
+            }
+            catch (WebException e)
+            {
+                _parent.Log("ERROR - EMBY  Command : " + cmd + " - " + e.Message);
+                if (e.Status == WebExceptionStatus.Timeout)
+                {
+
+                    // _parent.MpcLoaded = false;
+                }
+            }
+            return returnContent;
+        }
+
 
         public string GetStatus()
         {
@@ -167,8 +260,7 @@ namespace Remote.Emby.Api
 
         public void ToggleMute()
         {
-            if (_parent.MpcLoaded)
-                AsyncCommand("909", "");
+            AsyncGeneralCommand("ToggleMute", "");
         }
 
         public void Return()
@@ -305,19 +397,27 @@ namespace Remote.Emby.Api
 
         public void Play()
         {
-            if (_parent.MpcLoaded)
-                AsyncCommand("play", "");
+            //if (_parent.MpcLoaded)
+               
+            
+            
+            AsyncCommand("Unpause", "");
+        }
+
+        public void Pause()
+        {
+            AsyncCommand("Pause", "");
         }
 
         public void Stop()
         {
-            if (_parent.MpcLoaded)
-                AsyncCommand("stop", "");
+            //if (_parent.MpcLoaded)
+                AsyncCommand("Stop", "");
         }
 
         public void Forward()
         {
-            if (_parent.MpcLoaded)
+            //if (_parent.MpcLoaded)
                 AsyncCommand("stepForward", "");
         }
 

@@ -654,38 +654,45 @@ namespace Remote.Emby.Api
 
         public void PlayPause()
         {
-            if (_parent.MpcLoaded)
-                _parent.MpcHcRemote.Play();
+            // if (_parent.MpcLoaded)
+            if (_nowPlaying.IsPlaying == true)
+            {
+                _parent.MpcHcRemote.Pause();
+            }
             else
-                if (_parent.IsConnected())
-                    _parent.AsyncEventAction("PlayerControl(Play)");
+            {
+                _parent.MpcHcRemote.Play();
+            }
+                //else
+             //   if (_parent.IsConnected())
+              //      _parent.AsyncEventAction("PlayerControl(Play)");
         }
 
         public void Stop()
         {
-            if (_parent.MpcLoaded)
+           // if (_parent.MpcLoaded)
                 _parent.MpcHcRemote.Stop();
-            else
-                if (_parent.IsConnected())
-                    _parent.AsyncEventAction("PlayerControl(Stop)");
+           // else
+             //   if (_parent.IsConnected())
+               //     _parent.AsyncEventAction("PlayerControl(Stop)");
         }
 
         public void SkipPrevious()
         {
-            if (_parent.MpcLoaded)
+            //if (_parent.MpcLoaded)
                 _parent.MpcHcRemote.SkipPrevious();
-            else
-                if (_parent.IsConnected())
-                    _parent.AsyncEventAction("PlayerControl(Previous)");
+            //else
+              //  if (_parent.IsConnected())
+                //    _parent.AsyncEventAction("PlayerControl(Previous)");
         }
 
         public void SkipNext()
         {
-            if (_parent.MpcLoaded)
+           // if (_parent.MpcLoaded)
                 _parent.MpcHcRemote.SkipNext();
-            else
-                if (_parent.IsConnected())
-                    _parent.AsyncEventAction("PlayerControl(Next)");
+            //else
+              //  if (_parent.IsConnected())
+              //      _parent.AsyncEventAction("PlayerControl(Next)");
         }
 
         public void SeekPercentage(int progress)
