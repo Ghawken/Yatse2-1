@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\ClassAuthenicateByUser\AuthenicateByUser.cs" />
+    <Compile Include="Api\EmbyServerPlugin\ApiInfo.cs" />
     <Compile Include="Api\Public Users Folder\Public Users.cs" />
     <Compile Include="Api\Sessions\Sessions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

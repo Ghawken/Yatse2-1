@@ -249,13 +249,13 @@ namespace Remote.Emby.Api
         public void SkipPrevious()
         {
             if (_parent.MpcLoaded)
-                AsyncCommand("920", "");
+                AsyncCommand("PreviousTrack", "");
         }
 
         public void SkipNext()
         {
             if (_parent.MpcLoaded)
-                AsyncCommand("921", "");
+                AsyncCommand("NextTrack", "");
         }
 
         public void ToggleMute()
@@ -266,67 +266,58 @@ namespace Remote.Emby.Api
         public void Return()
         {
             if (_parent.MpcLoaded)
-                AsyncCommand("933", "");
+                AsyncGeneralCommand("Select", "");
         }
 
         public void Enter()
         {
             if (_parent.MpcLoaded)
-                AsyncCommand("932", "");
+                AsyncGeneralCommand("Select", "");
         }
 
         public void Info()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("info");
+            AsyncGeneralCommand("ToggleOsdMenu", "");
         }
 
         public void Home()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("start");
+            AsyncGeneralCommand("GoHome", "");
         }
 
         public void Video()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("myvideo");
+
         }
 
         public void Music()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("mymusic");
+
         }
 
         public void Pictures()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("mypictures");
+
         }
 
         public void Tv()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("mytv");
+
         }
 
         public void VolUp()
         {
-            if (_parent.MpcLoaded)
-                AsyncCommand("907", "");
+            AsyncGeneralCommand("VolumeUp", "");
         }
 
         public void VolDown()
         {
-            if (_parent.MpcLoaded)
-                AsyncCommand("908", "");
+            AsyncGeneralCommand("VolumeDown", "");
         }
 
         public void Menu()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("menu");
+
         }
                
         public void Title()
@@ -337,62 +328,52 @@ namespace Remote.Emby.Api
 
         public void Down()
         {
-            if (_parent.MpcLoaded)
-                AsyncCommand("931", "");
+
         }
 
         public void Up()
         {
-            if (_parent.MpcLoaded)
-                AsyncCommand("930", "");
+            AsyncGeneralCommand("MoveUp", "");
         }
 
         public void Left()
         {
-            if (_parent.MpcLoaded)
-                AsyncCommand("928", "");
+            AsyncGeneralCommand("MoveLeft", "");
         }
 
         public void Right()
         {
-            if (_parent.MpcLoaded)
-                AsyncCommand("929", "");
+            AsyncGeneralCommand("MoveRight", "");
         }
 
         public void Mute()
         {
-            if (_parent.MpcLoaded)
-                AsyncCommand("909", "");
+            AsyncGeneralCommand("Mute", "");
         }
 
         public void PlayDrive()
         {
-            if (_parent.MpcLoaded)
-                AsyncCommand("951", "");
+
         }
                 
         public void EjectDrive()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventAction("EjectTray");
+
         }
 
         public void Subtitles()
         {
-            if (_parent.MpcLoaded)
-                AsyncCommand("953", "");
+
         }
 
         public void Previous()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("skipPrevious");
+            AsyncGeneralCommand("Back", "");
         }
 
         public void Rewind()
         {
-            if (_parent.MpcLoaded)
-                AsyncCommand("stepBack", "");
+
         }
 
         public void Play()
@@ -417,86 +398,71 @@ namespace Remote.Emby.Api
 
         public void Forward()
         {
-            //if (_parent.MpcLoaded)
-                AsyncCommand("stepForward", "");
+
         }
 
         public void Next()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("skipNext");
+
         }
 
         public void One()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("one");
+;
         }
 
         public void Two()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("two");
+
         }
 
         public void Three()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("three");
+
         }
 
         public void Four()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("four");
+
         }
 
         public void Five()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("five");
+
         }
 
         public void Six()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("six");
+
         }
 
         public void Seven()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("seven");
+
         }
 
         public void Eight()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("eight");
         }
 
         public void Nine()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("nine");
+
         }
 
         public void Zero()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("zero");
+
         }
 
         public void Star()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("star");
+
         }
 
         public void Hash()
         {
-            if (_parent.MpcLoaded)
-                _parent.AsyncEventButton("hash");
+
         }
 
         public static void ParseCSVFields(ArrayList result, string data)
