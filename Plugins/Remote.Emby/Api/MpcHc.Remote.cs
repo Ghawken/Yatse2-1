@@ -67,6 +67,12 @@ namespace Remote.Emby.Api
 
         public bool Command(string cmd,string parameter)
         {
+            if (Globals.ClientSupportsRemoteControl == false)
+            {
+                _parent.Log("-----EMBY COMMAND:   Current Client DOES NOT SUPPORT REMOTE CONTROL -- No Command Sent");
+                return false;
+            }
+
             HttpWebRequest request;
             var returnContent = false;
             var authString = _parent.GetAuthString();

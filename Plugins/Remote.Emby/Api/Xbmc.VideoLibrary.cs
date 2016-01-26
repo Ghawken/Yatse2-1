@@ -18,8 +18,17 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Net;
+using System.Web.Script.Serialization;
+using System.Web;
+using System.Web.Script;
 using Plugin;
-using Jayrock.Json;
+//using Jayrock.Json;
+
+using System.Xml;
+using System.Xml.Serialization;
+
 
 namespace Remote.Emby.Api
 {
@@ -35,11 +44,15 @@ namespace Remote.Emby.Api
     public Collection<ApiTvSeason> GetTvSeasons()
     {
       var seasons = new Collection<ApiTvSeason>();
-
+    /*
       var properties = new Jayrock.Json.JsonArray(new[] { "title" });
       var param = new JsonObject();
       param["properties"] = properties;
+      
+        
       var result = (JsonObject)_parent.JsonCommand("VideoLibrary.GetTVShows", param);
+      
+        
       if (result != null)
       {
         if (result.Contains("tvshows"))
@@ -77,13 +90,14 @@ namespace Remote.Emby.Api
           }
         }
       }
+    */
       return seasons;
     }
 
     public Collection<ApiTvEpisode> GetTvEpisodes()
     {
       var episodes = new Collection<ApiTvEpisode>();
-
+      /*
       var properties = new JsonArray(new[] { "title", "plot", "season", "episode", "showtitle", "tvshowid", "fanart", "thumbnail", "rating", "playcount", "firstaired" });
       var param = new JsonObject();
       param["properties"] = properties;
@@ -124,13 +138,15 @@ namespace Remote.Emby.Api
           }
         }
       }
+        */
       return episodes;
     }
 
     public Collection<ApiTvShow> GetTvShows()
     {
-      var shows = new Collection<ApiTvShow>();
-
+     
+        var shows = new Collection<ApiTvShow>();
+     /*
       var properties = new JsonArray(new[] { "title", "plot", "genre", "fanart", "thumbnail", "rating", "mpaa", "studio", "playcount", "premiered", "episode" });
       var param = new JsonObject();
       param["properties"] = properties;
@@ -168,12 +184,88 @@ namespace Remote.Emby.Api
           }
         }
       }
+      */
       return shows;
     }
+
+    public string GetMainSelection(string param)
+    {
+        try
+        {
+
+            _parent.Log("Getting Main Selection Result" + _parent.IP);
+            string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items";
+
+            var request = WebRequest.CreateHttp(NPurl);
+
+            request.Method = "get";
+            request.Timeout = 10000;
+            _parent.Log("Main Selection: " + _parent.IP + ":" + _parent.Port);
+
+            var authString = _parent.GetAuthString();
+
+            request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+            request.Headers.Add("X-Emby-Authorization", authString);
+            request.ContentType = "application/json; charset=utf-8";
+            request.Accept = "application/json; charset=utf-8";
+
+            var response = request.GetResponse();
+
+            if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+            {
+
+                System.IO.Stream dataStream = response.GetResponseStream();
+                System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+
+                using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
+                {
+                    string json = sr.ReadToEnd();
+                    _parent.Log("--------------GETTING Main Selection Result ------" + json);
+                    
+                    var deserializer = new JavaScriptSerializer();
+                    
+                    var ItemData = deserializer.Deserialize<MainSelection.Root>(json);
+
+                   // var results = Jayrock.Json.Conversion.JsonConvert.Import<MainSelection.Root>(json);
+
+                  //  _parent.Log("Using Jayrock results equal Count: " + results.Items.Count );
+                    _parent.Log("---------------Get Main Selection:  Issue: Results.Count: " + ItemData.Items.Count);
+
+                    foreach (var id in ItemData.Items)
+                    {
+                       
+                        
+                        if (id.Name == param)
+                        {
+                            _parent.Log("----------- Get Main Selection Run ---" + param + " ID Result equals:  " + id.Id);
+                            return id.Id;
+                        }
+                    }
+
+                }
+            }
+
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            _parent.Log("ERROR in Main Selection obtaining: "+ex);
+            return "";
+
+        }
+    }
+
 
     public Collection<ApiMovie> GetMovies()
     {
       var movies = new Collection<ApiMovie>();
+      var MovieId = GetMainSelection("Movies");
+      
+
+
+
+      /*
 
       var properties = new JsonArray(new[] { "title", "plot", "genre", "year", "fanart", "thumbnail", "playcount", "studio", "rating", "runtime", "mpaa", "originaltitle", "director", "votes" });
       var param = new JsonObject();
@@ -221,7 +313,7 @@ namespace Remote.Emby.Api
           }
         }
       }
-
+     */
       return movies;
     }
   }

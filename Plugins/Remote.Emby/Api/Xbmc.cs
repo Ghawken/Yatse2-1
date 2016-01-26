@@ -58,6 +58,8 @@ namespace Remote.Emby.Api
         public static String DeviceID = "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
         public static string SessionID = "";
         public static string SessionIDClient = "";
+        public static bool ClientSupportsRemoteControl = false;
+        public static string CurrentUserID ="";
     }
     
     
@@ -245,14 +247,14 @@ namespace Remote.Emby.Api
             if (!MpcLoaded)
             {
 
-                string url = GetJsonPath() + "/clients";
+                string url = GetJsonPath() + "/Users/Public";
                 // PMS Server Clients Page - to connect to and see whether local player is in effect.
 
                 try
                 {
 
                     var request = WebRequest.Create(url);
-                    request.Headers.Add("X-Plex-Token", EmbyAuthToken);
+                    request.Headers.Add("X-MediaBrowser-Token", EmbyAuthToken);
                     var response = request.GetResponse();
 
                     if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
@@ -339,7 +341,7 @@ namespace Remote.Emby.Api
             string deviceID = Globals.DeviceID; // "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
             string appVersion = "1.0.0.0";
 
-            if (String.IsNullOrEmpty(CurrentUserID))
+            if (String.IsNullOrEmpty(Globals.CurrentUserID))
             {
                 CurrentUserID = GetCurrentUserID();
             }
@@ -388,6 +390,7 @@ namespace Remote.Emby.Api
                     {
                         string json = sr.ReadToEnd();
                         Trace(json);
+                        
                         var deserializer = new JavaScriptSerializer();
                       
                         var results = deserializer.Deserialize<List<Public_Users_Folder.Class1>>(json);
@@ -400,6 +403,7 @@ namespace Remote.Emby.Api
                             if (server.Name == UserName)
                             {
                                   Trace("----------------- Returning CurrentUserID based on Username from Public/Users: UserID:"+server.Name +" Username "+server.Id);
+                                  Globals.CurrentUserID = server.Id;
                                   return  server.Id;
                             }
                             
@@ -674,27 +678,12 @@ namespace Remote.Emby.Api
                         Log("------------------ EMBY ACCESS TOKEN FOUND" + deserialized.AccessToken);
                         Globals.EmbyAuthToken = deserialized.AccessToken;
                         Globals.SessionID = deserialized.SessionInfo.Id;
+                        Globals.ClientSupportsRemoteControl = deserialized.SessionInfo.SupportsRemoteControl;
                         return deserialized.AccessToken ;
                     }
                 }
 
 
-                /*  Old Method - variably worked - moved to classes
-                using (var sr = new StreamReader(response.GetResponseStream()))
-                {
-                    string json = sr.ReadToEnd();
-                    //Console.WriteLine(json);
-                    // Gets the Whole JSON return if password etc good
-                    // dynamic object fantastic - does need Class defined to return single Object
-                    Log(json);
-                    dynamic obj = JsonConvert.Import(json);
-
-                    var accessToken = obj.Name;
-                    Log("Access Token EQUALS!   " + accessToken);
-                    
-                    return accessToken;
-                } 
-                */
 
                 return "";
 
@@ -826,6 +815,7 @@ namespace Remote.Emby.Api
                     {
                         string json = sr.ReadToEnd();
                         Log("--------------GETTING CLIENT ID JSON------" + json);
+                        
                         var deserializer = new JavaScriptSerializer();
 
                         var results = deserializer.Deserialize<System.Collections.Generic.List<Sessions.Class1>>(json);
@@ -934,20 +924,20 @@ namespace Remote.Emby.Api
         public Object JsonCommand(string cmd, Object parameter)
         {
             if (!_configured)
-                Log("Plex:  Something not configured.");
+                Log("Emby:  Something not configured.");
                 return null;
 
 
             if (String.IsNullOrEmpty(Globals.EmbyAuthToken))
             {
-                Log("Not Plex Token - Not checking for clients.");
+                Log("Not Emby Token - Not checking for clients.");
                 return 0;
                 // Not Connected - failed Setup.
                 //Still need to check local player there - rather than internet server which gives Auth
             }
 
             string url = "http://" + IP + ":" + Port + "/";
-            Log("PLEX COMMAND: Sending to " + url);
+            Log("Emby COMMAND: Sending to " + url);
 
             // PMS Server Clients Page - to connect to and see whether local player is in effect.
 

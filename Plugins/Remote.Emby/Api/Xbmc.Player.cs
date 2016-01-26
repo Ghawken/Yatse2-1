@@ -485,7 +485,10 @@ namespace Remote.Emby.Api
                                     _nowPlaying.Volume = Convert.ToInt32(server.Volume);
                                     _nowPlaying.Tagline = server.Tagline;
                                     _nowPlaying.Studio = server.Studio;
-
+                                    if (server.AirDate.HasValue)
+                                    {
+                                        _nowPlaying.FirstAired = server.AirDate.Value;
+                                    }
 
                                     return;
 

@@ -33,5 +33,13 @@ namespace Remote.Emby.Api.EmbyServerPlugin
         public long? Duration { get; set; }
         public bool IsMuted { get; set; }
         public int? Volume { get; set; }
+        public DateTime? AirDate { get; set; }
+        public string NowViewingName { get; set; }
+        public string NowViewingSeriesName { get; set; }
+        public string NowViewingArtists { get; set; }
+
+        public string NowViewingAlbum { get; set; }
+        public string NowViewingMediaType { get; set; }
+
     }
 }
