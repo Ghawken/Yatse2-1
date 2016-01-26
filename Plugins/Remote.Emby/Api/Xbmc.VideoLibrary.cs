@@ -28,6 +28,7 @@ using Plugin;
 
 using System.Xml;
 using System.Xml.Serialization;
+using System.Linq;
 
 
 namespace Remote.Emby.Api
@@ -251,7 +252,60 @@ namespace Remote.Emby.Api
 
         }
     }
+    public SingleMovieItem.Rootobject GetSingleMovieItem(string itemId)
+    {
+        try
+        {
 
+            _parent.Log("Getting Single Movie Data" + _parent.IP);
+            string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items/"+itemId;
+
+            var request = WebRequest.CreateHttp(NPurl);
+
+            request.Method = "get";
+            request.Timeout = 5000;
+            _parent.Log("Single Movie Selection: " + _parent.IP + ":" + _parent.Port);
+
+            var authString = _parent.GetAuthString();
+
+            request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+            request.Headers.Add("X-Emby-Authorization", authString);
+            request.ContentType = "application/json; charset=utf-8";
+            request.Accept = "application/json; charset=utf-8";
+
+            var response = request.GetResponse();
+
+            if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+            {
+
+                System.IO.Stream dataStream = response.GetResponseStream();
+                System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+
+                using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
+                {
+                    string json = sr.ReadToEnd();
+                    _parent.Log("--------------GETTING Single Movie Selection Result ------" + json);
+
+                    var deserializer = new JavaScriptSerializer();
+
+                    var ItemData = deserializer.Deserialize<SingleMovieItem.Rootobject>(json);
+                    _parent.Log("---------------Get Single Movie Selection:  Issue: Results.Taglines: " + ItemData.Taglines);
+
+                    return ItemData;
+
+                }
+            }
+
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            _parent.Log("ERROR in Single Movie Selection obtaining: " + ex);
+            return null;
+
+        }
+    }
 
     public Collection<ApiMovie> GetMovies()
     {
@@ -298,26 +352,30 @@ namespace Remote.Emby.Api
 
                   foreach (var id in ItemData.Items)
                   {
-
+                      SingleMovieItem.Rootobject Movieitem = GetSingleMovieItem(id.Id);
+                      
+                      string newDirector = Movieitem.People.First(i => i.Type == "Director").ToString();
+                      
                       var movie = new ApiMovie
                       {
-                          Title = id.Name,
-                          Plot = "",
-                          Votes = "",
+                          Title = Movieitem.Name,
+                          Plot = Movieitem.Overview,
+                          Votes = Movieitem.VoteCount.ToString(),
                           Rating = id.OfficialRating,
                           Year = id.ProductionYear,
-                          IdScraper = "",
+                          Tagline = Movieitem.Taglines.FirstOrDefault(),
+                          IdScraper = Movieitem.ProviderIds.Imdb,
                           Length = id.RunTimeTicks.ToString(),
                           Mpaa = id.OfficialRating,
-                          Genre = "Genre",
-                          Director = "Director",
+                          Genre = Movieitem.Genres.FirstOrDefault(),
+                          Director = newDirector,
                           OriginalTitle = id.Name,
-                          Studio = "",
+                          Studio = Movieitem.Studios.FirstOrDefault().ToString(),
                           IdFile = 0,
                           IdMovie = 123,
-                          FileName = "",
-                          Path = "",
-                          PlayCount = 0,
+                          FileName = Movieitem.Path,
+                          Path = Movieitem.Path,
+                          PlayCount = Movieitem.UserData.PlayCount,
                           Thumb = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + id.Id + "/Images/Primary",
                           Fanart = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + id.Id + "/Images/Backdrop",
                           Hash = Xbmc.Hash(id.Id)

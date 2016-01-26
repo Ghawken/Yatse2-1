@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\ClassAuthenicateByUser\AuthenicateByUser.cs" />
+    <Compile Include="Api\Emby Library Items\2 Single Movie Item Data.cs" />
     <Compile Include="Api\Emby Library Items\3 TV Episodes.cs" />
     <Compile Include="Api\Emby Library Items\2 TV Seasons.cs" />
     <Compile Include="Api\Emby Library Items\1 TV Shows.cs" />
