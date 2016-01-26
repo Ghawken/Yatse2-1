@@ -353,35 +353,44 @@ namespace Remote.Emby.Api
                   foreach (var id in ItemData.Items)
                   {
                       SingleMovieItem.Rootobject Movieitem = GetSingleMovieItem(id.Id);
-                      
-                      string newDirector = Movieitem.People.First(i => i.Type == "Director").ToString();
-                      
-                      var movie = new ApiMovie
+                      string newDirector = "";
+                      bool index = Movieitem.People.Any(item => item.Type == "Director");
+                      if (index == true)
                       {
-                          Title = Movieitem.Name,
-                          Plot = Movieitem.Overview,
-                          Votes = Movieitem.VoteCount.ToString(),
-                          Rating = id.OfficialRating,
-                          Year = id.ProductionYear,
-                          Tagline = Movieitem.Taglines.FirstOrDefault(),
-                          IdScraper = Movieitem.ProviderIds.Imdb,
-                          Length = id.RunTimeTicks.ToString(),
-                          Mpaa = id.OfficialRating,
-                          Genre = Movieitem.Genres.FirstOrDefault(),
-                          Director = newDirector,
-                          OriginalTitle = id.Name,
-                          Studio = Movieitem.Studios.FirstOrDefault().ToString(),
-                          IdFile = 0,
-                          IdMovie = 123,
-                          FileName = Movieitem.Path,
-                          Path = Movieitem.Path,
-                          PlayCount = Movieitem.UserData.PlayCount,
-                          Thumb = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + id.Id + "/Images/Primary",
-                          Fanart = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + id.Id + "/Images/Backdrop",
-                          Hash = Xbmc.Hash(id.Id)
-                      };
-                      movies.Add(movie);
-
+                          newDirector = Movieitem.People.First(i => i.Type == "Director").Name.ToString();
+                      }
+                      try
+                      {
+                          var movie = new ApiMovie
+                          {
+                              Title = Movieitem.Name,
+                              Plot = Movieitem.Overview,
+                              Votes = Movieitem.VoteCount.ToString(),
+                              Rating = id.CommunityRating.ToString(),
+                              Year = id.ProductionYear,
+                              Tagline = Movieitem.Taglines.FirstOrDefault(),
+                              IdScraper = Movieitem.ProviderIds.Imdb,
+                              Length = id.RunTimeTicks.ToString(),
+                              Mpaa = id.OfficialRating,
+                              Genre = Movieitem.Genres.FirstOrDefault(),
+                              Director = newDirector,
+                              OriginalTitle = id.Name,
+                              Studio = Movieitem.Studios.FirstOrDefault().Name,
+                              IdFile = 0,
+                              IdMovie = 123,
+                              FileName = Movieitem.Path,
+                              Path = Movieitem.Path,
+                              PlayCount = Movieitem.UserData.PlayCount,
+                              Thumb = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + id.Id + "/Images/Primary",
+                              Fanart = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + id.Id + "/Images/Backdrop",
+                              Hash = Xbmc.Hash(id.Id)
+                          };
+                          movies.Add(movie);
+                      }
+                      catch (Exception ex)
+                          {
+                              _parent.Log("Exception with Movie Name "+Movieitem.Name+":"+Movieitem.Path+":"+ex);
+                          }
                   }
 
                   /*
