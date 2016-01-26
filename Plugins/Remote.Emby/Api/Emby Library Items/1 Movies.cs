@@ -9,7 +9,7 @@ namespace Remote.Emby.Api.Movies
 
     public class Rootobject
     {
-        public Item[] Items { get; set; }
+        public IList<Item> Items { get; set; }
         public int TotalRecordCount { get; set; }
     }
 

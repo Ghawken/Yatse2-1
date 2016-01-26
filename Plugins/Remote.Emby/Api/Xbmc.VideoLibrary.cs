@@ -223,12 +223,8 @@ namespace Remote.Emby.Api
                     _parent.Log("--------------GETTING Main Selection Result ------" + json);
                     
                     var deserializer = new JavaScriptSerializer();
-                    
+                   
                     var ItemData = deserializer.Deserialize<MainSelection.Root>(json);
-
-                   // var results = Jayrock.Json.Conversion.JsonConvert.Import<MainSelection.Root>(json);
-
-                  //  _parent.Log("Using Jayrock results equal Count: " + results.Items.Count );
                     _parent.Log("---------------Get Main Selection:  Issue: Results.Count: " + ItemData.Items.Count);
 
                     foreach (var id in ItemData.Items)
@@ -261,8 +257,92 @@ namespace Remote.Emby.Api
     {
       var movies = new Collection<ApiMovie>();
       var MovieId = GetMainSelection("Movies");
-      
 
+      try
+      {
+
+          _parent.Log("Getting Main Movie Database Result" + _parent.IP);
+          string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?ParentId=" + MovieId;
+
+          var request = WebRequest.CreateHttp(NPurl);
+
+          request.Method = "get";
+          request.Timeout = 20000;
+          _parent.Log("Main Selection: " + _parent.IP + ":" + _parent.Port);
+
+          var authString = _parent.GetAuthString();
+
+          request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+          request.Headers.Add("X-Emby-Authorization", authString);
+          request.ContentType = "application/json; charset=utf-8";
+          request.Accept = "application/json; charset=utf-8";
+
+          var response = request.GetResponse();
+
+          if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+          {
+
+              System.IO.Stream dataStream = response.GetResponseStream();
+              System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+
+              using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
+              {
+                  string json = sr.ReadToEnd();
+                  _parent.Log("--------------GETTING All Movies Results ------" + json);
+
+                  var deserializer = new JavaScriptSerializer();
+
+                  var ItemData = deserializer.Deserialize<Movies.Rootobject>(json);
+
+                  _parent.Log("---------------Get Worlds Result:  Issue: Results.Count: " + ItemData.Items.Count);
+
+                  foreach (var id in ItemData.Items)
+                  {
+
+                      var movie = new ApiMovie
+                      {
+                          Title = id.Name,
+                          Plot = "",
+                          Votes = "",
+                          Rating = id.OfficialRating,
+                          Year = id.ProductionYear,
+                          IdScraper = "",
+                          Length = id.RunTimeTicks.ToString(),
+                          Mpaa = id.OfficialRating,
+                          Genre = "Genre",
+                          Director = "Director",
+                          OriginalTitle = id.Name,
+                          Studio = "",
+                          IdFile = 0,
+                          IdMovie = 123,
+                          FileName = "",
+                          Path = "",
+                          PlayCount = 0,
+                          Thumb = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + id.Id + "/Images/Primary",
+                          Fanart = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + id.Id + "/Images/Backdrop",
+                          Hash = Xbmc.Hash(id.Id)
+                      };
+                      movies.Add(movie);
+
+                  }
+
+                  /*
+                                    _nowPlaying.FanartURL = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.PrimaryItemId + "/Images/Backdrop";
+                                    _nowPlaying.ThumbURL = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.PrimaryItemId + "/Images/Primary";
+                  */
+
+              }
+
+          }
+
+
+      }
+      catch (Exception ex)
+      {
+          _parent.Log("ERROR in Main Movies obtaining: " + ex);
+
+
+      }
 
 
       /*
