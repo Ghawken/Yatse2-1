@@ -352,34 +352,40 @@ namespace Remote.Emby.Api
 
                   foreach (var id in ItemData.Items)
                   {
-                      SingleMovieItem.Rootobject Movieitem = GetSingleMovieItem(id.Id);
-                      string newDirector = "";
-                      bool index = Movieitem.People.Any(item => item.Type == "Director");
-                      if (index == true)
-                      {
-                          newDirector = Movieitem.People.First(i => i.Type == "Director").Name.ToString();
-                      }
                       try
                       {
+
+                          SingleMovieItem.Rootobject Movieitem = GetSingleMovieItem(id.Id);
+                          string newDirector = "";
+                          bool index = Movieitem.People.Any(item => item.Type == "Director");
+                          if (index == true)
+                          {
+                              newDirector = Movieitem.People.First(i => i.Type == "Director").Name.ToString();
+                          }
+
+                          var Seconds = Convert.ToInt64(id.RunTimeTicks);
+                          var RoundSeconds = Math.Round(Seconds / 10000000.00, 1);
+
+
                           var movie = new ApiMovie
                           {
-                              Title = Movieitem.Name,
-                              Plot = Movieitem.Overview,
-                              Votes = Movieitem.VoteCount.ToString(),
-                              Rating = id.CommunityRating.ToString(),
+                              Title = Movieitem.Name ?? "Unknown",
+                              Plot = Movieitem.Overview ?? "Unknown",
+                              Votes = Movieitem.VoteCount.ToString() ?? "0",
+                              Rating = id.CommunityRating.ToString() ?? "0",
                               Year = id.ProductionYear,
-                              Tagline = Movieitem.Taglines.FirstOrDefault(),
-                              IdScraper = Movieitem.ProviderIds.Imdb,
-                              Length = id.RunTimeTicks.ToString(),
-                              Mpaa = id.OfficialRating,
-                              Genre = Movieitem.Genres.FirstOrDefault(),
-                              Director = newDirector,
-                              OriginalTitle = id.Name,
-                              Studio = Movieitem.Studios.FirstOrDefault().Name,
+                              Tagline = Movieitem.Taglines.FirstOrDefault() ?? "Might be a good movie",
+                              IdScraper = Movieitem.ProviderIds.Imdb ?? "",
+                              Length = new TimeSpan(0,0,0, Convert.ToInt32(RoundSeconds)).ToString() ?? "Unknown",
+                              Mpaa = id.OfficialRating ?? "Unknown",
+                              Genre = Movieitem.Genres.FirstOrDefault() ?? "Unknown",
+                              Director = newDirector ?? "",
+                              OriginalTitle = id.Name ?? "",
+                              Studio = Movieitem.Studios.FirstOrDefault().Name ?? "Unknown",
                               IdFile = 0,
                               IdMovie = 123,
-                              FileName = Movieitem.Path,
-                              Path = Movieitem.Path,
+                              FileName = Movieitem.Path ?? "",
+                              Path = Movieitem.Path ?? "",
                               PlayCount = Movieitem.UserData.PlayCount,
                               Thumb = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + id.Id + "/Images/Primary",
                               Fanart = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + id.Id + "/Images/Backdrop",
@@ -387,11 +393,13 @@ namespace Remote.Emby.Api
                           };
                           movies.Add(movie);
                       }
+
                       catch (Exception ex)
-                          {
-                              _parent.Log("Exception with Movie Name "+Movieitem.Name+":"+Movieitem.Path+":"+ex);
-                          }
+                      {
+                          _parent.Log("Exception with Movie Name :" + ex);
+                      }
                   }
+
 
                   /*
                                     _nowPlaying.FanartURL = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + server.PrimaryItemId + "/Images/Backdrop";
