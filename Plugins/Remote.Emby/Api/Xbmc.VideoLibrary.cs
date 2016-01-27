@@ -199,7 +199,7 @@ namespace Remote.Emby.Api
       {
 
 
-          _parent.Log("Getting TV Seasons" + _parent.IP);
+          _parent.Log("Getting TV Episodes" + _parent.IP);
           string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?Recursive=true&IncludeItemTypes=Episode";
 
           var request = WebRequest.CreateHttp(NPurl);
@@ -231,7 +231,7 @@ namespace Remote.Emby.Api
                   var deserializer = new JavaScriptSerializer();
 
                   var ItemData = deserializer.Deserialize<TVEpisodes.Rootobject>(json);
-                  _parent.Log("---------------Get Single TV Season Selection:  Issue: Results.Taglines: " + ItemData.TotalRecordCount);
+                  _parent.Log("---------------Get Single TV Episode Selection:  Issue: Results.Taglines: " + ItemData.TotalRecordCount);
 
                   foreach (var genre in ItemData.Items)
                   {
