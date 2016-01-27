@@ -46,6 +46,101 @@ namespace Remote.Emby.Api
     public Collection<ApiTvSeason> GetTvSeasons()
     {
       var seasons = new Collection<ApiTvSeason>();
+
+      try
+      {
+
+
+          _parent.Log("Getting TV Seasons" + _parent.IP);
+          string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?Recursive=true&IncludeItemTypes=Season";
+
+          var request = WebRequest.CreateHttp(NPurl);
+
+          request.Method = "get";
+          request.Timeout = 15000;
+          _parent.Log("Single TV Season Selection: " + _parent.IP + ":" + _parent.Port);
+
+          var authString = _parent.GetAuthString();
+
+          request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+          request.Headers.Add("X-Emby-Authorization", authString);
+          request.ContentType = "application/json; charset=utf-8";
+          request.Accept = "application/json; charset=utf-8";
+
+          var response = request.GetResponse();
+
+          if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+          {
+
+              System.IO.Stream dataStream = response.GetResponseStream();
+              System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+
+              using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
+              {
+                  string json = sr.ReadToEnd();
+                  _parent.Log("--------------GETTING Single TV Season Selection Result ------" + json);
+
+                  var deserializer = new JavaScriptSerializer();
+
+                  var ItemData = deserializer.Deserialize<TVSeasons.Rootobject>(json);
+                  _parent.Log("---------------Get Single TV Season Selection:  Issue: Results.Taglines: " + ItemData.TotalRecordCount);
+
+                  foreach (var genre in ItemData.Items)
+                  {
+                      try
+                      {
+
+                          //var SingleTVData = GetSingleTVFromSeries(genre.Id);
+
+                          var tvShow = new ApiTvSeason
+                          {
+                              SeasonNumber = genre.IndexNumber,
+                              IdShow = Xbmc.IDtoNumber(genre.SeriesId),
+                              Show = genre.SeriesName ?? "",
+                              Thumb = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + genre.SeriesPrimaryImageTag + "/Images/Primary" ?? "",
+                              EpisodeCount = genre.ChildCount,
+                              Fanart = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + genre.SeriesPrimaryImageTag + "/Images/Backdrop" ?? "",
+                              Hash = Xbmc.Hash(genre.Id)
+                          };
+                          seasons.Add(tvShow);
+/*
+                          var tvShow = new ApiTvShow
+                          {
+
+                              Title = genre.Name ?? "Unknown",
+                              Plot = SingleTVData.Overview ?? "",
+                              Rating = genre.CommunityRating.ToString() ?? "",
+                              IdScraper = "",
+                              Mpaa = SingleTVData.OfficialRating ?? "Unknown",
+                              Genre = SingleTVData.Genres.FirstOrDefault().ToString() ?? "",
+                              Studio = SingleTVData.Studios.FirstOrDefault().Name.ToString() ?? "",
+                              IdShow = Xbmc.IDtoNumber(genre.Id),
+                              TotalCount = genre.RecursiveItemCount,
+                              Path = SingleTVData.Path ?? "",
+                              Premiered = genre.PremiereDate.ToString() ?? "",
+                              Thumb = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + genre.Id + "/Images/Primary" ?? "",
+                              Fanart = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + genre.Id + "/Images/Backdrop" ?? "",
+                              Hash = Xbmc.Hash(genre.Id)
+
+                          };
+
+                          shows.Add(tvShow);*/
+                      }
+                      catch (Exception ex)
+                      {
+                          _parent.Log("TV Shows Exception Caught " + ex);
+                      }
+                  }
+
+              }
+          }
+      }
+      catch (Exception Ex)
+      {
+          _parent.Log("Another tV SHows exception" + Ex);
+      }
+
+
     /*
       var properties = new Jayrock.Json.JsonArray(new[] { "title" });
       var param = new JsonObject();
@@ -99,6 +194,87 @@ namespace Remote.Emby.Api
     public Collection<ApiTvEpisode> GetTvEpisodes()
     {
       var episodes = new Collection<ApiTvEpisode>();
+
+      try
+      {
+
+
+          _parent.Log("Getting TV Seasons" + _parent.IP);
+          string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?Recursive=true&IncludeItemTypes=Episode";
+
+          var request = WebRequest.CreateHttp(NPurl);
+
+          request.Method = "get";
+          request.Timeout = 15000;
+          _parent.Log("Single TV Season Selection: " + _parent.IP + ":" + _parent.Port);
+
+          var authString = _parent.GetAuthString();
+
+          request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+          request.Headers.Add("X-Emby-Authorization", authString);
+          request.ContentType = "application/json; charset=utf-8";
+          request.Accept = "application/json; charset=utf-8";
+
+          var response = request.GetResponse();
+
+          if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+          {
+
+              System.IO.Stream dataStream = response.GetResponseStream();
+              System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+
+              using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
+              {
+                  string json = sr.ReadToEnd();
+                  _parent.Log("--------------GETTING Single TV Season Selection Result ------" + json);
+
+                  var deserializer = new JavaScriptSerializer();
+
+                  var ItemData = deserializer.Deserialize<TVEpisodes.Rootobject>(json);
+                  _parent.Log("---------------Get Single TV Season Selection:  Issue: Results.Taglines: " + ItemData.TotalRecordCount);
+
+                  foreach (var genre in ItemData.Items)
+                  {
+                      try
+                      {
+
+                          //var SingleTVData = GetSingleTVFromSeries(genre.Id);
+                          var tvShow = new ApiTvEpisode
+                          {
+                              Title = genre.Name ?? "",
+                              Plot = "",
+                              Rating = genre.OfficialRating ?? "",
+                              Mpaa = "",
+                              Date = genre.PremiereDate.ToString(),
+                              Director = "",
+                              PlayCount = genre.UserData.PlayCount,
+                              Studio = "",
+                              IdEpisode = Xbmc.IDtoNumber(genre.Id),
+                              IdShow = Xbmc.IDtoNumber(genre.SeriesId),
+                              Season = Xbmc.IDtoNumber(genre.SeasonId),
+                              Episode = Xbmc.IDtoNumber(genre.Id),
+                              Path = "",
+                              ShowTitle = genre.SeriesName ?? "",
+                              Thumb = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + genre.SeriesPrimaryImageTag + "/Images/Primary" ?? "",
+                              Fanart = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + genre.SeriesPrimaryImageTag + "/Images/Backdrop" ?? "",
+                              Hash = Xbmc.Hash(genre.Id)
+                          };
+                          episodes.Add(tvShow);
+
+                      }
+                      catch (Exception ex)
+                      {
+                          _parent.Log("TV Shows Exception Caught " + ex);
+                      }
+                  }
+
+              }
+          }
+      }
+      catch (Exception Ex)
+      {
+          _parent.Log("Another tV Episodes exception" + Ex);
+      }
       /*
       var properties = new JsonArray(new[] { "title", "plot", "season", "episode", "showtitle", "tvshowid", "fanart", "thumbnail", "rating", "playcount", "firstaired" });
       var param = new JsonObject();
