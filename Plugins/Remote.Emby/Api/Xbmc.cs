@@ -210,6 +210,26 @@ namespace Remote.Emby.Api
             return res;
         }
 
+
+        public static long IDtoNumber(string input)
+        {
+            int res;
+
+            try
+            {
+                res = String.IsNullOrEmpty(input) ? 0 : Convert.ToInt32(input.Substring(0,15), CultureInfo.InvariantCulture);
+            }
+            catch (Exception)
+            {
+                Logger.Instance().Trace("ERROR : ", "IDtoNumber Error" + input);
+                return 0;
+            }
+
+            return res;
+        }
+
+
+
         public static string Hash(string input)
         {
             if (input == null)

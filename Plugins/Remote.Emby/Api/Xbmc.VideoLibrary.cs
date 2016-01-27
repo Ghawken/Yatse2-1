@@ -17,6 +17,7 @@
 // ------------------------------------------------------------------------
 
 using System;
+using System.Text;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Net;
@@ -142,52 +143,98 @@ namespace Remote.Emby.Api
         */
       return episodes;
     }
-
     public Collection<ApiTvShow> GetTvShows()
     {
-     
+        //var MovieId = GetMainSelection("TV");
         var shows = new Collection<ApiTvShow>();
-     /*
-      var properties = new JsonArray(new[] { "title", "plot", "genre", "fanart", "thumbnail", "rating", "mpaa", "studio", "playcount", "premiered", "episode" });
-      var param = new JsonObject();
-      param["properties"] = properties;
-      var result = (JsonObject)_parent.JsonCommand("VideoLibrary.GetTVShows", param);
-      if (result != null)
-      {
-        if (result.Contains("tvshows"))
+
+        try
         {
-          foreach (JsonObject genre in (JsonArray)result["tvshows"])
-          {
-            try
+
+
+            _parent.Log("Getting TV Shows" + _parent.IP);
+            string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?Recursive=true&IncludeItemTypes=Series";
+
+            var request = WebRequest.CreateHttp(NPurl);
+
+            request.Method = "get";
+            request.Timeout = 5000;
+            _parent.Log("Single TV Show Selection: " + _parent.IP + ":" + _parent.Port);
+
+            var authString = _parent.GetAuthString();
+
+            request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+            request.Headers.Add("X-Emby-Authorization", authString);
+            request.ContentType = "application/json; charset=utf-8";
+            request.Accept = "application/json; charset=utf-8";
+
+            var response = request.GetResponse();
+
+            if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
             {
-              var tvShow = new ApiTvShow
+
+                System.IO.Stream dataStream = response.GetResponseStream();
+                System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+
+                using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                 {
-                  Title = genre["title"].ToString(),
-                  Plot = genre["plot"].ToString(),
-                  Rating = genre["rating"].ToString(),
-                  IdScraper = "",
-                  Mpaa = genre["mpaa"].ToString(),
-                  Genre = _parent.JsonArrayToString((JsonArray)genre["genre"]),
-                  Studio = _parent.JsonArrayToString((JsonArray)genre["studio"]),
-                  IdShow = (long)(JsonNumber)genre["tvshowid"],
-                  TotalCount = (long)(JsonNumber)genre["episode"],
-                  Path = "",
-                  Premiered = genre["premiered"].ToString(),
-                  Thumb = genre["thumbnail"].ToString(),
-                  Fanart = genre["fanart"].ToString(),
-                  Hash = Xbmc.Hash(genre["thumbnail"].ToString())
-                };
-              shows.Add(tvShow);
+                    string json = sr.ReadToEnd();
+                    _parent.Log("--------------GETTING Single TV Show Selection Result ------" + json);
+
+                    var deserializer = new JavaScriptSerializer();
+
+                    var ItemData = deserializer.Deserialize<TVShows.Rootobject>(json);
+                    _parent.Log("---------------Get Single TV Show Selection:  Issue: Results.Taglines: " + ItemData.TotalRecordCount);
+
+                    foreach (var genre in ItemData.Items)
+                    {
+                        try
+                        {
+
+                            var SingleTVData = GetSingleTVFromSeries(genre.Id);
+
+                            var tvShow = new ApiTvShow
+                            {
+                                
+                                Title = genre.Name ?? "Unknown",
+                                Plot = SingleTVData.Overview ?? "",
+                                Rating = genre.CommunityRating.ToString() ?? "" ,
+                                IdScraper = "",
+                                Mpaa = SingleTVData.OfficialRating ?? "Unknown",
+                                Genre = SingleTVData.Genres.FirstOrDefault().ToString() ?? "",
+                                Studio = SingleTVData.Studios.FirstOrDefault().Name.ToString() ?? "",
+                                IdShow = Xbmc.IDtoNumber(genre.Id),
+                                TotalCount = genre.RecursiveItemCount,
+                                Path = SingleTVData.Path ?? "",
+                                Premiered = genre.PremiereDate.ToString() ?? "",
+                                Thumb = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + genre.Id + "/Images/Primary" ?? "",
+                                Fanart = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + genre.Id + "/Images/Backdrop" ?? "",
+                                Hash = Xbmc.Hash(genre.Id)
+                                
+                            };
+
+                            shows.Add(tvShow);
+                        }
+                        catch (Exception ex)
+                        {
+                            _parent.Log("TV Shows Exception Caught " + ex);
+                        }
+                    }
+
+                }
             }
-            catch (Exception)
-            {
-            }
-          }
         }
+        catch (Exception Ex)
+        {
+            _parent.Log("Another tV SHows exception" + Ex);
+        }
+            
+            return shows;
       }
-      */
-      return shows;
-    }
+    
+    
+
+
 
     public string GetMainSelection(string param)
     {
@@ -252,6 +299,63 @@ namespace Remote.Emby.Api
 
         }
     }
+    public TVSingleItemSeries.Rootobject GetSingleTVFromSeries(string itemId)
+    {
+        try
+        {
+
+            _parent.Log("Getting Single TV From Series Data" + _parent.IP);
+            string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items/" + itemId;
+
+            var request = WebRequest.CreateHttp(NPurl);
+
+            request.Method = "get";
+            request.Timeout = 5000;
+            _parent.Log("Single Movie Selection: " + _parent.IP + ":" + _parent.Port);
+
+            var authString = _parent.GetAuthString();
+
+            request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+            request.Headers.Add("X-Emby-Authorization", authString);
+            request.ContentType = "application/json; charset=utf-8";
+            request.Accept = "application/json; charset=utf-8";
+
+            var response = request.GetResponse();
+
+            if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+            {
+
+                System.IO.Stream dataStream = response.GetResponseStream();
+                System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+
+                using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
+                {
+                    string json = sr.ReadToEnd();
+                    _parent.Log("--------------GETTING Single TV From Series Selection Result ------" + json);
+
+                    var deserializer = new JavaScriptSerializer();
+
+                    var ItemData = deserializer.Deserialize<TVSingleItemSeries.Rootobject>(json);
+                    _parent.Log("---------------Get Single TV From Series Selection:  Issue: Results.Taglines: " + ItemData.Taglines);
+
+                    return ItemData;
+
+                }
+            }
+
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            _parent.Log("ERROR in Single TV From Series Selection obtaining: " + ex);
+            return null;
+
+        }
+    }
+
+
+
     public SingleMovieItem.Rootobject GetSingleMovieItem(string itemId)
     {
         try
@@ -383,7 +487,7 @@ namespace Remote.Emby.Api
                               OriginalTitle = id.Name ?? "",
                               Studio = Movieitem.Studios.FirstOrDefault().Name ?? "Unknown",
                               IdFile = 0,
-                              IdMovie = 123,
+                              IdMovie = Xbmc.IDtoNumber(Movieitem.Id),
                               FileName = Movieitem.Path ?? "",
                               Path = Movieitem.Path ?? "",
                               PlayCount = Movieitem.UserData.PlayCount,

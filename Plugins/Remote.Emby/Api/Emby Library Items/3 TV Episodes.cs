@@ -9,24 +9,40 @@ namespace Remote.Emby.Api.TVEpisodes
 
     public class Rootobject
     {
-        public Item[] Items { get; set; }
-        public int TotalRecordCount { get; set; }
-    }
-
-    public class Item
-    {
         public string Name { get; set; }
         public string ServerId { get; set; }
         public string Id { get; set; }
+        public string Etag { get; set; }
+        public DateTime DateCreated { get; set; }
+        public bool CanDelete { get; set; }
+        public bool CanDownload { get; set; }
+        public bool SupportsSync { get; set; }
+        public bool HasSyncJob { get; set; }
+        public bool IsSynced { get; set; }
+        public string SortName { get; set; }
+        public DateTime PremiereDate { get; set; }
+        public object[] ExternalUrls { get; set; }
+        public Mediasource[] MediaSources { get; set; }
+        public string Path { get; set; }
+        public string Overview { get; set; }
+        public object[] Taglines { get; set; }
+        public object[] Genres { get; set; }
+        public string[] SeriesGenres { get; set; }
         public float CommunityRating { get; set; }
         public long RunTimeTicks { get; set; }
         public string PlayAccess { get; set; }
+        public int ProductionYear { get; set; }
         public bool IsPlaceHolder { get; set; }
         public int IndexNumber { get; set; }
         public int ParentIndexNumber { get; set; }
+        public object[] RemoteTrailers { get; set; }
+        public Providerids ProviderIds { get; set; }
         public bool IsHD { get; set; }
         public bool IsFolder { get; set; }
+        public string ParentId { get; set; }
         public string Type { get; set; }
+        public Person[] People { get; set; }
+        public object[] Studios { get; set; }
         public string ParentLogoItemId { get; set; }
         public string ParentBackdropItemId { get; set; }
         public string[] ParentBackdropImageTags { get; set; }
@@ -34,18 +50,32 @@ namespace Remote.Emby.Api.TVEpisodes
         public string SeriesName { get; set; }
         public string SeriesId { get; set; }
         public string SeasonId { get; set; }
+        public string DisplayPreferencesId { get; set; }
+        public object[] Tags { get; set; }
+        public object[] Keywords { get; set; }
+        public float PrimaryImageAspectRatio { get; set; }
         public string SeriesPrimaryImageTag { get; set; }
+        public string SeasonName { get; set; }
+        public Mediastream1[] MediaStreams { get; set; }
         public string VideoType { get; set; }
         public Imagetags ImageTags { get; set; }
         public object[] BackdropImageTags { get; set; }
+        public object[] ScreenshotImageTags { get; set; }
         public string ParentLogoImageTag { get; set; }
         public string SeriesThumbImageTag { get; set; }
+        public string SeriesStudio { get; set; }
         public string ParentThumbItemId { get; set; }
         public string ParentThumbImageTag { get; set; }
+        public Chapter[] Chapters { get; set; }
         public string LocationType { get; set; }
         public string MediaType { get; set; }
-        public DateTime PremiereDate { get; set; }
-        public int ProductionYear { get; set; }
+        public object[] ProductionLocations { get; set; }
+        public object[] LockedFields { get; set; }
+        public bool LockData { get; set; }
+    }
+
+    public class Providerids
+    {
     }
 
     public class Userdata
@@ -61,5 +91,102 @@ namespace Remote.Emby.Api.TVEpisodes
     {
         public string Primary { get; set; }
     }
+
+    public class Mediasource
+    {
+        public string Protocol { get; set; }
+        public string Id { get; set; }
+        public string Path { get; set; }
+        public string Type { get; set; }
+        public string Container { get; set; }
+        public string Name { get; set; }
+        public long RunTimeTicks { get; set; }
+        public bool ReadAtNativeFramerate { get; set; }
+        public bool SupportsTranscoding { get; set; }
+        public bool SupportsDirectStream { get; set; }
+        public bool SupportsDirectPlay { get; set; }
+        public bool RequiresOpening { get; set; }
+        public bool RequiresClosing { get; set; }
+        public string VideoType { get; set; }
+        public Mediastream[] MediaStreams { get; set; }
+        public object[] PlayableStreamFileNames { get; set; }
+        public object[] Formats { get; set; }
+        public int Bitrate { get; set; }
+        public Requiredhttpheaders RequiredHttpHeaders { get; set; }
+        public int DefaultAudioStreamIndex { get; set; }
+    }
+
+    public class Requiredhttpheaders
+    {
+    }
+
+    public class Mediastream
+    {
+        public string Codec { get; set; }
+        public bool IsInterlaced { get; set; }
+        public int BitRate { get; set; }
+        public int RefFrames { get; set; }
+        public bool IsDefault { get; set; }
+        public bool IsForced { get; set; }
+        public int Height { get; set; }
+        public int Width { get; set; }
+        public int AverageFrameRate { get; set; }
+        public int RealFrameRate { get; set; }
+        public string Profile { get; set; }
+        public string Type { get; set; }
+        public string AspectRatio { get; set; }
+        public int Index { get; set; }
+        public bool IsExternal { get; set; }
+        public bool IsTextSubtitleStream { get; set; }
+        public bool SupportsExternalStream { get; set; }
+        public string PixelFormat { get; set; }
+        public int Level { get; set; }
+        public bool IsAnamorphic { get; set; }
+        public string ChannelLayout { get; set; }
+        public int Channels { get; set; }
+        public int SampleRate { get; set; }
+    }
+
+    public class Person
+    {
+        public string Name { get; set; }
+        public string Id { get; set; }
+        public string Role { get; set; }
+        public string Type { get; set; }
+    }
+
+    public class Mediastream1
+    {
+        public string Codec { get; set; }
+        public bool IsInterlaced { get; set; }
+        public int BitRate { get; set; }
+        public int RefFrames { get; set; }
+        public bool IsDefault { get; set; }
+        public bool IsForced { get; set; }
+        public int Height { get; set; }
+        public int Width { get; set; }
+        public int AverageFrameRate { get; set; }
+        public int RealFrameRate { get; set; }
+        public string Profile { get; set; }
+        public string Type { get; set; }
+        public string AspectRatio { get; set; }
+        public int Index { get; set; }
+        public bool IsExternal { get; set; }
+        public bool IsTextSubtitleStream { get; set; }
+        public bool SupportsExternalStream { get; set; }
+        public string PixelFormat { get; set; }
+        public int Level { get; set; }
+        public bool IsAnamorphic { get; set; }
+        public string ChannelLayout { get; set; }
+        public int Channels { get; set; }
+        public int SampleRate { get; set; }
+    }
+
+    public class Chapter
+    {
+        public long StartPositionTicks { get; set; }
+        public string Name { get; set; }
+    }
+
 
 }
