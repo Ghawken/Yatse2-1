@@ -18,7 +18,13 @@
 
 using Jayrock.Json;
 using Plugin;
-
+using System;
+using System.Net;
+using System.Web.Script.Serialization;
+using System.Web;
+using System.Web.Script;
+using System.Text;
+using System.Collections.Generic;
 namespace Remote.Emby.Api
 {
     class XbmcVideoPlayer : IApiVideoPlayer
@@ -37,6 +43,10 @@ namespace Remote.Emby.Api
             if (!_parent.IsConnected())
                 return;
 
+            EmbyPlayPlayList(video.Path);
+            _parent.Trace("Attemping to Play IdEpsiode equals" + video.Path);
+
+            /*
             var args = new JsonObject();
             var items = new JsonObject();
             args["movieid"] = video.IdMovie;
@@ -49,6 +59,8 @@ namespace Remote.Emby.Api
             _parent.JsonCommand("Playlist.Clear", plId);
             _parent.JsonCommand("Playlist.Add", items);
             _parent.JsonCommand("Player.Open", item);
+            */
+
         }
 
         public void PlayTvEpisode(ApiTvEpisode tvepisode)
@@ -57,6 +69,11 @@ namespace Remote.Emby.Api
                 return;
             if (!_parent.IsConnected())
                 return;
+
+            EmbyPlayPlayList(tvepisode.Path);
+            _parent.Log("Attemping to Play IdEpsiode equals: " + tvepisode.Path);
+
+            /*
 
             var args = new JsonObject();
             var items = new JsonObject();
@@ -70,6 +87,76 @@ namespace Remote.Emby.Api
             _parent.JsonCommand("Playlist.Clear", plId);
             _parent.JsonCommand("Playlist.Add", items);
             _parent.JsonCommand("Player.Open", item);                        
+        
+             */
+       }
+
+        public string EmbyPlayPlayList(string param)
+        {
+            try
+            {
+
+                string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Sessions/" + Globals.SessionIDClient + "/Playing";
+
+                var request = WebRequest.CreateHttp(NPurl);
+
+                request.Method = "post";
+                //request.Timeout = 000;
+                _parent.Trace("Play Playlist Selection: URL:   " + NPurl);
+
+                ASCIIEncoding encoding = new ASCIIEncoding();
+
+
+                var postData = new Dictionary<string, string>();
+                postData["ItemIds"] = param.ToString();
+                postData["StartPositionTicks"] = "0";
+                postData["PlayCommand"] = "PlayNow";
+
+                var postArg = Jayrock.Json.Conversion.JsonConvert.ExportToString(postData);
+
+                byte[] data = encoding.GetBytes(postArg);
+
+
+                var authString = _parent.GetAuthString();
+
+                request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+                request.Headers.Add("X-Emby-Authorization", authString);
+                request.ContentType = "application/json; charset=utf-8";
+                request.ContentLength = postArg.Length;
+                request.Accept = "application/json; charset=utf-8";
+
+                var response3 = request.GetRequestStream();
+                response3.Write(data, 0, data.Length);
+
+                var response = request.GetResponse();
+                _parent.Trace("PlayList Play Response:");
+
+                
+                if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+                {
+
+                    System.IO.Stream dataStream = response.GetResponseStream();
+                    System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+
+                    using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
+                    {
+                        string json = sr.ReadToEnd();
+                        _parent.Trace("--------------GETTING PlayList Json Result ------" + json);
+
+                    }
+                }
+
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _parent.Trace("ERROR in PlayList Play Selection obtaining: " + ex);
+                return "";
+
+            }
         }
+
+
     }
 }
