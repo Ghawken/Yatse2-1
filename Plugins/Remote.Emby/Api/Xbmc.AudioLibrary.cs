@@ -233,8 +233,7 @@ namespace Remote.Emby.Api
 
                         foreach (var genre in ItemData.Items)
                         {
-                            _parent.Trace("-----------  Get ALbum ARtists : ID " + genre.Id);
-                            _parent.Trace("------------- Get ALbum ARtists :Name " + genre.Name);
+
 
                             try
                             {
@@ -308,8 +307,7 @@ namespace Remote.Emby.Api
 
                         foreach (var genre in ItemData.Items)
                         {
-                            _parent.Trace("-----------  Get ALbum  : ID " + genre.Id);
-                            _parent.Trace("------------- Get ALbum  :Name " + genre.Name);
+
                             try
                             {
                                 var album = new ApiAudioAlbum
@@ -357,7 +355,7 @@ namespace Remote.Emby.Api
                 string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?ParentId=" + AlbumID;
                 var request = WebRequest.CreateHttp(NPurl);
                 request.Method = "get";
-                request.Timeout = 5000;
+                request.Timeout = 155000;
                 _parent.Log("Songs Selection: " + NPurl);
                 var authString = _parent.GetAuthString();
                 request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
@@ -379,25 +377,22 @@ namespace Remote.Emby.Api
                         _parent.Log("--------------GETTING Songs Selection Result ------" + json);
 
                         var deserializer = new JavaScriptSerializer();
+                        deserializer.MaxJsonLength = Int32.MaxValue;
                         var ItemData = deserializer.Deserialize<MusicSongs.Rootobject>(json);
                         _parent.Log("---------------Get Songs  :  Issue: Results.Record Count: " + ItemData.TotalRecordCount);
 
                         foreach (var genre in ItemData.Items)
                         {
-                            _parent.Trace("-----------  Get Songs  : ID " + genre.Id);
-                            _parent.Trace("------------- Get Songs  :Name " + genre.Name);
+
                             try
                             {
-                                var Seconds = Convert.ToInt32(genre.RunTimeTicks);
-                               
-                                
-                                var song = new ApiAudioSong
+                                 var song = new ApiAudioSong
                                  {
                                      IdSong = Xbmc.IDtoNumber(genre.Id),
                                      Title = genre.Name ?? "",
-                                     Track = genre.IndexNumber,
-                                     Duration = Seconds,
-                                     Year = genre.ProductionYear,
+                                     Track = Convert.ToInt64(genre.IndexNumber),
+                                     Duration = genre.RunTimeTicks,
+                                     Year = Convert.ToInt64(genre.ProductionYear),
                                      FileName = "",
                                      IdAlbum = Xbmc.IDtoNumber(genre.AlbumId),
                                      Album = genre.Album ?? "",
