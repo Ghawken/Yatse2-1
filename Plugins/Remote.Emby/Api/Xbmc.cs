@@ -863,9 +863,8 @@ namespace Remote.Emby.Api
             
             catch (Exception ex)
             {
-                Log("ERROR in Client ID obtaining");
+                Log("ERROR in Client ID obtaining" + ex);
                 return "";
-
             }
         }
 
