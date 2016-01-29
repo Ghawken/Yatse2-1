@@ -51,14 +51,14 @@ namespace Remote.Emby.Api
       {
 
 
-          _parent.Log("Getting TV Seasons" + _parent.IP);
+          _parent.Trace("Getting TV Seasons" + _parent.IP);
           string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?Recursive=true&IncludeItemTypes=Season";
 
           var request = WebRequest.CreateHttp(NPurl);
 
           request.Method = "get";
           request.Timeout = 15000;
-          _parent.Log("Single TV Season Selection: " + _parent.IP + ":" + _parent.Port);
+          _parent.Trace("Single TV Season Selection: " + _parent.IP + ":" + _parent.Port);
 
           var authString = _parent.GetAuthString();
 
@@ -78,12 +78,12 @@ namespace Remote.Emby.Api
               using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
               {
                   string json = sr.ReadToEnd();
-                  _parent.Log("--------------GETTING Single TV Season Selection Result ------" + json);
+                  _parent.Trace("--------------GETTING Single TV Season Selection Result ------" + json);
 
                   var deserializer = new JavaScriptSerializer();
 
                   var ItemData = deserializer.Deserialize<TVSeasons.Rootobject>(json);
-                  _parent.Log("---------------Get Single TV Season Selection:  Issue: Results.Taglines: " + ItemData.TotalRecordCount);
+                  _parent.Trace("---------------Get Single TV Season Selection:  Issue: Results.Taglines: " + ItemData.TotalRecordCount);
 
                   foreach (var genre in ItemData.Items)
                   {
@@ -128,7 +128,7 @@ namespace Remote.Emby.Api
                       }
                       catch (Exception ex)
                       {
-                          _parent.Log("TV Shows Exception Caught " + ex);
+                          _parent.Trace("TV Shows Exception Caught " + ex);
                       }
                   }
 
@@ -137,7 +137,7 @@ namespace Remote.Emby.Api
       }
       catch (Exception Ex)
       {
-          _parent.Log("Another tV SHows exception" + Ex);
+          _parent.Trace("Another tV SHows exception" + Ex);
       }
 
 
@@ -199,14 +199,14 @@ namespace Remote.Emby.Api
       {
 
 
-          _parent.Log("Getting TV Episodes: Parent IP: " + _parent.IP);
+          _parent.Trace("Getting TV Episodes: Parent IP: " + _parent.IP);
           string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?Recursive=true&IncludeItemTypes=Episode";
 
           var request = WebRequest.CreateHttp(NPurl);
 
           request.Method = "get";
           request.Timeout = 150000;
-          _parent.Log("Single TV Episode Selection: " + _parent.IP + ":" + _parent.Port);
+          _parent.Trace("Single TV Episode Selection: " + _parent.IP + ":" + _parent.Port);
 
           var authString = _parent.GetAuthString();
 
@@ -226,12 +226,12 @@ namespace Remote.Emby.Api
               using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
               {
                   string json = sr.ReadToEnd();
-                  _parent.Log("--------------GETTING TV Episodes Selection Result ------" + json);
+                  _parent.Trace("--------------GETTING TV Episodes Selection Result ------" + json);
 
                   var deserializer = new JavaScriptSerializer();
                   deserializer.MaxJsonLength = Int32.MaxValue;
                   var ItemData = deserializer.Deserialize<TVEpisodes.Rootobject>(json);
-                  _parent.Log("---------------Get Single TV Episode Selection:  Issue: Results.Taglines: " + ItemData.TotalRecordCount);
+                  _parent.Trace("---------------Get Single TV Episode Selection:  Issue: Results.Taglines: " + ItemData.TotalRecordCount);
 
                   foreach (var genre in ItemData.Items)
                   {
@@ -264,7 +264,7 @@ namespace Remote.Emby.Api
                       }
                       catch (Exception ex)
                       {
-                          _parent.Log("TV Shows Exception Caught " + ex);
+                          _parent.Trace("TV Shows Exception Caught " + ex);
                       }
                   }
 
@@ -273,7 +273,7 @@ namespace Remote.Emby.Api
       }
       catch (Exception Ex)
       {
-          _parent.Log("Another tV Episodes exception" + Ex);
+          _parent.Trace("Another tV Episodes exception" + Ex);
       }
       /*
       var properties = new JsonArray(new[] { "title", "plot", "season", "episode", "showtitle", "tvshowid", "fanart", "thumbnail", "rating", "playcount", "firstaired" });
@@ -328,14 +328,14 @@ namespace Remote.Emby.Api
         {
 
 
-            _parent.Log("Getting TV Shows" + _parent.IP);
+            _parent.Trace("Getting TV Shows" + _parent.IP);
             string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?Recursive=true&IncludeItemTypes=Series";
 
             var request = WebRequest.CreateHttp(NPurl);
 
             request.Method = "get";
             request.Timeout = 5000;
-            _parent.Log("Single TV Show Selection: " + _parent.IP + ":" + _parent.Port);
+            _parent.Trace("Single TV Show Selection: " + _parent.IP + ":" + _parent.Port);
 
             var authString = _parent.GetAuthString();
 
@@ -355,12 +355,12 @@ namespace Remote.Emby.Api
                 using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                 {
                     string json = sr.ReadToEnd();
-                    _parent.Log("--------------GETTING Single TV Show Selection Result ------" + json);
+                    _parent.Trace("--------------GETTING Single TV Show Selection Result ------" + json);
 
                     var deserializer = new JavaScriptSerializer();
 
                     var ItemData = deserializer.Deserialize<TVShows.Rootobject>(json);
-                    _parent.Log("---------------Get Single TV Show Selection:  Issue: Results.Taglines: " + ItemData.TotalRecordCount);
+                    _parent.Trace("---------------Get Single TV Show Selection:  Issue: Results.Taglines: " + ItemData.TotalRecordCount);
 
                     foreach (var genre in ItemData.Items)
                     {
@@ -393,7 +393,7 @@ namespace Remote.Emby.Api
                         }
                         catch (Exception ex)
                         {
-                            _parent.Log("TV Shows Exception Caught " + ex);
+                            _parent.Trace("TV Shows Exception Caught " + ex);
                         }
                     }
 
@@ -402,7 +402,7 @@ namespace Remote.Emby.Api
         }
         catch (Exception Ex)
         {
-            _parent.Log("Another tV SHows exception" + Ex);
+            _parent.Trace("Another tV SHows exception" + Ex);
         }
             
             return shows;
@@ -417,14 +417,14 @@ namespace Remote.Emby.Api
         try
         {
 
-            _parent.Log("Getting Main Selection Result" + _parent.IP);
+            _parent.Trace("Getting Main Selection Result" + _parent.IP);
             string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items";
 
             var request = WebRequest.CreateHttp(NPurl);
 
             request.Method = "get";
             request.Timeout = 10000;
-            _parent.Log("Main Selection: " + _parent.IP + ":" + _parent.Port);
+            _parent.Trace("Main Selection: " + _parent.IP + ":" + _parent.Port);
 
             var authString = _parent.GetAuthString();
 
@@ -444,12 +444,12 @@ namespace Remote.Emby.Api
                 using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                 {
                     string json = sr.ReadToEnd();
-                    _parent.Log("--------------GETTING Main Selection Result ------" + json);
+                    _parent.Trace("--------------GETTING Main Selection Result ------" + json);
                     
                     var deserializer = new JavaScriptSerializer();
                    
                     var ItemData = deserializer.Deserialize<MainSelectionItems.Rootobject>(json);
-                    _parent.Log("---------------Get Main Selection:  Issue: Results.Count: " + ItemData.TotalRecordCount);
+                    _parent.Trace("---------------Get Main Selection:  Issue: Results.Count: " + ItemData.TotalRecordCount);
 
                     foreach (var id in ItemData.Items)
                     {
@@ -457,7 +457,7 @@ namespace Remote.Emby.Api
                         
                         if (id.Name == param)
                         {
-                            _parent.Log("----------- Get Main Selection Run ---" + param + " ID Result equals:  " + id.Id);
+                            _parent.Trace("----------- Get Main Selection Run ---" + param + " ID Result equals:  " + id.Id);
                             return id.Id;
                         }
                     }
@@ -470,7 +470,7 @@ namespace Remote.Emby.Api
         }
         catch (Exception ex)
         {
-            _parent.Log("ERROR in Main Selection obtaining: "+ex);
+            _parent.Trace("ERROR in Main Selection obtaining: "+ex);
             return "";
 
         }
@@ -480,14 +480,14 @@ namespace Remote.Emby.Api
         try
         {
 
-            _parent.Log("Getting Single TV From Series Data" + _parent.IP);
+            _parent.Trace("Getting Single TV From Series Data" + _parent.IP);
             string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items/" + itemId;
 
             var request = WebRequest.CreateHttp(NPurl);
 
             request.Method = "get";
             request.Timeout = 5000;
-            _parent.Log("Single Movie Selection: " + _parent.IP + ":" + _parent.Port);
+            _parent.Trace("Single Movie Selection: " + _parent.IP + ":" + _parent.Port);
 
             var authString = _parent.GetAuthString();
 
@@ -507,12 +507,12 @@ namespace Remote.Emby.Api
                 using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                 {
                     string json = sr.ReadToEnd();
-                    _parent.Log("--------------GETTING Single TV From Series Selection Result ------" + json);
+                    _parent.Trace("--------------GETTING Single TV From Series Selection Result ------" + json);
 
                     var deserializer = new JavaScriptSerializer();
 
                     var ItemData = deserializer.Deserialize<TVSingleItemSeries.Rootobject>(json);
-                    _parent.Log("---------------Get Single TV From Series Selection:  Issue: Results.Taglines: " + ItemData.Taglines);
+                    _parent.Trace("---------------Get Single TV From Series Selection:  Issue: Results.Taglines: " + ItemData.Taglines);
 
                     return ItemData;
 
@@ -524,7 +524,7 @@ namespace Remote.Emby.Api
         }
         catch (Exception ex)
         {
-            _parent.Log("ERROR in Single TV From Series Selection obtaining: " + ex);
+            _parent.Trace("ERROR in Single TV From Series Selection obtaining: " + ex);
             return null;
 
         }
@@ -537,14 +537,14 @@ namespace Remote.Emby.Api
         try
         {
 
-            _parent.Log("Getting Single Movie Data" + _parent.IP);
+            _parent.Trace("Getting Single Movie Data" + _parent.IP);
             string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items/"+itemId;
 
             var request = WebRequest.CreateHttp(NPurl);
 
             request.Method = "get";
             request.Timeout = 5000;
-            _parent.Log("Single Movie Selection: " + _parent.IP + ":" + _parent.Port);
+            _parent.Trace("Single Movie Selection: " + _parent.IP + ":" + _parent.Port);
 
             var authString = _parent.GetAuthString();
 
@@ -564,12 +564,12 @@ namespace Remote.Emby.Api
                 using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                 {
                     string json = sr.ReadToEnd();
-                    _parent.Log("--------------GETTING Single Movie Selection Result ------" + json);
+                    _parent.Trace("--------------GETTING Single Movie Selection Result ------" + json);
 
                     var deserializer = new JavaScriptSerializer();
 
                     var ItemData = deserializer.Deserialize<SingleMovieItem.Rootobject>(json);
-                    _parent.Log("---------------Get Single Movie Selection:  Issue: Results.Taglines: " + ItemData.Taglines);
+                    _parent.Trace("---------------Get Single Movie Selection:  Issue: Results.Taglines: " + ItemData.Taglines);
 
                     return ItemData;
 
@@ -581,7 +581,7 @@ namespace Remote.Emby.Api
         }
         catch (Exception ex)
         {
-            _parent.Log("ERROR in Single Movie Selection obtaining: " + ex);
+            _parent.Trace("ERROR in Single Movie Selection obtaining: " + ex);
             return null;
 
         }
@@ -595,14 +595,14 @@ namespace Remote.Emby.Api
       try
       {
 
-          _parent.Log("Getting Main Movie Database Result" + _parent.IP);
+          _parent.Trace("Getting Main Movie Database Result" + _parent.IP);
           string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?ParentId=" + MovieId;
 
           var request = WebRequest.CreateHttp(NPurl);
 
           request.Method = "get";
           request.Timeout = 20000;
-          _parent.Log("Main Selection: " + _parent.IP + ":" + _parent.Port);
+          _parent.Trace("Main Selection: " + _parent.IP + ":" + _parent.Port);
 
           var authString = _parent.GetAuthString();
 
@@ -622,13 +622,13 @@ namespace Remote.Emby.Api
               using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
               {
                   string json = sr.ReadToEnd();
-                  _parent.Log("--------------GETTING All Movies Results ------" + json);
+                  _parent.Trace("--------------GETTING All Movies Results ------" + json);
 
                   var deserializer = new JavaScriptSerializer();
 
                   var ItemData = deserializer.Deserialize<Movies.Rootobject>(json);
 
-                  _parent.Log("---------------Get Worlds Result:  Issue: Results.Count: " + ItemData.Items.Count);
+                  _parent.Trace("---------------Get Worlds Result:  Issue: Results.Count: " + ItemData.Items.Count);
 
                   foreach (var id in ItemData.Items)
                   {
@@ -676,7 +676,7 @@ namespace Remote.Emby.Api
 
                       catch (Exception ex)
                       {
-                          _parent.Log("Exception with Movie Name :" + ex);
+                          _parent.Trace("Exception with Movie Name :" + ex);
                       }
                   }
 
@@ -694,7 +694,7 @@ namespace Remote.Emby.Api
       }
       catch (Exception ex)
       {
-          _parent.Log("ERROR in Main Movies obtaining: " + ex);
+          _parent.Trace("ERROR in Main Movies obtaining: " + ex);
 
 
       }

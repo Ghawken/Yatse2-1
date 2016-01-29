@@ -40,13 +40,13 @@ namespace Remote.Emby.Api
         {
             try
             {
-                _parent.Log("Getting Music Selection Result" + _parent.IP);
+                _parent.Trace("Getting Music Selection Result" + _parent.IP);
                 string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Views";
                 var request = WebRequest.CreateHttp(NPurl);
                 var MusicID = "";
                 request.Method = "get";
                 request.Timeout = 10000;
-                _parent.Log("Main Selection: " + _parent.IP + ":" + _parent.Port);
+                _parent.Trace("Main Selection: " + _parent.IP + ":" + _parent.Port);
                 var authString = _parent.GetAuthString();
                 request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
                 request.Headers.Add("X-Emby-Authorization", authString);
@@ -60,15 +60,15 @@ namespace Remote.Emby.Api
                     using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                     {
                         string json = sr.ReadToEnd();
-                        _parent.Log("--------------GETTING Main Selection Result ------" + json);
+                        _parent.Trace("--------------GETTING Main Selection Result ------" + json);
                         var deserializer = new JavaScriptSerializer();
                         var ItemData = deserializer.Deserialize<MainSelectionforMusic.Rootobject>(json);
-                        _parent.Log("---------------Get Main Selection:  Issue: Results.Count: " + ItemData.Items.Length);
+                        _parent.Trace("---------------Get Main Selection:  Issue: Results.Count: " + ItemData.Items.Length);
                         foreach (var id in ItemData.Items)
                         {
                             if (id.Name == "Music")
                             {
-                                _parent.Log("----------- Get Main Selection Run ---" + param + " ID Result equals:  " + id.Id);
+                                _parent.Trace("----------- Get Main Selection Run ---" + param + " ID Result equals:  " + id.Id);
                                 MusicID = id.Id;
                             }
                         }
@@ -79,12 +79,12 @@ namespace Remote.Emby.Api
                 // Do again to get Album, Genre etc results
                 // these come from param - above is fixed to Music
                 // Options to pass are Latest, Playlists, Albums, Album Artists, Songs, Genres
-                _parent.Log("Getting Music Next Selection  Result" + _parent.IP);
+                _parent.Trace("Getting Music Next Selection  Result" + _parent.IP);
                 NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?parentId=" + MusicID;
                 var request2 = WebRequest.CreateHttp(NPurl);
                 request2.Method = "get";
                 request2.Timeout = 10000;
-                _parent.Log("Main Selection: " + _parent.IP + ":" + _parent.Port);
+                _parent.Trace("Main Selection: " + _parent.IP + ":" + _parent.Port);
                 //var authString = _parent.GetAuthString();
                 request2.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
                 request2.Headers.Add("X-Emby-Authorization", authString);
@@ -98,15 +98,15 @@ namespace Remote.Emby.Api
                     using (var sr = new System.IO.StreamReader(response2.GetResponseStream()))
                     {
                         string json = sr.ReadToEnd();
-                        _parent.Log("--------------GETTING Music Next Selection Result ------" + json);
+                        _parent.Trace("--------------GETTING Music Next Selection Result ------" + json);
                         var deserializer = new JavaScriptSerializer();
                         var ItemData = deserializer.Deserialize<MusicSelection.Rootobject>(json);
-                        _parent.Log("---------------Get Next  Selection:  Issue: Results.Count: " + ItemData.TotalRecordCount);
+                        _parent.Trace("---------------Get Next  Selection:  Issue: Results.Count: " + ItemData.TotalRecordCount);
                         foreach (var id in ItemData.Items)
                         {
                             if (id.Name == param)
                             {
-                                _parent.Log("----------- Next Music Next Selection Run ---" + param + " ID Result equals:  " + id.Id);
+                                _parent.Trace("----------- Next Music Next Selection Run ---" + param + " ID Result equals:  " + id.Id);
                                 return id.Id;
                             }
                         }
@@ -121,7 +121,7 @@ namespace Remote.Emby.Api
             }
             catch (Exception ex)
             {
-                _parent.Log("ERROR in Main Music Selection obtaining: " + ex);
+                _parent.Trace("ERROR in Main Music Selection obtaining: " + ex);
                 return "";
 
             }
@@ -134,12 +134,12 @@ namespace Remote.Emby.Api
 
             try
             {
-                _parent.Log("Getting Music Genres: Parent IP: " + _parent.IP);
+                _parent.Trace("Getting Music Genres: Parent IP: " + _parent.IP);
                 string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?ParentId=" + genreID;
                 var request = WebRequest.CreateHttp(NPurl);
                 request.Method = "get";
                 request.Timeout = 5000;
-                _parent.Log("Genre Music Selection: " + NPurl);
+                _parent.Trace("Genre Music Selection: " + NPurl);
                 var authString = _parent.GetAuthString();
                 request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
                 request.Headers.Add("X-Emby-Authorization", authString);
@@ -157,11 +157,11 @@ namespace Remote.Emby.Api
                     using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                     {
                         string json = sr.ReadToEnd();
-                        _parent.Log("--------------GETTING Music Genres Selection Result ------" + json);
+                        _parent.Trace("--------------GETTING Music Genres Selection Result ------" + json);
 
                         var deserializer = new JavaScriptSerializer();
                         var ItemData = deserializer.Deserialize<MusicGenres.Rootobject>(json);
-                        _parent.Log("---------------Get Music Genres:  Issue: Results.Record Count: " + ItemData.TotalRecordCount);
+                        _parent.Trace("---------------Get Music Genres:  Issue: Results.Record Count: " + ItemData.TotalRecordCount);
 
                         foreach (var genre in ItemData.Items)
                         {
@@ -178,7 +178,7 @@ namespace Remote.Emby.Api
                             }
                             catch (Exception ex)
                             {
-                                _parent.Log("Music Genres Exception Caught " + ex);
+                                _parent.Trace("Music Genres Exception Caught " + ex);
                             }
                         }
 
@@ -187,7 +187,7 @@ namespace Remote.Emby.Api
             }
             catch (Exception Ex)
             {
-                _parent.Log("Another Music Genres exception" + Ex);
+                _parent.Trace("Another Music Genres exception" + Ex);
             }
             
             
@@ -204,12 +204,12 @@ namespace Remote.Emby.Api
 
             try
             {
-                _parent.Log("Getting Album ARtists: Parent IP: " + _parent.IP);
+                _parent.Trace("Getting Album ARtists: Parent IP: " + _parent.IP);
                 string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?ParentId=" + AlbumArtistsID;
                 var request = WebRequest.CreateHttp(NPurl);
                 request.Method = "get";
                 request.Timeout = 5000;
-                _parent.Log("Album Artists Music Selection: " + NPurl);
+                _parent.Trace("Album Artists Music Selection: " + NPurl);
                 var authString = _parent.GetAuthString();
                 request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
                 request.Headers.Add("X-Emby-Authorization", authString);
@@ -227,11 +227,11 @@ namespace Remote.Emby.Api
                     using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                     {
                         string json = sr.ReadToEnd();
-                        _parent.Log("--------------GETTING Album Artists Genres Selection Result ------" + json);
+                        _parent.Trace("--------------GETTING Album Artists Genres Selection Result ------" + json);
 
                         var deserializer = new JavaScriptSerializer();
                         var ItemData = deserializer.Deserialize<AlbumArtists.Rootobject>(json);
-                        _parent.Log("---------------Get Album Artists :  Issue: Results.Record Count: " + ItemData.TotalRecordCount);
+                        _parent.Trace("---------------Get Album Artists :  Issue: Results.Record Count: " + ItemData.TotalRecordCount);
 
                         foreach (var genre in ItemData.Items)
                         {
@@ -252,7 +252,7 @@ namespace Remote.Emby.Api
 
                             catch (Exception ex)
                             {
-                                _parent.Log("Music Genres Exception Caught " + ex);
+                                _parent.Trace("Music Genres Exception Caught " + ex);
                             }
                         }
 
@@ -261,7 +261,7 @@ namespace Remote.Emby.Api
             }
             catch (Exception Ex)
             {
-                _parent.Log("Another Album Artists  exception" + Ex);
+                _parent.Trace("Another Album Artists  exception" + Ex);
             }
             
             
@@ -280,12 +280,12 @@ namespace Remote.Emby.Api
 
             try
             {
-                _parent.Log("Getting Album ARtists: Parent IP: " + _parent.IP);
+                _parent.Trace("Getting Album ARtists: Parent IP: " + _parent.IP);
                 string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?ParentId=" + AlbumID;
                 var request = WebRequest.CreateHttp(NPurl);
                 request.Method = "get";
                 request.Timeout = 5000;
-                _parent.Log("Genre Music Selection: " + NPurl);
+                _parent.Trace("Genre Music Selection: " + NPurl);
                 var authString = _parent.GetAuthString();
                 request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
                 request.Headers.Add("X-Emby-Authorization", authString);
@@ -303,11 +303,11 @@ namespace Remote.Emby.Api
                     using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                     {
                         string json = sr.ReadToEnd();
-                        _parent.Log("--------------GETTING Albums Selection Result ------" + json);
+                        _parent.Trace("--------------GETTING Albums Selection Result ------" + json);
 
                         var deserializer = new JavaScriptSerializer();
                         var ItemData = deserializer.Deserialize<MusicAlbums.Rootobject>(json);
-                        _parent.Log("---------------Get Album  :  Issue: Results.Record Count: " + ItemData.TotalRecordCount);
+                        _parent.Trace("---------------Get Album  :  Issue: Results.Record Count: " + ItemData.TotalRecordCount);
 
                         foreach (var genre in ItemData.Items)
                         {
@@ -329,7 +329,7 @@ namespace Remote.Emby.Api
                             }
                             catch (Exception ex)
                             {
-                                _parent.Log("Music Album exception" + ex);
+                                _parent.Trace("Music Album exception" + ex);
                             }
                         }
 
@@ -338,7 +338,7 @@ namespace Remote.Emby.Api
             }
             catch (Exception Ex)
             {
-                _parent.Log("Music Album   exception" + Ex);
+                _parent.Trace("Music Album   exception" + Ex);
             }
             return albums;
         }
@@ -348,14 +348,14 @@ namespace Remote.Emby.Api
             try
             {
 
-                _parent.Log("Getting Single Song From ItemData" + _parent.IP);
+                _parent.Trace("Getting Single Song From ItemData" + _parent.IP);
                 string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items/" + itemId;
 
                 var request = WebRequest.CreateHttp(NPurl);
 
                 request.Method = "get";
                 request.Timeout = 5000;
-                _parent.Log("Single Song Selection: " + NPurl);
+                _parent.Trace("Single Song Selection: " + NPurl);
 
                 var authString = _parent.GetAuthString();
 
@@ -375,12 +375,12 @@ namespace Remote.Emby.Api
                     using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                     {
                         string json = sr.ReadToEnd();
-                        _parent.Log("--------------GETTING Single Song From Series Selection Result ------" + json);
+                        _parent.Trace("--------------GETTING Single Song From Series Selection Result ------" + json);
 
                         var deserializer = new JavaScriptSerializer();
 
                         var ItemData = deserializer.Deserialize<MusicSongSingleItem.Rootobject>(json);
-                        _parent.Log("---------------Get Single Song From ItemData Selection:  Issue: Results.Taglines: " + ItemData.Taglines);
+                        _parent.Trace("---------------Get Single Song From ItemData Selection:  Issue: Results.Taglines: " + ItemData.Taglines);
 
                         return ItemData;
 
@@ -392,7 +392,7 @@ namespace Remote.Emby.Api
             }
             catch (Exception ex)
             {
-                _parent.Log("ERROR in Single Song Selection obtaining: " + ex);
+                _parent.Trace("ERROR in Single Song Selection obtaining: " + ex);
                 return null;
 
             }
@@ -408,12 +408,12 @@ namespace Remote.Emby.Api
 
             try
             {
-                _parent.Log("Getting Songs: Parent IP: " + _parent.IP);
+                _parent.Trace("Getting Songs: Parent IP: " + _parent.IP);
                 string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?ParentId=" + AlbumID;
                 var request = WebRequest.CreateHttp(NPurl);
                 request.Method = "get";
                 request.Timeout = 155000;
-                _parent.Log("Songs Selection: " + NPurl);
+                _parent.Trace("Songs Selection: " + NPurl);
                 var authString = _parent.GetAuthString();
                 request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
                 request.Headers.Add("X-Emby-Authorization", authString);
@@ -431,13 +431,12 @@ namespace Remote.Emby.Api
                     using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                     {
                         string json = sr.ReadToEnd();
-                        _parent.Log("--------------GETTING Songs Selection Result ------" + json);
+                        _parent.Trace("--------------GETTING Songs Selection Result ------" + json);
 
                         var deserializer = new JavaScriptSerializer();
                         deserializer.MaxJsonLength = Int32.MaxValue;
                         var ItemData = deserializer.Deserialize<MusicSongs.Rootobject>(json);
-                        _parent.Log("---------------Get Songs  :  Issue: Results.Record Count: " + ItemData.TotalRecordCount);
-
+                        
                         foreach (var genre in ItemData.Items)
                         {
                             MusicSongSingleItem.Rootobject Songitem = GetSingleSong(genre.Id);
