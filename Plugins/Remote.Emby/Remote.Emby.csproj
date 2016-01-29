@@ -81,6 +81,7 @@
     <Compile Include="Api\Emby Library Items\Main Selection Views.cs" />
     <Compile Include="Api\Emby Library Items\Music Genres.cs" />
     <Compile Include="Api\Emby Library Items\2 Single Movie Item Data.cs" />
+    <Compile Include="Api\Emby Library Items\Single Item Song.cs" />
     <Compile Include="Api\Emby Library Items\Single Item from TV Series.cs" />
     <Compile Include="Api\Emby Library Items\3 TV Episodes.cs" />
     <Compile Include="Api\Emby Library Items\2 TV Seasons.cs" />
