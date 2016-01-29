@@ -20,6 +20,10 @@ using System.Collections.ObjectModel;
 using Plugin;
 using Jayrock.Json;
 using System;
+using System.Net;
+using System.Web.Script.Serialization;
+using System.Web;
+using System.Web.Script;
 
 namespace Remote.Emby.Api
 {
@@ -31,37 +35,158 @@ namespace Remote.Emby.Api
     {
       _parent = parent;
     }
+    public string GetMainSelection(string param)
+    {
+        try
+        {
+            _parent.Log("Getting Music Selection Result" + _parent.IP);
+            string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Views";
+            var request = WebRequest.CreateHttp(NPurl);
+            var MusicID = "";
+            request.Method = "get";
+            request.Timeout = 10000;
+            _parent.Log("Main Selection: " + _parent.IP + ":" + _parent.Port);
+            var authString = _parent.GetAuthString();
+            request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+            request.Headers.Add("X-Emby-Authorization", authString);
+            request.ContentType = "application/json; charset=utf-8";
+            request.Accept = "application/json; charset=utf-8";
+            var response = request.GetResponse();
+            if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+            {
+                System.IO.Stream dataStream = response.GetResponseStream();
+                System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+                using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
+                {
+                    string json = sr.ReadToEnd();
+                    _parent.Log("--------------GETTING Main Selection Result ------" + json);
+                    var deserializer = new JavaScriptSerializer();
+                    var ItemData = deserializer.Deserialize<MainSelectionforMusic.Rootobject>(json);
+                    _parent.Log("---------------Get Main Selection:  Issue: Results.Count: " + ItemData.Items.Length);
+                    foreach (var id in ItemData.Items)
+                    {
+                        if (id.Name == "Music")
+                        {
+                            _parent.Log("----------- Get Main Selection Run ---" + param + " ID Result equals:  " + id.Id);
+                            MusicID = id.Id;
+                        }
+                    }
 
+                }
+            }
+
+            // Do again to get Album, Genre etc results
+            // these come from param - above is fixed to Music
+            // Options to pass are Latest, Playlists, Albums, Album Artists, Songs, Genres
+            _parent.Log("Getting Music Next Selection  Result" + _parent.IP);
+            NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?parentId="+ MusicID;
+            var request2 = WebRequest.CreateHttp(NPurl);
+            request2.Method = "get";
+            request2.Timeout = 10000;
+            _parent.Log("Main Selection: " + _parent.IP + ":" + _parent.Port);
+            //var authString = _parent.GetAuthString();
+            request2.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+            request2.Headers.Add("X-Emby-Authorization", authString);
+            request2.ContentType = "application/json; charset=utf-8";
+            request2.Accept = "application/json; charset=utf-8";
+            var response2 = request2.GetResponse();
+            if (((HttpWebResponse)response2).StatusCode == HttpStatusCode.OK)
+            {
+                System.IO.Stream dataStream = response2.GetResponseStream();
+                System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+                using (var sr = new System.IO.StreamReader(response2.GetResponseStream()))
+                {
+                    string json = sr.ReadToEnd();
+                    _parent.Log("--------------GETTING Music Next Selection Result ------" + json);
+                    var deserializer = new JavaScriptSerializer();
+                    var ItemData = deserializer.Deserialize<MusicSelection.Rootobject>(json);
+                    _parent.Log("---------------Get Next  Selection:  Issue: Results.Count: " + ItemData.TotalRecordCount);
+                    foreach (var id in ItemData.Items)
+                    {
+                        if (id.Name == param)
+                        {
+                            _parent.Log("----------- Next Music Next Selection Run ---" + param + " ID Result equals:  " + id.Id);
+                            return id.Id; 
+                        }
+                    }
+
+                }
+            }
+
+
+
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            _parent.Log("ERROR in Main Music Selection obtaining: " + ex);
+            return "";
+
+        }
+    }
     public Collection<ApiAudioGenre> GetGenres()
     {
-      var genres = new Collection<ApiAudioGenre>();
 
-      var properties = new JsonArray(new[] { "title", "thumbnail" });
-      var param = new JsonObject();
-      param["properties"] = properties;
-      var result = (JsonObject)_parent.JsonCommand("AudioLibrary.GetGenres", param);
-      if (result != null)
+      var genreID = GetMainSelection("Genres"); 
+      var genres = new Collection<ApiAudioGenre>();
+     
+      try
       {
-        if (result.Contains("genres"))
-        {
-          foreach (JsonObject genre in (JsonArray)result["genres"])
+          _parent.Log("Getting Music Genres: Parent IP: " + _parent.IP);
+          string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?ParentId="+genreID;
+          var request = WebRequest.CreateHttp(NPurl);
+          request.Method = "get";
+          request.Timeout = 5000;
+          _parent.Log("Genre Music Selection: " + _parent.IP + ":" + _parent.Port);
+          var authString = _parent.GetAuthString();
+          request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+          request.Headers.Add("X-Emby-Authorization", authString);
+          request.ContentType = "application/json; charset=utf-8";
+          request.Accept = "application/json; charset=utf-8";
+
+          var response = request.GetResponse();
+
+          if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
           {
-            try
-            {
-              var gen = new ApiAudioGenre
-                {
-                  IdGenre = (long)(JsonNumber)genre["genreid"],
-                  Name = genre["title"].ToString(),
-                  AlbumCount = 0,
-                  Thumb = genre["thumbnail"].ToString()
-                };
-              genres.Add(gen);
-            }
-            catch (Exception)
-            {
-            }
+
+              System.IO.Stream dataStream = response.GetResponseStream();
+              System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+
+              using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
+              {
+                  string json = sr.ReadToEnd();
+                  _parent.Log("--------------GETTING Music Genres Selection Result ------" + json);
+
+                  var deserializer = new JavaScriptSerializer();
+                  var ItemData = deserializer.Deserialize<MusicGenres.Rootobject>(json);
+                  _parent.Log("---------------Get Music Genres:  Issue: Results.Record Count: " + ItemData.TotalRecordCount);
+
+                  foreach (var genre in ItemData.Items)
+                  {
+                      try
+                      {
+                          var gen = new ApiAudioGenre
+                          {
+                              IdGenre = Xbmc.IDtoNumber(genre.Id),
+                              Name = genre.Name ?? "",
+                              AlbumCount = genre.ChildCount,
+                              Thumb = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + genre.Id + "/Images/Primary" ?? ""
+                          };
+                          genres.Add(gen);
+                      }
+                      catch (Exception ex)
+                      {
+                          _parent.Log("Music Genres Exception Caught " + ex);
+                      }
+                  }
+
+              }
           }
-        }
+      }
+      catch (Exception Ex)
+      {
+          _parent.Log("Another Music Genres exception" + Ex);
       }
       return genres;
     }
@@ -70,36 +195,76 @@ namespace Remote.Emby.Api
     {
       var artists = new Collection<ApiAudioArtist>();
 
-      var properties = new JsonArray(new[] { "thumbnail", "fanart", "description" });
-      var param = new JsonObject();
-      param["properties"] = properties;
-      var result = (JsonObject)_parent.JsonCommand("AudioLibrary.GetArtists", param);
-      if (result != null)
-      {
-        if (result.Contains("artists"))
-        {
-          foreach (JsonObject genre in (JsonArray)result["artists"])
+
+          var AlbumArtistsID = GetMainSelection("Album Artists");
+         
+
+          try
           {
-            try
-            {
-              var artist = new ApiAudioArtist
-                {
-                  IdArtist = (long)(JsonNumber)genre["artistid"],
-                  Name = genre["artist"].ToString(),
-                  Thumb = genre["thumbnail"].ToString(),
-                  Fanart = genre["fanart"].ToString(),
-                  Biography = genre["description"].ToString()
-                };
-              artists.Add(artist);
-            }
-            catch (Exception)
-            {
-            }
+              _parent.Log("Getting Album ARtists: Parent IP: " + _parent.IP);
+              string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?ParentId=" + AlbumArtistsID;
+              var request = WebRequest.CreateHttp(NPurl);
+              request.Method = "get";
+              request.Timeout = 5000;
+              _parent.Log("Genre Music Selection: " + _parent.IP + ":" + _parent.Port);
+              var authString = _parent.GetAuthString();
+              request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+              request.Headers.Add("X-Emby-Authorization", authString);
+              request.ContentType = "application/json; charset=utf-8";
+              request.Accept = "application/json; charset=utf-8";
+
+              var response = request.GetResponse();
+
+              if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+              {
+
+                  System.IO.Stream dataStream = response.GetResponseStream();
+                  System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+
+                  using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
+                  {
+                      string json = sr.ReadToEnd();
+                      _parent.Log("--------------GETTING Album Artists Genres Selection Result ------" + json);
+
+                      var deserializer = new JavaScriptSerializer();
+                      var ItemData = deserializer.Deserialize<AlbumArtists.Rootobject>(json);
+                      _parent.Log("---------------Get Album Artists :  Issue: Results.Record Count: " + ItemData.TotalRecordCount);
+
+                      foreach (var genre in ItemData.Items)
+                      {
+                          _parent.Trace("-----------  Get ALbum ARtists : ID " + genre.Id);
+                          _parent.Trace("------------- Get ALbum ARtists :Name " + genre.Name);
+                          
+                          try
+                          {
+                              var artist = new ApiAudioArtist
+                                {
+                                    IdArtist = Xbmc.IDtoNumber(genre.Id),
+                                    Name = genre.Name ?? "",
+                                    Thumb = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + genre.Id + "/Images/Primary" ?? "",
+                                    Fanart = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + genre.Id + "/Images/Backdrop" ?? "",
+                                    Biography = ""
+                                };
+                              artists.Add(artist);
+                          }
+
+                          catch (Exception ex)
+                          {
+                              _parent.Log("Music Genres Exception Caught " + ex);
+                          }
+                      }
+
+                  }
+              }
           }
-        }
+          catch (Exception Ex)
+          {
+              _parent.Log("Another Album Artists  exception" + Ex);
+          }
+          return artists;
       }
-      return artists;
-    }
+
+
 
 
     public Collection<ApiAudioAlbum> GetAlbums()

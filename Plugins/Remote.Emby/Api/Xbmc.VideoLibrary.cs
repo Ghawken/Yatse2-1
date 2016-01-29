@@ -448,8 +448,8 @@ namespace Remote.Emby.Api
                     
                     var deserializer = new JavaScriptSerializer();
                    
-                    var ItemData = deserializer.Deserialize<MainSelection.Root>(json);
-                    _parent.Log("---------------Get Main Selection:  Issue: Results.Count: " + ItemData.Items.Count);
+                    var ItemData = deserializer.Deserialize<MainSelectionItems.Rootobject>(json);
+                    _parent.Log("---------------Get Main Selection:  Issue: Results.Count: " + ItemData.TotalRecordCount);
 
                     foreach (var id in ItemData.Items)
                     {
