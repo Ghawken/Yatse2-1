@@ -138,7 +138,7 @@ namespace Remote.Emby.Api
                 string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?ParentId=" + genreID;
                 var request = WebRequest.CreateHttp(NPurl);
                 request.Method = "get";
-                request.Timeout = 5000;
+                request.Timeout = 150000;
                 _parent.Trace("Genre Music Selection: " + NPurl);
                 var authString = _parent.GetAuthString();
                 request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
@@ -208,7 +208,7 @@ namespace Remote.Emby.Api
                 string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?ParentId=" + AlbumArtistsID;
                 var request = WebRequest.CreateHttp(NPurl);
                 request.Method = "get";
-                request.Timeout = 5000;
+                request.Timeout = 150000;
                 _parent.Trace("Album Artists Music Selection: " + NPurl);
                 var authString = _parent.GetAuthString();
                 request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
@@ -284,7 +284,7 @@ namespace Remote.Emby.Api
                 string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?ParentId=" + AlbumID;
                 var request = WebRequest.CreateHttp(NPurl);
                 request.Method = "get";
-                request.Timeout = 5000;
+                request.Timeout = 150000;
                 _parent.Trace("Genre Music Selection: " + NPurl);
                 var authString = _parent.GetAuthString();
                 request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
@@ -354,7 +354,7 @@ namespace Remote.Emby.Api
                 var request = WebRequest.CreateHttp(NPurl);
 
                 request.Method = "get";
-               // request.Timeout = 5000;
+                request.Timeout = 150000;
                 _parent.Trace("Single Song Selection: " + NPurl);
 
                 var authString = _parent.GetAuthString();
@@ -412,7 +412,7 @@ namespace Remote.Emby.Api
                 string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items?ParentId=" + AlbumID;
                 var request = WebRequest.CreateHttp(NPurl);
                 request.Method = "get";
-                request.Timeout = 155000;
+                request.Timeout = 150000;
                 _parent.Trace("Songs Selection: " + NPurl);
                 var authString = _parent.GetAuthString();
                 request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);

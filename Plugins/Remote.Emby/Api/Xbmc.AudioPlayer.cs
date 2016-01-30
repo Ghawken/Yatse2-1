@@ -57,21 +57,20 @@ namespace Remote.Emby.Api
                 return;
 
 
-            var stringlistIds = "";
+            StringBuilder stringlistIds = new StringBuilder();
 
 
 
             foreach (var apiAudioSong in songs)
             {
-
-
-                stringlistIds += apiAudioSong.Path + ",";
-
-
+                stringlistIds.Append(apiAudioSong.Path).Append(",");
             }
 
-            _parent.Log("PLAYFILES Attempting to Play :" + stringlistIds);
-            EmbyPlayPlayList(stringlistIds);
+            string ListItems = stringlistIds.ToString(0, stringlistIds.Length-1);
+
+            
+            _parent.Log("PLAYFILES Attempting to Play :" + ListItems);
+            EmbyPlayPlayList(ListItems);
 
 
 
@@ -103,9 +102,9 @@ namespace Remote.Emby.Api
             foreach (var apiAudioSong in songs)
             {
 
-
-                stringlistIds += apiAudioSong.Path + ",";
-
+               
+                    stringlistIds = apiAudioSong.Path;
+                
 
             }
 

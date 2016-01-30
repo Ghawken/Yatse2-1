@@ -57,7 +57,7 @@ namespace Remote.Emby.Api
           var request = WebRequest.CreateHttp(NPurl);
 
           request.Method = "get";
-          request.Timeout = 15000;
+          request.Timeout = 150000;
           _parent.Trace("Single TV Season Selection: " + _parent.IP + ":" + _parent.Port);
 
           var authString = _parent.GetAuthString();
@@ -334,7 +334,7 @@ namespace Remote.Emby.Api
             var request = WebRequest.CreateHttp(NPurl);
 
             request.Method = "get";
-            request.Timeout = 5000;
+            request.Timeout = 150000;
             _parent.Trace("Single TV Show Selection: " + _parent.IP + ":" + _parent.Port);
 
             var authString = _parent.GetAuthString();
@@ -423,7 +423,7 @@ namespace Remote.Emby.Api
             var request = WebRequest.CreateHttp(NPurl);
 
             request.Method = "get";
-            request.Timeout = 10000;
+            request.Timeout = 150000;
             _parent.Trace("Main Selection: " + _parent.IP + ":" + _parent.Port);
 
             var authString = _parent.GetAuthString();
@@ -486,7 +486,7 @@ namespace Remote.Emby.Api
             var request = WebRequest.CreateHttp(NPurl);
 
             request.Method = "get";
-            request.Timeout = 5000;
+            request.Timeout = 150000;
             _parent.Trace("Single Movie Selection: " + _parent.IP + ":" + _parent.Port);
 
             var authString = _parent.GetAuthString();
@@ -543,7 +543,7 @@ namespace Remote.Emby.Api
             var request = WebRequest.CreateHttp(NPurl);
 
             request.Method = "get";
-            request.Timeout = 5000;
+            request.Timeout = 150000;
             _parent.Trace("Single Movie Selection: " + _parent.IP + ":" + _parent.Port);
 
             var authString = _parent.GetAuthString();
@@ -601,7 +601,7 @@ namespace Remote.Emby.Api
           var request = WebRequest.CreateHttp(NPurl);
 
           request.Method = "get";
-          request.Timeout = 20000;
+          request.Timeout = 150000;
           _parent.Trace("Main Selection: " + _parent.IP + ":" + _parent.Port);
 
           var authString = _parent.GetAuthString();
