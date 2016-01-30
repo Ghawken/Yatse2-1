@@ -50,7 +50,7 @@ namespace Remote.Emby.Api
            // var songs = (Collection<ApiAudioSong>)e.Argument;
 
 
-            _parent.Log("-----------PLAYLIST Songs:  Trying to play songs #:" + songs.Count + "and Globals.SessionID:" + Globals.SessionIDClient);
+            _parent.Trace("-----------PLAYLIST Songs:  Trying to play songs #:" + songs.Count + "and Globals.SessionID:" + Globals.SessionIDClient);
             if (songs == null)
                 return;
             if (!_parent.IsConnected())
@@ -69,7 +69,7 @@ namespace Remote.Emby.Api
             string ListItems = stringlistIds.ToString(0, stringlistIds.Length-1);
 
             
-            _parent.Log("PLAYFILES Attempting to Play :" + ListItems);
+            _parent.Trace("PLAYFILES Attempting to Play :" + ListItems);
             EmbyPlayPlayList(ListItems);
 
 
