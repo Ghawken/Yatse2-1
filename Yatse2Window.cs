@@ -566,6 +566,15 @@ namespace Yatse2
                 PreInit();
                 // Attempting to start server socket on seperate thread
                 
+                
+                //Change refresh rate to limit CPU usage - try off
+                /*
+                Timeline.DesiredFrameRateProperty.OverrideMetadata(
+                   typeof(Timeline),
+                   new FrameworkPropertyMetadata { DefaultValue = 20 }
+                   );
+                */
+                
                 Logger.Instance().Log("SERVER", "Starting Server Thread... ",true);
                 
 

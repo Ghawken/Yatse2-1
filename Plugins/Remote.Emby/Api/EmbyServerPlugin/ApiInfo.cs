@@ -8,6 +8,8 @@ namespace Remote.Emby.Api.EmbyServerPlugin
 {
     public class ApiInfo
     {
+
+        public string PlayingClientID { get; set; }
         public string ID { get; set; }
         public string Filename { get; set; }
         public bool IsPaused { get; set; }

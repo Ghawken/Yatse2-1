@@ -70,6 +70,7 @@ namespace Remote.Emby.Api
             if (Globals.ClientSupportsRemoteControl == false)
             {
                 _parent.Log("-----EMBY COMMAND:   Current Client DOES NOT SUPPORT REMOTE CONTROL -- No Command Sent");
+                _parent.Log("-----EMBY COMMAND:  GLobals SupportsRemote " + Globals.ClientSupportsRemoteControl + "Global ClientID:" + Globals.SessionIDClient);
                 return false;
             }
 

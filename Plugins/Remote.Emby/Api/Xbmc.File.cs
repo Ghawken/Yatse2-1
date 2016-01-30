@@ -141,9 +141,10 @@ namespace Remote.Emby.Api
             _parent.Trace("----------DOWNLOAD IMAGES ISSUE:  fileNAME is"+fileName+"  : Destination is: "+destination);
 
             if (!_parent.IsConnected())
+            {
                 _parent.Trace(" ---------------DOWNLOAD ISSUES ISSUE:  PARENT NOT CONNECTING RETURNING FALSE");
                 return false;
-
+            }
 
             try
             {

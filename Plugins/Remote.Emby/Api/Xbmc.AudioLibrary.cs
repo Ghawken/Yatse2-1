@@ -56,7 +56,7 @@ namespace Remote.Emby.Api
                 if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
                 {
                     System.IO.Stream dataStream = response.GetResponseStream();
-                    System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+//REMOVETHIS        System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
                     using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                     {
                         string json = sr.ReadToEnd();
@@ -152,7 +152,7 @@ namespace Remote.Emby.Api
                 {
 
                     System.IO.Stream dataStream = response.GetResponseStream();
-                    System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+//REMOTETHIS        System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
                     using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                     {
@@ -222,7 +222,7 @@ namespace Remote.Emby.Api
                 {
 
                     System.IO.Stream dataStream = response.GetResponseStream();
-                    System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+//REMOVETHIS                    System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
                     using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                     {
@@ -235,7 +235,7 @@ namespace Remote.Emby.Api
 
                         foreach (var genre in ItemData.Items)
                         {
-
+                            MusicSingleArtistInfo.Rootobject ArtistItem = GetSingleArtist(genre.Id);
 
                             try
                             {
@@ -245,7 +245,7 @@ namespace Remote.Emby.Api
                                       Name = genre.Name ?? "",
                                       Thumb = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + genre.Id + "/Images/Primary" ?? "",
                                       Fanart = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + genre.Id + "/Images/Backdrop" ?? "",
-                                      Biography = ""
+                                      Biography = ArtistItem.Overview
                                   };
                                 artists.Add(artist);
                             }
@@ -298,7 +298,7 @@ namespace Remote.Emby.Api
                 {
 
                     System.IO.Stream dataStream = response.GetResponseStream();
-                    System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+ //REMOVETHIS                   System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
                     using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                     {
@@ -343,18 +343,18 @@ namespace Remote.Emby.Api
             return albums;
         }
 
-        public MusicSongSingleItem.Rootobject GetSingleSong(string itemId)
+        public MusicSingleArtistInfo.Rootobject GetSingleArtist(string itemId)
         {
             try
             {
 
-                _parent.Trace("Getting Single Song From ItemData" + _parent.IP);
+                _parent.Trace("Getting Single Artist From ItemData" + _parent.IP);
                 string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Users/" + Globals.CurrentUserID + "/Items/" + itemId;
 
                 var request = WebRequest.CreateHttp(NPurl);
 
                 request.Method = "get";
-                request.Timeout = 5000;
+               // request.Timeout = 5000;
                 _parent.Trace("Single Song Selection: " + NPurl);
 
                 var authString = _parent.GetAuthString();
@@ -370,17 +370,17 @@ namespace Remote.Emby.Api
                 {
 
                     System.IO.Stream dataStream = response.GetResponseStream();
-                    System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+//REMOVETHIS                    System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
                     using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                     {
                         string json = sr.ReadToEnd();
-                        _parent.Trace("--------------GETTING Single Song From Series Selection Result ------" + json);
+                        _parent.Trace("--------------GETTING Single Artist From Series Selection Result ------" + json);
 
                         var deserializer = new JavaScriptSerializer();
 
-                        var ItemData = deserializer.Deserialize<MusicSongSingleItem.Rootobject>(json);
-                        _parent.Trace("---------------Get Single Song From ItemData Selection:  Issue: Results.Taglines: " + ItemData.Taglines);
+                        var ItemData = deserializer.Deserialize<MusicSingleArtistInfo.Rootobject>(json);
+                        _parent.Trace("---------------Get Single Artist From ItemData Selection:  Issue: Results.Taglines: " + ItemData.Taglines);
 
                         return ItemData;
 
@@ -392,7 +392,7 @@ namespace Remote.Emby.Api
             }
             catch (Exception ex)
             {
-                _parent.Trace("ERROR in Single Song Selection obtaining: " + ex);
+                _parent.Trace("ERROR in Single Artist Selection obtaining: " + ex);
                 return null;
 
             }
@@ -426,7 +426,7 @@ namespace Remote.Emby.Api
                 {
 
                     System.IO.Stream dataStream = response.GetResponseStream();
-                    System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+ //REMOVETHIS                   System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
                     using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                     {
@@ -439,7 +439,9 @@ namespace Remote.Emby.Api
                         
                         foreach (var genre in ItemData.Items)
                         {
-                            MusicSongSingleItem.Rootobject Songitem = GetSingleSong(genre.Id);
+                           
+                            // Do get more data - but takes FOREVER !!
+                            // MusicSongSingleItem.Rootobject Songitem = GetSingleSong(genre.Id);
                             
                             var RoundSeconds = genre.RunTimeTicks / 10000000.00;
 
@@ -452,14 +454,14 @@ namespace Remote.Emby.Api
                                      Track = Convert.ToInt64(genre.IndexNumber),
                                      Duration = Convert.ToInt64(RoundSeconds),
                                      Year = Convert.ToInt64(genre.ProductionYear),
-                                     FileName = Songitem.Path ?? "",
+                                     FileName = "",
                                      IdAlbum = Xbmc.IDtoNumber(genre.AlbumId),
                                      Album = genre.Album ?? "",
-                                     Path = Songitem.Path ?? "",
-                                     IdArtist = Xbmc.IDtoNumber(Songitem.AlbumArtists.FirstOrDefault().Id),
+                                     Path = genre.Id,
+                                     IdArtist = 0,
                                      Artist = genre.Artists.FirstOrDefault() ?? "",
                                      IdGenre = 0,
-                                     Genre = Songitem.Genres.FirstOrDefault() ?? "",
+                                     Genre = "",
                                      Thumb = "http://" + _parent.IP + ":" + _parent.Port + "/Items/" + genre.Id + "/Images/Primary" ?? "",
                                  };
                                 songs.Add(song);

@@ -52,7 +52,7 @@ using System.Collections.Specialized;
 
 namespace Remote.Emby.Api
 {
-    public static class Globals
+    public class Globals
     {
         public static String EmbyAuthToken = ""; // Modifiable in Code
         public static String DeviceID = "9DA94EFB-EFF0-4144-9A18-46B046C450C6";
@@ -284,9 +284,9 @@ namespace Remote.Emby.Api
                     {
 
                         // Get the stream containing content returned by the server.
-                        System.IO.Stream dataStream = response.GetResponseStream();
+                        //REMOVETHIS                           System.IO.Stream dataStream = response.GetResponseStream();
                         // Open the stream using a StreamReader.
-                        System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+//REMOVETHIS                        System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
                  //       XmlSerializer serializer = new XmlSerializer(typeof(ClientsMediaContainer));
                    //    ClientsMediaContainer deserialized = (ClientsMediaContainer)serializer.Deserialize(reader);
@@ -400,9 +400,9 @@ namespace Remote.Emby.Api
                 {
 
                     // Get the stream containing content returned by the server.
-                    System.IO.Stream dataStream = response.GetResponseStream();
+                    //REMOVETHIS                       System.IO.Stream dataStream = response.GetResponseStream();
                     // Open the stream using a StreamReader.
-                    System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+//REMOVETHIS                    System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
                     //XmlSerializer serializer = new XmlSerializer(typeof(Public_Users_Folder.Class1));
                    // Public_Users_Folder.Class1 deserialized = (Public_Users_Folder.Class1)serializer.Deserialize(reader);
@@ -478,9 +478,9 @@ namespace Remote.Emby.Api
             
             string authString = GetAuthString();
 
-
-            Globals.SessionIDClient = GetClientID();
             
+            Globals.SessionIDClient = GetYatseInfoPlayingClient();
+            Globals.ClientSupportsRemoteControl = GetPlaybackClientSupportsRemote();
 
             try
             {
@@ -626,7 +626,7 @@ namespace Remote.Emby.Api
             
             postData["username"] = Uri.EscapeDataString(UserName);
 
-            var bytes = Encoding.UTF8.GetBytes(password ?? string.Empty);
+//REMOVETHIS            var bytes = Encoding.UTF8.GetBytes(password ?? string.Empty);
 
             //Log("---------------" + HashSha1(Password));
 
@@ -640,8 +640,8 @@ namespace Remote.Emby.Api
             var postArg = JsonConvert.ExportToString(postData);
 
 
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(UserName + ":" + Password);
-            string auth = System.Convert.ToBase64String(plainTextBytes);
+            //REMOVETHIS               var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(UserName + ":" + Password);
+//REMOVETHIS            string auth = System.Convert.ToBase64String(plainTextBytes);
 
          //   var authString = @"MediaBrowser Client=""" + clientname + "\", Device=\"" + devicename + "\", DeviceId=\"" + deviceID + "\", Version=\"" + applicationVersion + "\", UserId=\"" + CurrentUserID + "\"";
 
@@ -679,7 +679,7 @@ namespace Remote.Emby.Api
 
 
                 Log("HTTP WEB RESPONSE GIVEN:" + ((HttpWebResponse)response).StatusDescription);
-
+//PERFORMANCE CHANGE
                 if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
                 {
 
@@ -688,6 +688,9 @@ namespace Remote.Emby.Api
                     // Open the stream using a StreamReader.
                     System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
+                    //string json = reader.ReadToEnd();
+                    //Log("--------------GETTING Authenication ID JSON------" + json);
+
                     XmlSerializer serializer = new XmlSerializer(typeof(AuthenicateByUser.Root.AuthenticationResult));
 
 
@@ -695,13 +698,18 @@ namespace Remote.Emby.Api
 
                     Log("-------------- EMBY Access Token:" + deserialized.AccessToken);
                     Log("-------------- EMBY User ID: " + CurrentUserID);
+                   // Log("-------------- EMBY Supports Remote Control: " + deserialized.SessionInfo.SupportsRemoteControl);
+                    Log("-------------- EMBY Sessions ID: " + deserialized.SessionInfo.Id);
+
 
                     if (!String.IsNullOrEmpty(deserialized.AccessToken))
                     {
-                        Log("------------------ EMBY ACCESS TOKEN FOUND" + deserialized.AccessToken);
+                        Log("------------------ EMBY ACCESS TOKEN FOUND:" + deserialized.AccessToken);
+                        Log("------------------- Emby Sessions ID Set:" + deserialized.SessionInfo.Id);
+                        //Log("------------------- Emby Client Supports Remote:" + deserialized.SessionInfo.SupportsRemoteControl);
                         Globals.EmbyAuthToken = deserialized.AccessToken;
                         Globals.SessionID = deserialized.SessionInfo.Id;
-                        Globals.ClientSupportsRemoteControl = deserialized.SessionInfo.SupportsRemoteControl;
+                     //   Globals.ClientSupportsRemoteControl = deserialized.SessionInfo.SupportsRemoteControl;
                         return deserialized.AccessToken ;
                     }
                 }
@@ -768,8 +776,10 @@ namespace Remote.Emby.Api
             }
             if (String.IsNullOrEmpty(Globals.SessionIDClient))
             {
-                Globals.SessionIDClient = GetClientID();
+                Globals.SessionIDClient = GetYatseInfoPlayingClient();
             }
+            Globals.ClientSupportsRemoteControl = GetPlaybackClientSupportsRemote();
+
 
 
             if (_checkTimer == null)
@@ -793,12 +803,73 @@ namespace Remote.Emby.Api
             Player.RefreshNowPlaying();
         }
 
-        private string GetClientID()
+        public string GetYatseInfoPlayingClient()
         {
             try
             {
 
-                Log("Emby:  Get Client ID Using Parent IP equals: " + IP);
+                Log("Emby: Using Parent IP equals: " + IP);
+                string NPurl = "http://" + IP + ":" + Port;
+                var request = WebRequest.CreateHttp(NPurl + "/Yatse");
+
+                request.Method = "get";
+                //request.Timeout = 5000;
+                Log("--------------- PLAYER CONNECTION: IP " + NPurl);
+
+
+                var authString = GetAuthString();
+
+
+
+                Log("------------GetYatseInfo------- Username Parent :" + UserName);
+                Log("------------GetYatseInfo------ CurrentUserID Parent :" + CurrentUserID);
+                Log("------------GetYatseInfo------- EMBY TOKEN EQUALS :" + Globals.EmbyAuthToken);
+
+
+                request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+
+                request.Headers.Add("Authorization", authString);
+                request.ContentType = "application/json; charset=utf-8";
+                request.Accept = "application/json";
+                var response = request.GetResponse();
+
+                if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+                {
+
+                    System.IO.Stream dataStream = response.GetResponseStream();
+
+                    using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
+                    {
+                        string json = sr.ReadToEnd();
+                        Trace("--------------Using Yatse Info Emby Plugin Data   ------" + json);
+                        var deserializer = new JavaScriptSerializer();
+
+                        var server = deserializer.Deserialize<EmbyServerPlugin.ApiInfo>(json);
+                        Trace("------------- Yatse Emby Plugin: Now Checking Results :results.Count:" + server.Filename);
+                        Globals.SessionIDClient = server.PlayingClientID;
+                        Log("-------------------------------PLAYING CLIENT ID GOT AND SET TO :" + Globals.SessionIDClient);
+                        return server.PlayingClientID;
+                    }
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Log("--------------------------PLAYING CLIENT EXCEPTION" + ex);
+                return null;
+            }
+        }
+
+
+
+        private bool GetPlaybackClientSupportsRemote()
+        {
+            
+            
+            try
+            {
+
+                Log("Emby:  Get SESSION DATA ID Using Parent IP equals: " + IP);
                 string NPurl = "http://" + IP + ":" + Port;
                 var request = WebRequest.CreateHttp(NPurl + "/Sessions");
 
@@ -812,7 +883,7 @@ namespace Remote.Emby.Api
 
 
 
-                Log("Client ID:------------------- Username Parent :" + UserName);
+                Log("Client SESSIONAL:------------------- Username Parent :" + UserName);
                 Log("Client Id:------------------- CurrentUserID Parent :" + CurrentUserID);
                 Log("Client ID:------------------- EMBY TOKEN EQUALS :" + Globals.EmbyAuthToken);
 
@@ -830,14 +901,14 @@ namespace Remote.Emby.Api
 
                     //  Use MPC Remote
 
-                    System.IO.Stream dataStream = response.GetResponseStream();
+                    //REMOVETHIS                       System.IO.Stream dataStream = response.GetResponseStream();
 
-                    System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+                    //REMOVETHIS                       System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
                     using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                     {
                         string json = sr.ReadToEnd();
-                        Log("--------------GETTING CLIENT ID JSON------" + json);
+                        Log("--------------GETTING CLIENT SESSIONAL JSON------" + json);
                         
                         var deserializer = new JavaScriptSerializer();
 
@@ -845,26 +916,26 @@ namespace Remote.Emby.Api
 
                         foreach (var server in results)
                         {
+                                              
 
-
-                            Log("++++++++++++++++++++ EMBY: Found Local Playback Client: CurrentUserID:  " + CurrentUserID + " : Current Server.UserID:  " + server.UserId);
-
-                            if (server.UserId == CurrentUserID && server.DeviceId != Globals.DeviceID)
+                            if (server.Id == Globals.SessionIDClient)
                             {
                                 Log("Returning Client ID:" + server.Id);
-                                Globals.SessionIDClient = server.Id;
-                                return server.Id;
+                                Log("Returning Client Supports Remote Control:" + server.SupportsRemoteControl);
+                                //Globals.SessionIDClient = server.Id;
+                                Globals.ClientSupportsRemoteControl = server.SupportsRemoteControl;
+                                return true;
                             }
                         }
                     }
                 }
-                return "";
+                return false;
             }
             
             catch (Exception ex)
             {
                 Log("ERROR in Client ID obtaining" + ex);
-                return "";
+                return false;
             }
         }
 
@@ -1039,7 +1110,8 @@ namespace Remote.Emby.Api
             String result = "";
             foreach (var item in array)
             {
-                if (result == "")
+                if (String.IsNullOrEmpty(result))
+               
                 {
                     result = item.ToString();
                 }

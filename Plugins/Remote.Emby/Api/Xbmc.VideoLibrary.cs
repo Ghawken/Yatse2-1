@@ -73,7 +73,7 @@ namespace Remote.Emby.Api
           {
 
               System.IO.Stream dataStream = response.GetResponseStream();
-              System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+              //REMOVETHIS                System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
               using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
               {
@@ -221,7 +221,7 @@ namespace Remote.Emby.Api
           {
 
               System.IO.Stream dataStream = response.GetResponseStream();
-              System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+              //REMOVETHIS                System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
               using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
               {
@@ -350,7 +350,7 @@ namespace Remote.Emby.Api
             {
 
                 System.IO.Stream dataStream = response.GetResponseStream();
-                System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+                //REMOVETHIS                   System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
                 using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                 {
@@ -439,7 +439,7 @@ namespace Remote.Emby.Api
             {
 
                 System.IO.Stream dataStream = response.GetResponseStream();
-                System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+                //REMOVETHIS                   System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
                 using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                 {
@@ -502,7 +502,7 @@ namespace Remote.Emby.Api
             {
 
                 System.IO.Stream dataStream = response.GetResponseStream();
-                System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+                //REMOVETHIS                System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
                 using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
                 {
@@ -617,7 +617,7 @@ namespace Remote.Emby.Api
           {
 
               System.IO.Stream dataStream = response.GetResponseStream();
-              System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+              //REMOVETHIS                 System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
 
               using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
               {

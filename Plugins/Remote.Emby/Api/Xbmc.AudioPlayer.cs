@@ -22,22 +22,60 @@ using System.Threading;
 using Jayrock.Json;
 using Plugin;
 
+
+using System;
+using System.Net;
+using System.Web.Script.Serialization;
+using System.Web;
+using System.Web.Script;
+using System.Text;
+using System.Collections.Generic;
+
 namespace Remote.Emby.Api
 
 {
     class XbmcAudioPlayer : IApiAudioPlayer
     {
         private readonly Xbmc _parent;
-        private readonly BackgroundWorker _bw = new BackgroundWorker{WorkerSupportsCancellation = true};
+        //private readonly BackgroundWorker _bw = new BackgroundWorker{WorkerSupportsCancellation = true};
 
         public XbmcAudioPlayer(Xbmc parent)
         {
             _parent = parent;
-            _bw.DoWork += AsyncPlayFilesWorker;
+            //_bw.DoWork += AsyncPlayFilesWorker;
         }
 
-        private void AsyncPlayFiles(Collection<ApiAudioSong> songs)
+        public void AsyncPlayFiles(Collection<ApiAudioSong> songs)
         {
+           // var songs = (Collection<ApiAudioSong>)e.Argument;
+
+
+            _parent.Log("-----------PLAYLIST Songs:  Trying to play songs #:" + songs.Count + "and Globals.SessionID:" + Globals.SessionIDClient);
+            if (songs == null)
+                return;
+            if (!_parent.IsConnected())
+                return;
+
+
+            var stringlistIds = "";
+
+
+
+            foreach (var apiAudioSong in songs)
+            {
+
+
+                stringlistIds += apiAudioSong.Path + ",";
+
+
+            }
+
+            _parent.Log("PLAYFILES Attempting to Play :" + stringlistIds);
+            EmbyPlayPlayList(stringlistIds);
+
+
+
+            /*
             _bw.CancelAsync();
             while (_bw.IsBusy)
             {
@@ -45,40 +83,35 @@ namespace Remote.Emby.Api
                 System.Windows.Forms.Application.DoEvents();
             }
             _bw.RunWorkerAsync(songs);
+             */
         }
 
-        private void AsyncPlayFilesWorker(object sender, DoWorkEventArgs e)
+        public void AsyncPlayFilesWorker(Collection<ApiAudioSong> songs)
         {
-            var songs = (Collection<ApiAudioSong>)e.Argument;
-
+           // var songs = (Collection<ApiAudioSong>)e.Argument;
+            
             if (songs == null)
                 return;
             if (!_parent.IsConnected())
                 return;
 
-            var plId = new JsonObject();
-            plId["playlistid"] = 1;
-            _parent.JsonCommand("Playlist.Clear", plId);
-            var i = 0;
-            var args = new JsonObject();
-            var items = new JsonObject();
+            
+            var stringlistIds="";
+
+
+ 
             foreach (var apiAudioSong in songs)
             {
-                if (((BackgroundWorker)sender).CancellationPending)
-                {
-                    e.Cancel = true;
-                    return;
-                }
-                args["songid"] = apiAudioSong.IdSong;
-                items["item"] = args;
-                items["playlistid"] = 1;
-                _parent.JsonCommand("Playlist.Add", items);
-                if (i != 0) continue;
-                var item = new JsonObject();
-                item["item"] = plId;
-                _parent.JsonCommand("Player.Open", item);
-                i++;
+
+
+                stringlistIds += apiAudioSong.Path + ",";
+
+
             }
+
+            _parent.Trace("Attemping to Play IdEpsiode equals: " + stringlistIds);
+            EmbyPlayPlayList(stringlistIds);
+
         }
 
         public void PlayFiles(Collection<ApiAudioSong> songs)
@@ -97,18 +130,65 @@ namespace Remote.Emby.Api
                 return;
             if (!_parent.IsConnected())
                 return;
-            var args = new JsonObject();
-            var items = new JsonObject();
-            args["songid"] = audio.IdSong;
-            items["item"] = args;
-            items["playlistid"] = 1;
-            var plId = new JsonObject();
-            plId["playlistid"] = 1;
-            var item = new JsonObject();
-            item["item"] = plId;
-            _parent.JsonCommand("Playlist.Clear", plId);
-            _parent.JsonCommand("Playlist.Add", items);
-            _parent.JsonCommand("Playlist.Play", item);
+
+            EmbyPlayPlayList(audio.Path);
+
         }
+
+        public string EmbyPlayPlayList(string param)
+        {
+            try
+            {
+
+                string NPurl = "http://" + _parent.IP + ":" + _parent.Port + "/emby/Sessions/" + Globals.SessionIDClient + "/Playing";
+                var request = WebRequest.CreateHttp(NPurl);
+                request.Method = "post";
+                _parent.Trace("Play Playlist Selection: URL:   " + NPurl + "and String param:"+param);
+                ASCIIEncoding encoding = new ASCIIEncoding();
+                var postData = new Dictionary<string, string>();
+                postData["ItemIds"] = param.ToString();
+                postData["StartPositionTicks"] = "0";
+                postData["PlayCommand"] = "PlayNow";
+                var postArg = Jayrock.Json.Conversion.JsonConvert.ExportToString(postData);
+                byte[] data = encoding.GetBytes(postArg);
+                var authString = _parent.GetAuthString();
+                request.Headers.Add("X-MediaBrowser-Token", Globals.EmbyAuthToken);
+                request.Headers.Add("X-Emby-Authorization", authString);
+                request.ContentType = "application/json; charset=utf-8";
+                request.ContentLength = postArg.Length;
+                request.Accept = "application/json; charset=utf-8";
+                var response3 = request.GetRequestStream();
+                response3.Write(data, 0, data.Length);
+
+                var response = request.GetResponse();
+                _parent.Trace("PlayList Play Response:");
+
+                if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+                {
+
+                    System.IO.Stream dataStream = response.GetResponseStream();
+                    //REMOVETHIS                       System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+
+                    using (var sr = new System.IO.StreamReader(response.GetResponseStream()))
+                    {
+                        string json = sr.ReadToEnd();
+                        _parent.Trace("--------------GETTING PlayList Json Result ------" + json);
+
+                    }
+                }
+
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _parent.Trace("ERROR in PlayList Play Selection obtaining: " + ex);
+                return "";
+
+            }
+        }
+
+
+
     }
 }
